@@ -19,6 +19,7 @@ class CoreApplication : public QObject,
 {
     Q_OBJECT
     Q_INTERFACES(WebServiceUserInterface)
+    Q_INTERFACES(DatabaseServiceUserInterface)
     Q_PROPERTY(int xbmcServerPort WRITE setXbmcServerPort READ getXbmcServerPort NOTIFY xbmcServerPortChanged)
     Q_PROPERTY(QUrl xbmcServerUrl WRITE setXbmcServerUrl READ getXbmcServerUrl NOTIFY xbmcServerUrlChanged)
     Q_PROPERTY(QString xbmcServerUserName WRITE setXbmcServerUserName READ getXbmcServerUserName NOTIFY xbmcServerUserNameChanged)

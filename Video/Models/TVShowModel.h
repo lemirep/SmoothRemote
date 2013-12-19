@@ -1,7 +1,6 @@
 #ifndef TVSHOWMODEL_H
 #define TVSHOWMODEL_H
 
-#include <SubListedListItem.h>
 #include <SubListedListModel.h>
 #include "TVShowSeasonModel.h"
 
@@ -12,7 +11,7 @@ public:
 
     enum TVShowModelItemRoles
     {
-        tvShowId = Qt::UserRole + 1,
+        tvshowid = Qt::UserRole + 1,
         title,
         year,
         rating,
@@ -29,6 +28,7 @@ public:
 
     int         id() const;
     QVariant    data(int role) const;
+    bool        setData(int role, const QVariant &value);
     QHash<int, QByteArray> roleNames() const;
     Models::ListModel *submodel() const;
 

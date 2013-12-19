@@ -26,6 +26,7 @@
 ****************************************************************************/
 
 #include "VideoLibrary.h"
+#include "JSONListItemBuilder.h"
 
 VideoLibrary::VideoLibrary(QObject *parent) : QObject(parent)
 {
@@ -198,7 +199,7 @@ void VideoLibrary::reloadDataModels(bool webReload)
 
     if (webReload)
     {
-        this->retrieveMovies(this->moviesLibraryModel);
+        //        this->retrieveMovies(this->moviesLibraryModel);
         this->retrieveTVShows(this->tvShowsLibraryModel);
     }
     else
@@ -231,9 +232,9 @@ void VideoLibrary::saveShowToDB(TVShowModel *show)
                      QString::number(show->getPlaycount()),
                      QString::number(show->getWatchedEpisodes()))
                 .arg( Utils::escapeSqlQuery(show->getFile()),
-                     show->getThumbnail(),
-                     QString::number(show->getSeason()),
-                     QString::number(show->getEpisode()));
+                      show->getThumbnail(),
+                      QString::number(show->getSeason()),
+                      QString::number(show->getEpisode()));
         emit performSQLQuery(insertShowQuery, 0);
         if (show->submodel())
             foreach (Models::ListItem *season, show->submodel()->toList())
@@ -277,12 +278,12 @@ void VideoLibrary::saveEpisodeToDB(TVShowEpisodeModel *episode)
                      getSeasonId,
                      episode->getAired(),
                      QString::number(episode->getEpisodeNum()),
-                      Utils::escapeSqlQuery(episode->getSummary()))
+                     Utils::escapeSqlQuery(episode->getSummary()))
                 .arg( Utils::escapeSqlQuery(episode->getTitle()),
                       Utils::escapeSqlQuery(episode->getFile()),
-                     QString::number(episode->getRating()),
-                     episode->getThumbnail(),
-                     QString::number(episode->getRuntime()));
+                      QString::number(episode->getRating()),
+                      episode->getThumbnail(),
+                      QString::number(episode->getRuntime()));
         emit performSQLQuery(insertEpisodeQuery, 0);
     }
 }
@@ -495,6 +496,7 @@ void VideoLibrary::retrieveTVShowsCallBack(QNetworkReply *reply, QPointer<QObjec
     if (reply != NULL && !data.isNull())
     {
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
+        qDebug() << "Results " << jsonResponse.toJson();
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
@@ -504,10 +506,13 @@ void VideoLibrary::retrieveTVShowsCallBack(QNetworkReply *reply, QPointer<QObjec
                 tvShowsArray = resultObj.value("tvshows").toArray();
                 foreach (QJsonValue tvShowObj, tvShowsArray)
                 {
-                    TVShowModel *tvShow = this->parseTVShow(tvShowObj.toObject());
-                    if (tvShow != NULL)
+                    TVShowModel *tvShow = new TVShowModel();
+                    Models::JSONListItemBuilder::fromQJsonValue(tvShowObj, tvShow);
+//                    qDebug() << tvShow->toSQLQuery("tvshows");
+                    if (tvShow->id() != -1)
                     {
-//                        this->retrieveTVShowSeasons(tvShow->id(), tvShow->submodel());
+                        qDebug() << "Parsing seems efficient";
+                        //                        this->retrieveTVShowSeasons(tvShow->id(), tvShow->submodel());
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(tvShow);
                     }
                 }
@@ -534,7 +539,7 @@ void VideoLibrary::retrieveTVShowSeasonsCallBack(QNetworkReply *reply, QPointer<
                     TVShowSeasonModel *season = this->parseTVShowSeason(seasonObj.toObject());
                     if (season != NULL)
                     {
-//                        this->retrieveTVShowEpisodes(season->getTVShowId(), season->id(), season->submodel());
+                        //                        this->retrieveTVShowEpisodes(season->getTVShowId(), season->id(), season->submodel());
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(season);
                     }
                 }

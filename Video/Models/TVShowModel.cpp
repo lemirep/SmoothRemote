@@ -51,7 +51,7 @@ QVariant TVShowModel::data(int role) const
 {
     switch (role)
     {
-    case tvShowId:
+    case tvshowid:
         return this->id();
     case title:
         return this->getTitle();
@@ -76,11 +76,50 @@ QVariant TVShowModel::data(int role) const
     }
 }
 
+bool TVShowModel::setData(int role, const QVariant &value)
+{
+    switch(role)
+    {
+    case tvshowid:
+        this->setTvShowId(value.toInt());
+        return true;
+    case title:
+        this->setTitle(value.toString());
+        return true;
+    case year:
+        this->setYear(value.toInt());
+        return true;
+    case rating:
+        this->setRating(value.toInt());
+        return true;
+    case playcount:
+        this->setPlaycount(value.toInt());
+        return true;
+    case episode:
+        this->setEpisode(value.toInt());
+        return true;
+    case season:
+        this->setSeason(value.toInt());
+        return true;
+    case watchedepisodes:
+        this->setWatchedEpisodes(value.toInt());
+        return true;
+    case file:
+        this->setFile(value.toString());
+        return true;
+    case thumbnail:
+        this->setThumbnail(value.toString());
+        return true;
+    default :
+        return false;
+    }
+}
+
 QHash<int, QByteArray> TVShowModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames;
 
-    roleNames[tvShowId] = "tvShowId";
+    roleNames[tvshowid] = "tvshowid";
     roleNames[title] = "title";
     roleNames[year] = "year";
     roleNames[rating] = "rating";
