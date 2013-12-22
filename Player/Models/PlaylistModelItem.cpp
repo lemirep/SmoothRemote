@@ -61,7 +61,6 @@ int PlaylistModelItem::id() const
     return this->m_playlistId;
 }
 
-
 QVariant PlaylistModelItem::data(int role) const
 {
     switch (role)
@@ -83,6 +82,11 @@ QHash<int, QByteArray> PlaylistModelItem::roleNames() const
     roleNames[playlistTypeString] = "playlistTypeString";
 
     return roleNames;
+}
+
+Models::ListItem *PlaylistModelItem::getNewItemInstance(QObject *parent) const
+{
+    return new PlayableItemModel(parent);
 }
 
 QString PlaylistModelItem::getPlaylistTypeString() const

@@ -10,5 +10,8 @@
         <file>qml/SettingsScreen.qml</file>
         <file>qml/AudioScreen.qml</file>
         <file>qml/TextInputComponent.qml</file>
+        <file>qml/DynamicGridView.qml</file>
+        <file>qml/TVShowDetailScreen.qml</file>
+        <file>qml/CoverImage.qml</file>
     </qresource>
 </RCC>

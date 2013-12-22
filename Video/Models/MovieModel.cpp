@@ -42,11 +42,9 @@ QVariant MovieModel::data(int role) const
     switch (role)
     {
     case movieId:
-            return this->id();
+        return this->id();
     case genre:
         return this->getGenre();
-    case mood:
-        return this->getMood();
     case studio:
         return this->getStudio();
     case plot:
@@ -58,13 +56,41 @@ QVariant MovieModel::data(int role) const
     }
 }
 
+bool MovieModel::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case movieId:
+        this->m_movieId = value.toInt();
+        return true;
+    case genre:
+        this->setGenre(value.toString());
+        return true;
+    case studio:
+        this->setStudio(value.toString());
+        return true;
+    case plot:
+        this->setPlot(value.toString());
+        return true;
+    case year:
+        this->setYear(value.toInt());
+        return true;
+    default:
+        return PlayableItemModel::setData(role, value);
+    }
+}
+
+Models::ListItem *MovieModel::getNewItemInstance(QObject *parent) const
+{
+    return new MovieModel(parent);
+}
+
 QHash<int, QByteArray> MovieModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames = PlayableItemModel::roleNames();
 
-    roleNames[movieId] = "movieId";
+    roleNames[movieId] = "movieid";
     roleNames[genre] = "genre";
-    roleNames[mood] = "mood";
     roleNames[studio] = "studio";
     roleNames[plot] = "plot";
     roleNames[year] = "year";
@@ -99,16 +125,6 @@ QString MovieModel::getStudio() const
 void MovieModel::setStudio(const QString &studio)
 {
     this->m_studio = studio;
-}
-
-QString MovieModel::getMood() const
-{
-    return this->m_mood;
-}
-
-void MovieModel::setMood(const QString &mood)
-{
-    this->m_mood = mood;
 }
 
 QString MovieModel::getGenre() const

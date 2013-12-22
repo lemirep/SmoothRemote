@@ -26,7 +26,7 @@
 ****************************************************************************/
 
 #include "VideoLibrary.h"
-#include "JSONListItemBuilder.h"
+#include "JSONListItemBinder.h"
 
 VideoLibrary::VideoLibrary(QObject *parent) : QObject(parent)
 {
@@ -76,16 +76,10 @@ void VideoLibrary::retrieveMovies(Models::ListModel *dataModel)
     QJsonObject paramObj;
     QJsonArray   properties;
 
-    properties.prepend(QJsonValue(QString("title")));
-    properties.prepend(QJsonValue(QString("genre")));
-    properties.prepend(QJsonValue(QString("studio")));
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    properties.prepend(QJsonValue(QString("plot")));
-    properties.prepend(QJsonValue(QString("year")));
-    properties.prepend(QJsonValue(QString("runtime")));
-    properties.prepend(QJsonValue(QString("rating")));
-    properties.prepend(QJsonValue(QString("file")));
-    properties.prepend(QJsonValue(QString("streamdetails")));
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    fields.remove(MovieModel::movieId);
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
 
     requestJson.insert("params", QJsonValue(paramObj));
@@ -104,16 +98,13 @@ void VideoLibrary::retrieveTVShows(Models::ListModel *dataModel)
     QJsonObject paramObj;
     QJsonArray   properties;
 
-    properties.prepend(QJsonValue(QString("title")));
-    properties.prepend(QJsonValue(QString("year")));
-    properties.prepend(QJsonValue(QString("rating")));
-    properties.prepend(QJsonValue(QString("playcount")));
-    properties.prepend(QJsonValue(QString("episode")));
-    properties.prepend(QJsonValue(QString("season")));
-    properties.prepend(QJsonValue(QString("file")));
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    paramObj.insert("properties", QJsonValue(properties));
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    fields.remove(TVShowModel::tvshowid);
+    fields.remove(TVShowModel::seasonsModel);
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
 
+    paramObj.insert("properties", QJsonValue(properties));
     requestJson.insert("params", QJsonValue(paramObj));
     // "ID IS TRANSMITTED BACK WITH RESPONSE TO IDENTITFY THE QUERY
     requestJson.insert("id", QJsonValue(QString("tvshows")));
@@ -131,13 +122,11 @@ void VideoLibrary::retrieveTVShowSeasons(int tvShowId, Models::ListModel *dataMo
     QJsonArray   properties;
 
     paramObj.insert("tvshowid", QJsonValue(tvShowId));
-
-    properties.prepend(QJsonValue(QString("season")));
-    properties.prepend(QJsonValue(QString("episode")));
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    properties.prepend(QJsonValue(QString("tvshowid")));
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    fields.remove(TVShowSeasonModel::episodeModel);
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
-
     requestJson.insert("params", QJsonValue(paramObj));
     // "ID IS TRANSMITTED BACK WITH RESPONSE TO IDENTITFY THE QUERY
     requestJson.insert("id", QJsonValue(QString("tvshows_seasons")));
@@ -157,17 +146,9 @@ void VideoLibrary::retrieveTVShowEpisodes(int tvShowId, int season, Models::List
     paramObj.insert("tvshowid", QJsonValue(tvShowId));
     paramObj.insert("season", QJsonValue(season));
 
-    properties.prepend(QJsonValue(QString("title")));
-    properties.prepend(QJsonValue(QString("file")));
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    properties.prepend(QJsonValue(QString("rating")));
-    properties.prepend(QJsonValue(QString("resume")));
-    properties.prepend(QJsonValue(QString("season")));
-    properties.prepend(QJsonValue(QString("tvshowid")));
-    properties.prepend(QJsonValue(QString("firstaired")));
-    properties.prepend(QJsonValue(QString("episode")));
-    properties.prepend(QJsonValue(QString("runtime")));
-
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
 
     requestJson.insert("params", QJsonValue(paramObj));
@@ -194,20 +175,21 @@ void VideoLibrary::reloadDataModels(bool webReload)
     //    this->dirtyModelItem.append(this->moviesLibraryModel->takeRows());
     //    this->dirtyModelItem.append(this->tvShowsLibraryModel->takeRows());
 
-    this->moviesLibraryModel->clear();
-    this->tvShowsLibraryModel->clear();
+    //    this->moviesLibraryModel->clear();
+    //    this->tvShowsLibraryModel->clear();
 
-    if (webReload)
-    {
-        //        this->retrieveMovies(this->moviesLibraryModel);
-        this->retrieveTVShows(this->tvShowsLibraryModel);
-    }
-    else
-    {
-        this->retrieveMoviesFromDB();
-        this->retrieveTVShowsFromDB();
-    }
+    //    if (webReload)
+    //    {
+    //        this->retrieveMovies(this->moviesLibraryModel);
+    //        this->retrieveTVShows(this->tvShowsLibraryModel);
+    //    }
+    //    else
+    //    {
+    //        this->retrieveMoviesFromDB();
+    //        this->retrieveTVShowsFromDB();
+    //    }
 }
+
 
 void VideoLibrary::saveShowsToDB()
 {
@@ -298,25 +280,25 @@ void VideoLibrary::saveMoviesToDB()
 
 void VideoLibrary::saveMovieToDB(MovieModel *movie)
 {
-    if (movie != NULL)
-    {
-        QString insertMovieQuery = QString("INSERT OR REPLACE INTO movie "
-                                           "(id, genre, mood, studio, year, plot, title, file, rating, thumbnail, runtime) "
-                                           "VALUES(%1, '%2', '%3', '%4', %5, '%6', '%7', '%8', %9, '%10', %11);")
-                .arg(QString::number(movie->id()),
-                     Utils::escapeSqlQuery(movie->getGenre()),
-                     Utils::escapeSqlQuery(movie->getMood()),
-                     Utils::escapeSqlQuery(movie->getStudio()),
-                     QString::number(movie->getYear()),
-                     Utils::escapeSqlQuery(movie->getPlot()))
-                .arg(Utils::escapeSqlQuery(movie->getTitle()),
-                     Utils::escapeSqlQuery(movie->getFile()),
-                     QString::number(movie->getRating()),
-                     movie->getThumbnail(),
-                     QString::number(movie->getRuntime()));
+//    if (movie != NULL)
+//    {
+//        QString insertMovieQuery = QString("INSERT OR REPLACE INTO movie "
+//                                           "(id, genre, mood, studio, year, plot, title, file, rating, thumbnail, runtime) "
+//                                           "VALUES(%1, '%2', '%3', '%4', %5, '%6', '%7', '%8', %9, '%10', %11);")
+//                .arg(QString::number(movie->id()),
+//                     Utils::escapeSqlQuery(movie->getGenre()),
+//                     Utils::escapeSqlQuery(movie->getMood()),
+//                     Utils::escapeSqlQuery(movie->getStudio()),
+//                     QString::number(movie->getYear()),
+//                     Utils::escapeSqlQuery(movie->getPlot()))
+//                .arg(Utils::escapeSqlQuery(movie->getTitle()),
+//                     Utils::escapeSqlQuery(movie->getFile()),
+//                     QString::number(movie->getRating()),
+//                     movie->getThumbnail(),
+//                     QString::number(movie->getRuntime()));
 
-        emit performSQLQuery(insertMovieQuery, 0);
-    }
+//        emit performSQLQuery(insertMovieQuery, 0);
+//    }
 }
 
 
@@ -363,14 +345,29 @@ void VideoLibrary::retrieveTVShowEpisodesFromDB(TVShowSeasonModel *season)
     emit performSQLQuery(selectEpisodesQuery, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_VIDEO, RETRIEVE_TVSHOW_EPISODES), QPointer<QObject>(season));
 }
 
-Models::ListModel *VideoLibrary::getMoviesLibraryModel() const
+Models::ListModel *VideoLibrary::getMoviesLibraryModel()
 {
+    this->moviesLibraryModel->clear();
+    this->retrieveMovies(this->moviesLibraryModel);
     return this->moviesLibraryModel;
 }
 
-Models::ListModel *VideoLibrary::getTVShowsLibraryModel() const
+Models::ListModel *VideoLibrary::getTVShowsLibraryModel()
 {
+    this->tvShowsLibraryModel->clear();
+    this->retrieveTVShows(this->tvShowsLibraryModel);
     return this->tvShowsLibraryModel;
+}
+
+void VideoLibrary::refreshSeasonsForShow(int showId)
+{
+    Models::SubListedListItem *item = NULL;
+    if ((item = reinterpret_cast<Models::SubListedListItem*>
+         (this->tvShowsLibraryModel->find(showId))) != NULL)
+    {
+        item->submodel()->clear();
+        this->retrieveTVShowSeasons(showId, item->submodel());
+    }
 }
 
 void VideoLibrary::retrieveMoviesFromDBCallBack(QList<QSqlRecord> result, QPointer<QObject> data)
@@ -388,7 +385,7 @@ void VideoLibrary::retrieveMoviesFromDBCallBack(QList<QSqlRecord> result, QPoint
             movie->setThumbnail(record.value(4).toString());
             movie->setRuntime(record.value(5).toInt());
             movie->setGenre(record.value(6).toString());
-            movie->setMood(record.value(7).toString());
+//            movie->setMood(record.value(7).toString());
             movie->setStudio(record.value(8).toString());
             movie->setYear(record.value(9).toInt());
             movie->setPlot(record.value(10).toString());
@@ -473,6 +470,7 @@ void VideoLibrary::retrieveMoviesCallBack(QNetworkReply *reply, QPointer<QObject
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
+            qDebug() << "Results " << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  moviesArray;
             if (!resultObj.isEmpty())
@@ -480,9 +478,9 @@ void VideoLibrary::retrieveMoviesCallBack(QNetworkReply *reply, QPointer<QObject
                 moviesArray = resultObj.value("movies").toArray();
                 foreach (QJsonValue movieObj, moviesArray)
                 {
-                    MovieModel *movie = this->parseMovie(movieObj.toObject());
-                    qDebug() << "In retrieve movie";
-                    if (movie != NULL)
+                    MovieModel *movie = new MovieModel();
+                    Models::JSONListItemBinder::fromQJsonValue(movieObj, movie);
+                    if (movie->id() != -1)
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(movie);
                 }
             }
@@ -496,9 +494,9 @@ void VideoLibrary::retrieveTVShowsCallBack(QNetworkReply *reply, QPointer<QObjec
     if (reply != NULL && !data.isNull())
     {
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
-        qDebug() << "Results " << jsonResponse.toJson();
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
+//            qDebug() << "Results " << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  tvShowsArray;
             if (!resultObj.isEmpty())
@@ -507,11 +505,11 @@ void VideoLibrary::retrieveTVShowsCallBack(QNetworkReply *reply, QPointer<QObjec
                 foreach (QJsonValue tvShowObj, tvShowsArray)
                 {
                     TVShowModel *tvShow = new TVShowModel();
-                    Models::JSONListItemBuilder::fromQJsonValue(tvShowObj, tvShow);
-//                    qDebug() << tvShow->toSQLQuery("tvshows");
+                    Models::JSONListItemBinder::fromQJsonValue(tvShowObj, tvShow);
+                    //                    qDebug() << tvShow->toSQLQuery("tvshows");
                     if (tvShow->id() != -1)
                     {
-                        qDebug() << "Parsing seems efficient";
+                        //                        qDebug() << "Parsing seems efficient";
                         //                        this->retrieveTVShowSeasons(tvShow->id(), tvShow->submodel());
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(tvShow);
                     }
@@ -529,6 +527,7 @@ void VideoLibrary::retrieveTVShowSeasonsCallBack(QNetworkReply *reply, QPointer<
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
+            qDebug() << "Results " << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  tvShowsSeasonsArray;
             if (!resultObj.isEmpty())
@@ -536,10 +535,11 @@ void VideoLibrary::retrieveTVShowSeasonsCallBack(QNetworkReply *reply, QPointer<
                 tvShowsSeasonsArray = resultObj.value("seasons").toArray();
                 foreach (QJsonValue seasonObj, tvShowsSeasonsArray)
                 {
-                    TVShowSeasonModel *season = this->parseTVShowSeason(seasonObj.toObject());
-                    if (season != NULL)
+                    TVShowSeasonModel *season = new TVShowSeasonModel();
+                    Models::JSONListItemBinder::fromQJsonValue(seasonObj, season);
+                    if (season->id() != -1)
                     {
-                        //                        this->retrieveTVShowEpisodes(season->getTVShowId(), season->id(), season->submodel());
+                        this->retrieveTVShowEpisodes(season->getTVShowId(), season->id(), season->submodel());
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(season);
                     }
                 }
@@ -563,8 +563,9 @@ void VideoLibrary::retrieveTVShowEpisodesCallBack(QNetworkReply *reply, QPointer
                 tvShowEpisodesArray = resultObj.value("episodes").toArray();
                 foreach (QJsonValue episodeObj, tvShowEpisodesArray)
                 {
-                    TVShowEpisodeModel *episode = this->parseTVShowEpisode(episodeObj.toObject());
-                    if (episode != NULL)
+                    TVShowEpisodeModel *episode = new TVShowEpisodeModel();
+                    Models::JSONListItemBinder::fromQJsonValue(episodeObj, episode);
+                    if (episode->id() != -1)
                     {
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(episode);
                     }

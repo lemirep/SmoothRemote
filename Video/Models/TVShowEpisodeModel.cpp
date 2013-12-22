@@ -62,15 +62,46 @@ QVariant TVShowEpisodeModel::data(int role) const
     }
 }
 
+bool TVShowEpisodeModel::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case episodeId:
+        this->m_episodeId = value.toInt();
+        return true;
+    case aired:
+        this->setAired(value.toString());
+        return true;
+    case summary:
+        return false;
+    case tvShowId:
+        this->setTVShowId(value.toInt());
+        return true;
+    case season:
+        this->setSeason(value.toInt());
+        return true;
+    case episodeNum:
+        this->setEpisodeNum(value.toInt());
+        return true;
+    default:
+        return PlayableItemModel::setData(role, value);
+    }
+}
+
+Models::ListItem *TVShowEpisodeModel::getNewItemInstance(QObject *parent) const
+{
+    return new TVShowEpisodeModel(parent);
+}
+
 QHash<int, QByteArray> TVShowEpisodeModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames = PlayableItemModel::roleNames();
-    roleNames[episodeId] = "episodeId";
-    roleNames[aired] = "aired";
+    roleNames[episodeId] = "episodeid";
+    roleNames[aired] = "firstaired";
     roleNames[summary] = "summary";
-    roleNames[tvShowId] = "tvShowId";
+    roleNames[tvShowId] = "tvshowid";
     roleNames[season] = "season";
-    roleNames[episodeNum] = "episodeNum";
+    roleNames[episodeNum] = "episode";
     return roleNames;
 }
 

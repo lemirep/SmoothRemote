@@ -119,6 +119,11 @@ Models::ListModel *AlbumModel::submodel() const
     return this->songModel;
 }
 
+Models::ListItem *AlbumModel::getNewItemInstance(QObject *parent) const
+{
+    return new AlbumModel(parent);
+}
+
 int AlbumModel::getAlbumYear() const
 {
     return this->m_albumYear;

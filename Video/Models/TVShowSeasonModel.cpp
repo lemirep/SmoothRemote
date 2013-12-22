@@ -27,16 +27,16 @@
 
 #include "TVShowSeasonModel.h"
 
-TVShowSeasonModel::TVShowSeasonModel(QObject *parent, int seasonId) : Models::SubListedListItem(parent)
+TVShowSeasonModel::TVShowSeasonModel(QObject *parent, int seasonId) : Models::SubListedListItem(parent),
+    m_season(seasonId),
+    m_episodeModel(new Models::ListModel(new TVShowEpisodeModel()))
 {
-    this->m_season = seasonId;
-    this->episodeModel = new Models::ListModel(new TVShowEpisodeModel());
 }
 
 TVShowSeasonModel::~TVShowSeasonModel()
 {
-    delete this->episodeModel;
-    this->episodeModel = NULL;
+    delete this->m_episodeModel;
+    this->m_episodeModel = NULL;
 }
 
 int TVShowSeasonModel::id() const
@@ -58,25 +58,61 @@ QVariant TVShowSeasonModel::data(int role) const
         return this->getEpisode();
     case thumbnail:
         return this->getThumbnailUrl();
+    case episodeModel:
+        return QVariant::fromValue(this->submodel());
     default:
         return QVariant();
+    }
+}
+
+bool TVShowSeasonModel::setData(int role, const QVariant &value)
+{
+    switch(role)
+    {
+    case season:
+        this->m_season = value.toInt();
+        return true;
+    case watchedEpisodes:
+        this->setWatchedEpisodes(value.toInt());
+        return true;
+    case tvShowId:
+        this->setTVShowId(value.toInt());
+        return true;
+    case episode:
+        this->setEpisode(value.toInt());
+        return true;
+    case thumbnail:
+        this->setThumbnail(value.toString());
+        return true;
+    case episodeModel:
+        return false;
+    default:
+        return false;
     }
 }
 
 QHash<int, QByteArray> TVShowSeasonModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames;
+
     roleNames[season] = "season";
-    roleNames[watchedEpisodes] = "watchedEpisodes";
-    roleNames[tvShowId] = "tvShowId";
+    roleNames[watchedEpisodes] = "watchedepisodes";
+    roleNames[tvShowId] = "tvshowid";
     roleNames[episode] = "episode";
     roleNames[thumbnail] = "thumbnail";
+    roleNames[episodeModel] = "episodeModel";
+
     return roleNames;
 }
 
 Models::ListModel *TVShowSeasonModel::submodel() const
 {
-    return this->episodeModel;
+    return this->m_episodeModel;
+}
+
+Models::ListItem *TVShowSeasonModel::getNewItemInstance(QObject *parent) const
+{
+    return new TVShowSeasonModel(parent);
 }
 
 QString TVShowSeasonModel::getThumbnail() const

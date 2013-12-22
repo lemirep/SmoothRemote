@@ -16,11 +16,14 @@ public:
         year,
         rating,
         playcount,
+        plot,
         episode,
         season, // UNUSED
         watchedepisodes, //UNUSED
         file,
-        thumbnail
+        thumbnail,
+        seasonsModel,
+        fanart
     };
 
     explicit TVShowModel(QObject *parent = 0, int tvShowId = -1);
@@ -31,6 +34,7 @@ public:
     bool        setData(int role, const QVariant &value);
     QHash<int, QByteArray> roleNames() const;
     Models::ListModel *submodel() const;
+    Models::ListItem  *getNewItemInstance(QObject *parent) const;
 
     int getTVShowId() const;
     int getYear() const;
@@ -42,7 +46,10 @@ public:
     QString getFile() const;
     QString getTitle() const;
     QString getThumbnail() const;
+    QString getFanart() const;
+    QString getPlot() const;
     QUrl    getThumbnailUrl() const;
+    QUrl    getFanartUrl() const;
 
     void setTvShowId(int tvShowId);
     void setYear(int year);
@@ -53,7 +60,9 @@ public:
     void setWatchedEpisodes(int watchedEpisodes);
     void setFile(const QString &file);
     void setTitle(const QString &title);
+    void setPlot(const QString &plot);
     void setThumbnail(const QString &thumbnail);
+    void setFanart(const QString &fanart);
 
 private:
     Models::SubListedListModel*   seasonModels;
@@ -64,10 +73,12 @@ private:
     int                             m_episode;
     int                             m_playcount;
     int                             m_watchedEpisodes;
+    QString                    m_plot;
     QString                    m_file;
     QString                    m_title;
     QString                    m_thumbnail;
-    QUrl                       m_thumbnailUrl;
+    QString                    m_fanArt;
+
 
 };
 

@@ -37,7 +37,7 @@ CoreApplication::CoreApplication(QObject *parent) :
     //    this->databaseResultDispatcher[this->videoLibrary->getMajorDBIDRequest()] = this->videoLibrary;
     //    this->databaseResultDispatcher[this->audioLibrary->getMajorDBIDRequest()] = this->audioLibrary;
     this->readSettings();
-    this->videoLibrary->reloadDataModels(true);
+//    this->videoLibrary->reloadDataModels(true);
 }
 
 void CoreApplication::readSettings()
@@ -117,9 +117,6 @@ void CoreApplication::receiveResultFromSQLQuery(QList<QSqlRecord> result,
                                                 int id,
                                                 QPointer<QObject> data)
 {
-    //    if (id < 10)
-    //        (this->*this->databaseCallBacks[id])(reply, data);
-    //    else
     this->databaseResultDispatcher[id / 10]->receiveResultFromSQLQuery(result, id % 10, data);
 }
 
@@ -128,6 +125,7 @@ void CoreApplication::setXbmcServerPort(int port)
     if (port != this->xbmcServerPort)
     {
         this->xbmcServerPort = port;
+        this->xbmcFullServerUrl.setPort(this->xbmcServerPort);
         emit xbmcServerPortChanged();
     }
 }
@@ -139,6 +137,9 @@ void CoreApplication::setXbmcServerUrl(const QUrl &url)
         this->xbmcServerUrl = url;
         if (this->xbmcServerUrl.scheme().isEmpty())
             this->xbmcServerUrl.setScheme("http://");
+        this->xbmcFullServerUrl.setScheme(this->xbmcServerUrl.scheme());
+        this->xbmcFullServerUrl.setHost(this->xbmcServerUrl.host());
+        PlayableItemModel::xbmcHostUrl = this->xbmcFullServerUrl;
         emit xbmcServerUrlChanged();
     }
 }
@@ -148,6 +149,8 @@ void CoreApplication::setXbmcServerUserName(const QString &username)
     if (username != this->xbmcServerUserName)
     {
         this->xbmcServerUserName = username;
+        this->xbmcFullServerUrl.setUserName(this->xbmcServerUserName);
+        PlayableItemModel::xbmcHostUrl = this->xbmcFullServerUrl;
         emit xbmcServerUserNameChanged();
     }
 }
@@ -157,6 +160,8 @@ void CoreApplication::setXbmcServerPassword(const QString &password)
     if (password != this->xbmcServerPassword)
     {
         this->xbmcServerPassword = password;
+        this->xbmcFullServerUrl.setPassword(this->xbmcServerPassword);
+        PlayableItemModel::xbmcHostUrl = this->xbmcFullServerUrl;
         emit xbmcServerPasswordChanged();
     }
 }
@@ -173,14 +178,8 @@ QUrl CoreApplication::getXbmcServerUrl() const
 
 QUrl CoreApplication::getXbmcServerRequestUrl() const
 {
-    QUrl url;
-    QUrl hostUrl(this->xbmcServerUrl);
-    url.setScheme(hostUrl.scheme());
-    url.setHost(hostUrl.host());
-    url.setPort(this->xbmcServerPort);
-    url.setUserName(this->xbmcServerUserName);
-    url.setPassword(this->xbmcServerPassword);
-    url.setPath(hostUrl.path() + "/jsonrpc");
+    QUrl url(this->xbmcFullServerUrl);
+    url.setPath(xbmcFullServerUrl.path() + "/jsonrpc");
     return url;
 }
 
@@ -192,4 +191,24 @@ QString CoreApplication::getXbmcServerUserName() const
 QString CoreApplication::getXbmcServerPassword() const
 {
     return this->xbmcServerPassword;
+}
+
+QObject *CoreApplication::getTvShowModel() const
+{
+    return this->videoLibrary->getTVShowsLibraryModel();
+}
+
+void CoreApplication::refreshSeasonsForShow(int showId) const
+{
+    this->videoLibrary->refreshSeasonsForShow(showId);
+}
+
+QObject *CoreApplication::getMovieModel() const
+{
+    return this->videoLibrary->getMoviesLibraryModel();
+}
+
+QObject *CoreApplication::getAudioArtistsModel() const
+{
+    return this->audioLibrary->getArtistsLibraryModel();
 }

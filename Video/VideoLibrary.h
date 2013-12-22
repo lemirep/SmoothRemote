@@ -54,8 +54,9 @@ public:
     void                retrieveTVShowSeasonsFromDB(TVShowModel *show);
     void                retrieveTVShowEpisodesFromDB(TVShowSeasonModel *season);
 
-    Models::ListModel   *getMoviesLibraryModel() const;
-    Models::ListModel   *getTVShowsLibraryModel() const;
+    Models::ListModel   *getMoviesLibraryModel();
+    Models::ListModel   *getTVShowsLibraryModel();
+    void                refreshSeasonsForShow(int showId);
 
 private:
 

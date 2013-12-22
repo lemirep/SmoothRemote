@@ -40,7 +40,6 @@ public:
     {
         movieId = PlayableItemModel::thumbnail + 1,
         genre,
-        mood, //UNUSED
         studio,
         plot,
         year
@@ -49,16 +48,16 @@ public:
     explicit MovieModel(QObject *parent = 0, int movieId = -1);
     int id() const;
     QVariant data(int role) const;
+    bool    setData(int role, const QVariant &value);
+    Models::ListItem *getNewItemInstance(QObject *parent) const;
     QHash<int, QByteArray> roleNames() const;
 
     QString getGenre() const;
-    QString getMood() const;
     QString getStudio() const;
     QString getPlot() const;
     int getYear() const;
 
     void setGenre(const QString &genre);
-    void setMood(const QString &mood);
     void setStudio(const QString &studio);
     void setPlot(const QString &plot);
     void setYear(int year);
@@ -71,6 +70,8 @@ private:
     QString m_plot;
     int m_year;
     int m_movieId;
+
+
 };
 
 #endif // MOVIEMODEL_H

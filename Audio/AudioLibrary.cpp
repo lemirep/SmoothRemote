@@ -295,8 +295,10 @@ void AudioLibrary::retrieveAudioSongFromDB(AlbumModel *album)
     emit performSQLQuery(selectSongQuery, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_AUDIO, RETRIEVE_SONGS), QPointer<QObject>(album));
 }
 
-Models::ListModel *AudioLibrary::getArtistsLibraryModel() const
+Models::ListModel *AudioLibrary::getArtistsLibraryModel()
 {
+    this->artistsLibraryModel->clear();
+    this->retrieveAudioArtists(this->artistsLibraryModel);
     return this->artistsLibraryModel;
 }
 
@@ -414,6 +416,7 @@ void AudioLibrary::retrieveAudioArtistsCallBack(QNetworkReply *reply,  QPointer<
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
+//            qDebug() << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  artistsArray;
             if (!resultObj.isEmpty())
@@ -421,11 +424,13 @@ void AudioLibrary::retrieveAudioArtistsCallBack(QNetworkReply *reply,  QPointer<
                 artistsArray = resultObj.value("artists").toArray();
                 foreach (QJsonValue artistObj, artistsArray)
                 {
-                    ArtistModel* artist = this->parseJsonArtist(artistObj.toObject());
-                    if (artist != NULL)
+                    ArtistModel* artist = new ArtistModel();
+                    Models::JSONListItemBinder::fromQJsonValue(artistObj, artist);
+                    if (artist->id() != -1)
                     {
+
                         reinterpret_cast<Models::ListModel*>(data.data())->appendRow(artist);
-                        this->retrieveAlbumsForArtist(artist->id(), artist->submodel());
+//                        this->retrieveAlbumsForArtist(artist->id(), artist->submodel());
                     }
                 }
             }

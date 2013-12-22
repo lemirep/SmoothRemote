@@ -55,7 +55,9 @@ public:
     int     id() const;
     QHash<int, QByteArray>    roleNames() const;
     QVariant        data(int role) const;
+    bool            setData(int role, const QVariant &value);
     Models::ListModel*  submodel() const;
+    Models::ListItem *  getNewItemInstance(QObject *parent) const;
 
     QString getArtistName() const;
     void setArtistName(const QString &artistName);
@@ -83,6 +85,10 @@ private:
     QString m_mood;
 
     Models::SubListedListModel   *albumsModel;
+
+
+
+
 };
 
 #endif // ARTISTMODEL_H

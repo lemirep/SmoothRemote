@@ -59,6 +59,7 @@ public:
     QVariant      data(int role) const;
     QHash<int, QByteArray>  roleNames() const;
     Models::ListModel*  submodel() const;
+    Models::ListItem *  getNewItemInstance(QObject *parent) const;
 
     QString getDescription() const;
     QString getThumbnail() const;
@@ -92,6 +93,7 @@ private :
     QString m_description;
 
     Models::ListModel *songModel;
+
 };
 
 #endif // ALBUMMODEL_H

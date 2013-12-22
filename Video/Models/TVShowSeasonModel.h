@@ -42,7 +42,8 @@ public:
         watchedEpisodes, //UNUSED
         tvShowId,
         episode,
-        thumbnail
+        thumbnail,
+        episodeModel
     };
 
     explicit TVShowSeasonModel(QObject *parent = 0, int seasonId = -1);
@@ -50,8 +51,10 @@ public:
 
     int     id() const;
     QVariant data(int role) const;
+    bool setData(int role, const QVariant &value);
     QHash<int, QByteArray> roleNames() const;
     Models::ListModel *submodel() const;
+    Models::ListItem *getNewItemInstance(QObject *parent) const;
 
     int getWatchedEpisodes() const;
     int getTVShowId() const;
@@ -73,7 +76,9 @@ private:
     int     m_episode;
     QString m_thumbnail;
     QUrl    m_thumbnailUrl;
-    Models::ListModel* episodeModel;
+    Models::ListModel* m_episodeModel;
+
+
 };
 
 #endif // TVSHOWSEASONMODEL_H

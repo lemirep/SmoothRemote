@@ -13,6 +13,11 @@
 
 #define DATABASE_NAME "smooth_remote.sql"
 
+class AudioLibrary;
+class VideoLibrary;
+class RemoteManager;
+class PlayerManager;
+
 class CoreApplication : public QObject,
         public WebServiceUserInterface,
         public DatabaseServiceUserInterface
@@ -24,6 +29,9 @@ class CoreApplication : public QObject,
     Q_PROPERTY(QUrl xbmcServerUrl WRITE setXbmcServerUrl READ getXbmcServerUrl NOTIFY xbmcServerUrlChanged)
     Q_PROPERTY(QString xbmcServerUserName WRITE setXbmcServerUserName READ getXbmcServerUserName NOTIFY xbmcServerUserNameChanged)
     Q_PROPERTY(QString xbmcServerPassword WRITE setXbmcServerPassword READ getXbmcServerPassword NOTIFY xbmcServerPasswordChanged)
+    Q_PROPERTY(QObject* tvShowModel READ getTvShowModel CONSTANT)
+    Q_PROPERTY(QObject* movieModel READ getMovieModel CONSTANT)
+    Q_PROPERTY(QObject* audioArtistsModel READ getAudioArtistsModel CONSTANT)
 public:
     ~CoreApplication();
     static CoreApplication* getInstance();
@@ -44,6 +52,8 @@ private:
     QUrl        xbmcServerUrl;
     QString     xbmcServerUserName;
     QString     xbmcServerPassword;
+    QUrl        xbmcFullServerUrl;
+
 
     QHash<int, IDBDispatcher *>         databaseResultDispatcher;
     QHash<int, IWebRequestDispatcher*>  networkRequestResultDispatch;
@@ -65,6 +75,15 @@ public:
     QUrl                        getXbmcServerRequestUrl() const;
     QString                     getXbmcServerUserName() const;
     QString                     getXbmcServerPassword()   const;
+
+    // SHOWS
+    QObject*                    getTvShowModel() const;
+    Q_INVOKABLE void            refreshSeasonsForShow(int showId) const;
+    // MOVIES
+    QObject*                    getMovieModel() const;
+    // MUSIC
+    QObject*                    getAudioArtistsModel() const;
+    QObject*                    getAlbumsForArtist(int artistId) const;
 
     // WebServiceUserInterface interface
     void receiveResultFromHttpRequest(QNetworkReply *reply, int requestId, QPointer<QObject> data);

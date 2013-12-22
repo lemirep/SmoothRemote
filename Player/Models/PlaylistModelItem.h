@@ -67,5 +67,7 @@ public:
     int id() const;
     QVariant data(int role) const;
     QHash<int, QByteArray> roleNames() const;
+    Models::ListItem *getNewItemInstance(QObject *parent) const;
     QString       getPlaylistTypeString() const;
+
 };

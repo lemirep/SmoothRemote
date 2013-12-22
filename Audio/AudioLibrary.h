@@ -40,6 +40,7 @@
 #include "AlbumModel.h"
 #include "ArtistModel.h"
 #include "SongModel.h"
+#include <JSONListItemBinder.h>
 
 #define MAJOR_ID_REQUEST_AUDIO 1
 #define RETRIEVE_ALBUMS 0
@@ -77,7 +78,7 @@ public:
     void                      retrieveAudioAlbumsFromDB(ArtistModel *artist);
     void                      retrieveAudioSongFromDB(AlbumModel *album);
 
-    Models::ListModel *       getArtistsLibraryModel() const;
+    Models::ListModel *       getArtistsLibraryModel();
     Models::ListModel *       getAlbumsLibraryModel() const;
     Models::ListModel *       getSongsLibraryModel() const;
 

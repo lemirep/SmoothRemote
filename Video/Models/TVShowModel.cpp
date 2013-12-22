@@ -71,6 +71,12 @@ QVariant TVShowModel::data(int role) const
         return this->getFile();
     case thumbnail:
         return this->getThumbnailUrl();
+    case fanart:
+        return this->getFanartUrl();
+    case seasonsModel:
+        return QVariant::fromValue(this->submodel());
+    case plot:
+        return this->getPlot();
     default:
         return QVariant();
     }
@@ -110,6 +116,12 @@ bool TVShowModel::setData(int role, const QVariant &value)
     case thumbnail:
         this->setThumbnail(value.toString());
         return true;
+    case fanart:
+        this->setFanart(value.toString());
+        return true;
+    case plot:
+        this->setPlot(value.toString());
+        return true;
     default :
         return false;
     }
@@ -129,6 +141,9 @@ QHash<int, QByteArray> TVShowModel::roleNames() const
     roleNames[watchedepisodes] = "watchedepisodes";
     roleNames[file] = "file";
     roleNames[thumbnail] = "thumbnail";
+    roleNames[seasonsModel] = "seasonsModel";
+    roleNames[plot] = "plot";
+    roleNames[fanart] = "fanart";
 
     return roleNames;
 }
@@ -138,20 +153,44 @@ Models::ListModel *TVShowModel::submodel() const
     return this->seasonModels;
 }
 
+Models::ListItem *TVShowModel::getNewItemInstance(QObject *parent) const
+{
+    return new TVShowModel(parent);
+}
+
 QString TVShowModel::getThumbnail() const
 {
     return this->m_thumbnail;
 }
 
+QString TVShowModel::getFanart() const
+{
+    return this->m_fanArt;
+}
+
+QString TVShowModel::getPlot() const
+{
+    return this->m_plot;
+}
+
 QUrl TVShowModel::getThumbnailUrl() const
 {
-    return this->m_thumbnailUrl;
+    return PlayableItemModel::formatImageUrl(this->m_thumbnail);
+}
+
+QUrl TVShowModel::getFanartUrl() const
+{
+    return PlayableItemModel::formatImageUrl(this->m_fanArt);
 }
 
 void TVShowModel::setThumbnail(const QString &thumbnail)
 {
     this->m_thumbnail = thumbnail;
-    this->m_thumbnailUrl = PlayableItemModel::formatImageUrl(this->m_thumbnail);
+}
+
+void TVShowModel::setFanart(const QString &fanart)
+{
+    this->m_fanArt = fanart;
 }
 
 QString TVShowModel::getTitle() const
@@ -162,6 +201,11 @@ QString TVShowModel::getTitle() const
 void TVShowModel::setTitle(const QString &title)
 {
     this->m_title = title;
+}
+
+void TVShowModel::setPlot(const QString &plot)
+{
+    this->m_plot = plot;
 }
 
 QString TVShowModel::getFile() const

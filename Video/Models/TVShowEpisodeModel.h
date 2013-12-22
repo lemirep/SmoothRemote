@@ -50,6 +50,8 @@ public:
 
     int id() const;
     QVariant data(int role) const;
+    bool     setData(int role, const QVariant &value);
+    Models::ListItem *getNewItemInstance(QObject *parent) const;
     QHash<int, QByteArray> roleNames() const;
 
     QString getAired() const;
@@ -72,6 +74,8 @@ private:
     int m_season;
     int m_episodeId;
     int m_episodeNum;
+
+
 };
 
 #endif // TVSHOWEPISODEMODEL_H

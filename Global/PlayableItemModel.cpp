@@ -35,7 +35,7 @@ QString PlayableItemModel::formatImageUrl(const QString &imageUrl)
         return "empty_cd.png";
     QUrl url(PlayableItemModel::xbmcHostUrl);
     QByteArray encodeUrl = imageUrl.toLatin1().toPercentEncoding();
-    url.setPath(xbmcHostUrl.path() + "/image/");
+    url.setPath(PlayableItemModel::xbmcHostUrl.path() + "/image/");
     return url.toString().append(encodeUrl);
 }
 
@@ -80,6 +80,30 @@ QVariant PlayableItemModel::data(int role) const
         return this->getRuntime();
     default:
         return QVariant();
+    }
+}
+
+bool PlayableItemModel::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case title:
+        this->setTitle(value.toString());
+        return true;
+    case rating:
+        this->setRating(value.toInt());
+        return true;
+    case file:
+        this->setFile(value.toString());
+        return true;
+    case thumbnail:
+        this->setThumbnail(value.toString());
+        return true;
+    case runtime:
+        this->setRuntime(value.toInt());
+        return true;
+    default :
+        return false;
     }
 }
 
@@ -152,6 +176,11 @@ void PlayableItemModel::setRating(int rating)
 void PlayableItemModel::setRuntime(int runtime)
 {
     this->m_runtime = runtime;
+}
+
+Models::ListItem *PlayableItemModel::getNewItemInstance(QObject *parent) const
+{
+    return new PlayableItemModel(parent);
 }
 
 

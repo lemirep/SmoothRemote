@@ -32,6 +32,9 @@
 #include <ListItem.h>
 #include <QUrl>
 #include <QDebug>
+//#include "CoreApplication.h"
+
+//class CoreApplication;
 
 class PlayableItemModel : public Models::ListItem
 {
@@ -55,6 +58,8 @@ public:
     virtual int id() const;
 
     virtual QVariant data(int role) const;
+    virtual bool setData(int role, const QVariant &value);
+    virtual Models::ListItem *getNewItemInstance(QObject *parent) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
     virtual QString getFile() const;
@@ -77,6 +82,9 @@ protected :
     QString m_file;
     QString m_thumbnail;
     QString m_thumbnailUrl;
+
+
+
 };
 
 #endif // PLAYABLEITEMMODEL_H

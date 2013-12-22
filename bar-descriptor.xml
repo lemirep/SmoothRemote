@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+    <id>com.lemirep.SmoothRemote</id>
+    <name>SmoothRemote</name>
+    <versionNumber>1.0.0</versionNumber>
+    <description>DESCRIPTION</description>
+    <author>Epitech</author>
+    <copyright>COPYRIGHT</copyright>
+    <initialWindow>
+        <autoOrients>true</autoOrients>
+        <systemChrome>none</systemChrome>
+        <transparent>false</transparent>
+    </initialWindow>
+    <env value="app/native/qml" var="QML2_IMPORT_PATH"/>
+    <env value="app/native/imports" var="QML_IMPORT_PATH"/>
+    <env value="app/native/plugins" var="QT_PLUGIN_PATH"/>
+    <env value="app/native/lib" var="LD_LIBRARY_PATH"/>
+    <arg>-platform</arg>
+    <arg>qnx</arg>
+    <action system="true">run_native</action>
+    <action>access_internet</action>
+    <asset entry="true" type="Qnx/Elf" path="SmoothRemote">SmoothRemote</asset>
+    <!--
+    <asset path="%QT_INSTALL_LIBS%">lib</asset>
+    <asset path="%QT_INSTALL_PLUGINS%">plugins</asset>
+    <asset path="%QT_INSTALL_QML%">imports</asset>
+    <asset path="%SRC_DIR%/qml">qml</asset>
+         %QT_INSTALL_LIBS%, %QT_INSTALL_PLUGINS, %QT_INSTALL_QML% and %SRC_DIR%
+         tags are replaced on-the-fly when deploying the app. in Qt Creator.
+    -->
+    <!--
+         By default this bar-descriptor.xml embeds Qt5 runtime
+         into the application itself. See the following document
+         for various deployments of Qt runtime to a device:
+         http://qt-project.org/wiki/Qt-on-BlackBerry-devices
+    -->
+    <authorId>gYAAgOade5-FKd7UePNBVPyZ5xg</authorId>
+</qnx>

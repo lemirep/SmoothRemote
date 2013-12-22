@@ -92,6 +92,11 @@ QHash<int, QByteArray> SongModel::roleNames() const
     return roleNames;
 }
 
+Models::ListItem *SongModel::getNewItemInstance(QObject *parent) const
+{
+    return new SongModel(parent);
+}
+
 QString SongModel::getGenre() const
 {
     return this->m_genre;

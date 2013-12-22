@@ -58,9 +58,9 @@ QHash<int, QByteArray> ArtistModel::roleNames() const
 {
     QHash<int, QByteArray>  roleNames;
 
-    roleNames[artistId] = "artistId";
-    roleNames[artistName] = "artistName";
-    roleNames[birthDate] = "birthDate";
+    roleNames[artistId] = "artistid";
+    roleNames[artistName] = "artist";
+    roleNames[birthDate] = "born";
     roleNames[thumbnail] = "thumbnail";
     roleNames[genre] = "genre";
     roleNames[mood] = "mood";
@@ -88,9 +88,41 @@ QVariant ArtistModel::data(int role) const
     }
 }
 
+bool ArtistModel::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case artistId:
+        this->m_artistId = value.toInt();
+        return true;
+    case artistName:
+        this->setArtistName(value.toString());
+        return true;
+    case birthDate:
+        this->setBirthDate(value.toString());
+        return true;
+    case thumbnail:
+        this->setThumbnail(value.toString());
+        return true;
+    case genre:
+        this->setGenre(value.toString());
+        return true;
+    case mood:
+        this->setMood(value.toString());
+        return true;
+    default :
+        return false;
+    }
+}
+
 Models::ListModel *ArtistModel::submodel() const
 {
     return this->albumsModel;
+}
+
+Models::ListItem *ArtistModel::getNewItemInstance(QObject *parent) const
+{
+    return new ArtistModel(parent);
 }
 
 QString ArtistModel::getMood() const

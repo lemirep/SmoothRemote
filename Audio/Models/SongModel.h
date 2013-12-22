@@ -52,6 +52,7 @@ public:
     int             id() const;
     QVariant  data(int role) const;
     QHash<int, QByteArray>  roleNames() const;
+    Models::ListItem *getNewItemInstance(QObject *parent) const;
 
     void setAlbumId(int albumId);
     void setArtistId(int artistId);
@@ -73,6 +74,8 @@ private:
     int             m_duration;
     int             m_track;
     QString    m_genre;
+
+
 };
 
 #endif // SONGMODEL_H

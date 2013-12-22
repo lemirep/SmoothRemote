@@ -35,7 +35,18 @@ Item
     Loader
     {
         id : screenLoader
-        anchors.fill: parent
+        anchors
+        {
+            left : parent.left
+            right : parent.right
+            bottom : parent.bottom
+            top : topBanner.bottom
+        }
+    }
+
+    TopBanner
+    {
+        id : topBanner
     }
 
     SlideMenu
@@ -87,10 +98,5 @@ Item
             console.log(index);
             topBanner.text = sectionsModel.get(index).sectionName
         }
-    }
-
-    TopBanner
-    {
-        id : topBanner
     }
 }
