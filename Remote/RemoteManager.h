@@ -35,26 +35,15 @@
 #include <IWebRequestDispatcher.h>
 #include <QDebug>
 #include "Utils.h"
-
+#include "CoreApplication.h"
 #define MAJOR_ID_REQUEST_REMOTE 3
 #define KEY_PRESSED 0
-
 
 class RemoteManager : public QObject, public IWebRequestDispatcher
 {
     Q_OBJECT
 public:
     // REMOTE CONTROL ACTIONS
-    enum NavigationKeys
-    {
-        Up = 0,
-        Down,
-        Left,
-        Right,
-        Back,
-        Select,
-        Home
-    };
 public:
     RemoteManager(QObject *parent = 0);
     ~RemoteManager();
@@ -62,7 +51,7 @@ public:
     void            receiveResultFromHttpRequest(QNetworkReply *reply, int id, QPointer<QObject> data);
     int             getMajorIDRequestHandled() const;
 
-    void            moveKey(NavigationKeys key);
+    void            moveKey(const QString &keyCode);
 
     void            rebootSystem();
     void            shutdownSystem();
@@ -72,7 +61,6 @@ public:
 
 
 private:
-    QHash<NavigationKeys, QString>   webServiceMethods;
     void            moveKeyCallBack(QNetworkReply *reply);
 signals:
     void            performJsonRPCRequest(const QJsonObject &request, int requestId, QPointer<QObject> data=QPointer<QObject>());

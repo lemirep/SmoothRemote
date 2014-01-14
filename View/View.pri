@@ -1,4 +1,4 @@
-QT += quick
+QT += quick multimedia qml
 
 HEADERS += $$PWD/ViewManagement.h
 

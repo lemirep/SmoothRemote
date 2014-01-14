@@ -50,7 +50,8 @@ public:
     ~SongModel();
 
     int             id() const;
-    QVariant  data(int role) const;
+    QVariant        data(int role) const;
+    bool            setData(int role, const QVariant &value);
     QHash<int, QByteArray>  roleNames() const;
     Models::ListItem *getNewItemInstance(QObject *parent) const;
 

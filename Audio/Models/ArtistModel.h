@@ -42,11 +42,13 @@ public:
     enum    ArtistModelItemRoles
     {
         artistId = Qt::UserRole + 1,
-        artistName,
-        birthDate,
+        artist,
+        born,
         genre,
         thumbnail,
-        mood
+        mood,
+        fanart,
+        albumsModel
     };
 
     ArtistModel(QObject *parent = 0, int artistId = -1);
@@ -69,8 +71,12 @@ public:
     void setGenre(const QString &genre);
 
     QString getThumbnail() const;
-    QUrl    getThumbnailUrl() const;
+    QString    getThumbnailUrl() const;
     void setThumbnail(const QString &thumbnail);
+
+    QString getFanart() const;
+    QString getFanartUrl() const;
+    void    setFanart(const QString &fanart);
 
     QString getMood() const;
     void setMood(const QString &mood);
@@ -81,10 +87,10 @@ private:
     QString m_birthDate;
     QString m_genre;
     QString m_thumbnail;
-    QUrl    m_thumbnailUrl;
+    QString m_fanart;
     QString m_mood;
 
-    Models::SubListedListModel   *albumsModel;
+    Models::SubListedListModel   *m_albumsModel;
 
 
 

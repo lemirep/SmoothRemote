@@ -175,7 +175,7 @@ QString TVShowModel::getPlot() const
 
 QUrl TVShowModel::getThumbnailUrl() const
 {
-    return PlayableItemModel::formatImageUrl(this->m_thumbnail);
+    return PlayableItemModel::formatImageUrl(this->m_thumbnail, "Resources/empty_cd.png");
 }
 
 QUrl TVShowModel::getFanartUrl() const

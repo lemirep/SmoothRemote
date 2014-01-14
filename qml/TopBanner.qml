@@ -4,8 +4,9 @@ Rectangle
 {
     property alias text : titleText.text
     width : parent.width
-    height : 55
+    height : (mainScreen.mediaPlaying) ? 0 : mainScreen.height * 0.05 * mainScreen.dpiMultiplier
     color : "#e5e5e5"
+    Behavior on height {NumberAnimation {duration : 750}}
     Rectangle
     {
         anchors

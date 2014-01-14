@@ -27,10 +27,11 @@
 
 #include "ArtistModel.h"
 
-ArtistModel::ArtistModel(QObject *parent, int artistId) : Models::SubListedListItem(parent)
+ArtistModel::ArtistModel(QObject *parent, int artistId) :
+    Models::SubListedListItem(parent),
+    m_artistId(artistId),
+    m_albumsModel(new Models::SubListedListModel(new AlbumModel()))
 {
-    this->m_artistId = artistId;
-    this->albumsModel = new Models::SubListedListModel(new AlbumModel());
 }
 
 QString ArtistModel::getArtistName() const
@@ -45,8 +46,8 @@ void ArtistModel::setArtistName(const QString &artistName)
 
 ArtistModel::~ArtistModel()
 {
-    delete this->albumsModel;
-    this->albumsModel = NULL;
+    delete this->m_albumsModel;
+    this->m_albumsModel = NULL;
 }
 
 int ArtistModel::id() const
@@ -59,11 +60,13 @@ QHash<int, QByteArray> ArtistModel::roleNames() const
     QHash<int, QByteArray>  roleNames;
 
     roleNames[artistId] = "artistid";
-    roleNames[artistName] = "artist";
-    roleNames[birthDate] = "born";
+    roleNames[artist] = "artist";
+    roleNames[born] = "born";
     roleNames[thumbnail] = "thumbnail";
     roleNames[genre] = "genre";
     roleNames[mood] = "mood";
+    roleNames[fanart] = "fanart";
+    roleNames[albumsModel] = "albumsModel";
     return roleNames;
 }
 
@@ -73,9 +76,9 @@ QVariant ArtistModel::data(int role) const
     {
     case artistId:
         return this->id();
-    case artistName:
+    case artist:
         return this->getArtistName();
-    case birthDate:
+    case born:
         return this->getBirthDate();
     case thumbnail:
         return this->getThumbnailUrl();
@@ -83,6 +86,10 @@ QVariant ArtistModel::data(int role) const
         return this->getGenre();
     case mood:
         return this->getMood();
+    case fanart:
+        return this->getFanartUrl();
+    case albumsModel:
+        return QVariant::fromValue(this->submodel());
     default:
         return QVariant();
     }
@@ -95,10 +102,10 @@ bool ArtistModel::setData(int role, const QVariant &value)
     case artistId:
         this->m_artistId = value.toInt();
         return true;
-    case artistName:
+    case artist:
         this->setArtistName(value.toString());
         return true;
-    case birthDate:
+    case born:
         this->setBirthDate(value.toString());
         return true;
     case thumbnail:
@@ -110,6 +117,9 @@ bool ArtistModel::setData(int role, const QVariant &value)
     case mood:
         this->setMood(value.toString());
         return true;
+    case fanart:
+        this->setFanart(value.toString());
+        return true;
     default :
         return false;
     }
@@ -117,7 +127,7 @@ bool ArtistModel::setData(int role, const QVariant &value)
 
 Models::ListModel *ArtistModel::submodel() const
 {
-    return this->albumsModel;
+    return this->m_albumsModel;
 }
 
 Models::ListItem *ArtistModel::getNewItemInstance(QObject *parent) const
@@ -140,15 +150,29 @@ QString ArtistModel::getThumbnail() const
     return this->m_thumbnail;
 }
 
-QUrl ArtistModel::getThumbnailUrl() const
+QString ArtistModel::getThumbnailUrl() const
 {
-    return this->m_thumbnailUrl;
+    return PlayableItemModel::formatImageUrl(this->m_thumbnail, "Resources/empty_cd.png");
 }
 
 void ArtistModel::setThumbnail(const QString &thumbnail)
 {
     this->m_thumbnail = thumbnail;
-    this->m_thumbnailUrl = PlayableItemModel::formatImageUrl(this->m_thumbnail);
+}
+
+QString ArtistModel::getFanart() const
+{
+    return this->m_fanart;
+}
+
+QString ArtistModel::getFanartUrl() const
+{
+    return PlayableItemModel::formatImageUrl(this->m_fanart, "Resources/empty_cd.png");
+}
+
+void ArtistModel::setFanart(const QString &fanart)
+{
+    this->m_fanart = fanart;
 }
 
 QString ArtistModel::getGenre() const

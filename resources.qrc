@@ -11,7 +11,29 @@
         <file>qml/AudioScreen.qml</file>
         <file>qml/TextInputComponent.qml</file>
         <file>qml/DynamicGridView.qml</file>
-        <file>qml/TVShowDetailScreen.qml</file>
         <file>qml/CoverImage.qml</file>
+        <file>qml/Resources/empty_cd.png</file>
+        <file>qml/VideoCoverDelegate.qml</file>
+        <file>qml/ScrollBar.qml</file>
+        <file>qml/MediaDetailScreen.qml</file>
+        <file>qml/TVShowDetail.qml</file>
+        <file>qml/MovieDetail.qml</file>
+        <file>qml/PlayTargetPopup.qml</file>
+        <file>qml/Player.qml</file>
+        <file>qml/LoadIndicator.qml</file>
+        <file>qml/Resources/player_backward.png</file>
+        <file>qml/Resources/player_fbackward.png</file>
+        <file>qml/Resources/player_fforward.png</file>
+        <file>qml/Resources/player_forward.png</file>
+        <file>qml/Resources/player_pause.png</file>
+        <file>qml/Resources/player_play.png</file>
+        <file>qml/Resources/player_stop.png</file>
+        <file>qml/Resources/small_play.png</file>
+        <file>qml/Resources/arrow.png</file>
+        <file>qml/ArtistAlbumsScreen.qml</file>
+        <file>qml/CoverFlow.qml</file>
+        <file>qml/AlbumSongsScreen.qml</file>
+        <file>qml/ActionBar.qml</file>
+        <file>qml/SlideMenuDelegate.qml</file>
     </qresource>
 </RCC>

@@ -8,7 +8,6 @@ ViewManagement::ViewManagement(QObject *parent) : QObject(parent),
     viewer(new QQuickView()),
     context(this->viewer->rootContext())
 {
-
 }
 
 ViewManagement::ViewManagement(const QUrl &source, QObject *parent) : QObject(parent),
@@ -16,7 +15,6 @@ ViewManagement::ViewManagement(const QUrl &source, QObject *parent) : QObject(pa
     viewer(new QQuickView()),
     context(this->viewer->rootContext())
 {
-
 }
 
 ViewManagement *ViewManagement::getInstance()
@@ -34,15 +32,11 @@ ViewManagement::~ViewManagement()
 
 void ViewManagement::setSource(const QUrl &source)
 {
-    qDebug() << "-1";
     if (this->source != source)
     {
-        qDebug() << "-2";
         this->source = source;
-        qDebug() << "-3";
         this->viewer->setSource(this->source);
     }
-    qDebug() << "-4";
 }
 
 

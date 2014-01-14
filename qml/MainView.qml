@@ -2,6 +2,26 @@ import QtQuick 2.0
 
 Item
 {
+    property int oldIdx : -1;
+    focus : true
+
+    onActiveFocusChanged:
+    {
+        console.log("Main Active Focus "  + activeFocus)
+    }
+
+    onFocusChanged:
+    {
+        console.log("Main Focus " + focus)
+    }
+
+    Keys.onReleased:
+    {
+        console.log("Main Key Released");
+        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
+            slideMenu.setMenuItemIndex(0);
+    }
+
     ListModel
     {
         id : sectionsModel
@@ -9,26 +29,31 @@ Item
         {
             sectionName : "Remote"
             sectionSource : "RemoteScreen.qml"
+            sectionColor : "yellow"
         }
         ListElement
         {
             sectionName : "Audio"
             sectionSource : "AudioScreen.qml"
+            sectionColor : "red"
         }
         ListElement
         {
             sectionName : "Movies"
             sectionSource : "MovieScreen.qml"
+            sectionColor : "purple"
         }
         ListElement
         {
             sectionName : "TV Shows"
             sectionSource : "TVShowScreen.qml"
+            sectionColor : "blue"
         }
         ListElement
         {
             sectionName : "Settings"
             sectionSource : "SettingsScreen.qml"
+            sectionColor : "grey"
         }
     }
 
@@ -61,42 +86,11 @@ Item
         }
 
         model : sectionsModel
-        delegate : Component{
-            Item
-            {
-                id : slideMenuSectionDelegate
-                property bool isCurrent : (ListView.view.currentIndex === index)
-                width : ListView.view.width
-                height : 70
-                Rectangle {height : isCurrent ? 4 : 1; width : parent.width; anchors.top: parent.top; color : isCurrent ? "#0066cc" : "#c8c8c8"}
-                Text
-                {
-                    text: model.sectionName
-                    color : "#505050"
-                    anchors
-                    {
-                        left : parent.left
-                        verticalCenter: parent.verticalCenter
-                        leftMargin: 25
-                    }
-                    font.pointSize: 15
-                }
-                MouseArea
-                {
-                    anchors.fill: parent
-                    onClicked:
-                    {
-                        slideMenuSectionDelegate.ListView.view.currentIndex = index;
-                        screenLoader.source = model.sectionSource;
-                        slideMenu.deployed = false;
-                    }
-                }
-            }
-        }
+        delegate : SlideMenuDelegate {}
         onCurrentIndexChanged:
         {
-            console.log(index);
-            topBanner.text = sectionsModel.get(index).sectionName
+            topBanner.text = sectionsModel.get(index).sectionName;
+            screenLoader.source = sectionsModel.get(index).sectionSource;
         }
     }
 }

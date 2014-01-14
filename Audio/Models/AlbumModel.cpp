@@ -74,13 +74,13 @@ QVariant AlbumModel::data(int role) const
 {
     switch (role)
     {
-    case albumYear :
+    case year :
         return this->getAlbumYear();
     case rating:
         return this->getRating();
-    case artistId:
+    case artistid:
         return this->getArtistId();
-    case albumTitle:
+    case title:
         return this->getAlbumTitle();
     case genre:
         return this->getGenre();
@@ -92,8 +92,51 @@ QVariant AlbumModel::data(int role) const
         return this->getDescription();
     case albumId:
         return this->id();
+    case fanart:
+        return this->getFanartUrl();
+    case songsModel:
+        return QVariant::fromValue(this->submodel());
     default :
         return QVariant();
+    }
+}
+
+bool AlbumModel::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case albumId:
+        this->m_albumId = value.toInt();
+        return true;
+    case year:
+        this->setAlbumYear(value.toInt());
+        return true;
+    case rating:
+       this->setRating(value.toInt());
+        return true;
+    case artistid:
+        this->setArtistId(value.toInt());
+        return true;
+    case title:
+        this->setAlbumTitle(value.toString());
+        return true;
+    case genre:
+       this->setGenre(value.toString());
+        return true;
+    case mood :
+        this->setMood(value.toString());
+        return true;
+    case thumbnail:
+        this->setThumbnail(value.toString());
+        return true;
+    case description:
+        this->setDescription(value.toString());
+        return true;
+    case fanart:
+        this->setFanart(value.toString());
+        return true;
+    default:
+        return false;
     }
 }
 
@@ -101,15 +144,17 @@ QHash<int, QByteArray> AlbumModel::roleNames() const
 {
     QHash<int, QByteArray>  roleNames;
 
-    roleNames[albumId] = "albumId";
-    roleNames[albumYear] = "albumYear";
+    roleNames[albumId] = "albumid";
+    roleNames[year] = "year";
     roleNames[rating] = "rating";
-    roleNames[artistId] = "artistId";
-    roleNames[albumTitle] = "albumTitle";
+    roleNames[artistid] = "artistid";
+    roleNames[title] = "title";
     roleNames[genre] = "genre";
     roleNames[mood] = "mood";
     roleNames[thumbnail] = "thumbnail";
     roleNames[description] = "description";
+    roleNames[fanart] = "fanart";
+    roleNames[songsModel] = "songsModel";
 
     return roleNames;
 }
@@ -191,13 +236,27 @@ QString AlbumModel::getThumbnail() const
 
 QUrl AlbumModel::getThumbnailUrl() const
 {
-    return this->m_thumbnailUrl;
+    return PlayableItemModel::formatImageUrl(this->m_thumbnail, "Resources/empty_cd.png");
+}
+
+QString AlbumModel::getFanart() const
+{
+    return this->m_fanart;
+}
+
+QUrl AlbumModel::getFanartUrl() const
+{
+    return PlayableItemModel::formatImageUrl(this->m_fanart, "Resources/empty_cd.png");
 }
 
 void AlbumModel::setThumbnail(const QString &thumbnail)
 {
     this->m_thumbnail = thumbnail;
-    this->m_thumbnailUrl = PlayableItemModel::formatImageUrl(this->m_thumbnail);
+}
+
+void AlbumModel::setFanart(const QString &fanart)
+{
+    this->m_fanart = fanart;
 }
 
 QString AlbumModel::getDescription() const

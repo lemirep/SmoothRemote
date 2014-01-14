@@ -31,13 +31,35 @@ OTHER_FILES += \
     qml/AudioScreen.qml \
     qml/TextInputComponent.qml \
     qml/DynamicGridView.qml \
-    qml/TVShowDetailScreen.qml \
-    qml/CoverImage.qml
-
-HEADERS += \
-    qml/MainView.h
+    qml/CoverImage.qml \
+    qml/VideoCoverDelegate.qml \
+    qml/ScrollBar.qml \
+    qml/MediaDetailScreen.qml \
+    qml/TVShowDetail.qml \
+    qml/MovieDetail.qml \
+    qml/PlayTargetPopup.qml \
+    qml/Player.qml \
+    android/AndroidManifest.xml \
+    qml/LoadIndicator.qml \
+    qml/Resources/player_fbackward.png \
+    qml/Resources/small_play.png \
+    qml/Resources/player_forward.png \
+    qml/Resources/player_play.png \
+    qml/Resources/player_stop.png \
+    qml/Resources/player_fforward.png \
+    qml/Resources/empty_cd.png \
+    qml/Resources/player_backward.png \
+    qml/Resources/arrow.png \
+    qml/Resources/player_pause.png \
+    databaseThread.o \
+    qml/ArtistAlbumsScreen.qml \
+    qml/CoverFlow.qml \
+    qml/AlbumSongsScreen.qml \
+    qml/ActionBar.qml \
+    qml/SlideMenuDelegate.qml
 
 ANDROID_TARGET_ARCH = armeabi-v7a
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 qnx {
     PACKAGE_ARGS = \
@@ -49,6 +71,7 @@ qnx {
         -e $$[QT_INSTALL_LIBS]/libQt5Quick.so.5 lib/libQt5Quick.so.5 \
         -e $$[QT_INSTALL_LIBS]/libQt5Qml.so.5 lib/libQt5Qml.so.5 \
         -e $$[QT_INSTALL_LIBS]/libQt5Sql.so.5 lib/libQt5Sql.so.5 \
+        -e $$[QT_INSTALL_LIBS]/libQt5Multimedia.so.5 lib/libQt5Multimedia.so.5 \
         -e $$[QT_INSTALL_LIBS]/libQt5V8.so.5 lib/libQt5V8.so.5 \
         -e $$[QT_INSTALL_PLUGINS]/platforms/libqqnx.so plugins/platforms/libqqnx.so \
         -e $$[QT_INSTALL_PLUGINS]/imageformats/libqjpeg.so plugins/imageformats/libqjpeg.so \
@@ -65,3 +88,4 @@ qnx {
 
     OTHER_FILES += bar-descriptor.xml
 }
+

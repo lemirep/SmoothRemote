@@ -82,11 +82,6 @@ private:
     void                retrieveTVShowEpisodesCallBack(QNetworkReply *reply,  QPointer<QObject> data);
     void                refreshVideoLibraryCallBack(QNetworkReply *reply,  QPointer<QObject> data);
 
-    TVShowModel         *parseTVShow(const QJsonObject& tvShowObj);
-    TVShowSeasonModel   *parseTVShowSeason(const QJsonObject &tvShowSeasonObj);
-    TVShowEpisodeModel  *parseTVShowEpisode(const QJsonObject &tvShowEpisodeObj);
-    MovieModel          *parseMovie(const QJsonObject &movieObj);
-
     void                      increaseAsyncRequest();
     void                      decreaseAsyncRequest();
 private slots:

@@ -37,12 +37,16 @@ CoreApplication::CoreApplication(QObject *parent) :
     //    this->databaseResultDispatcher[this->videoLibrary->getMajorDBIDRequest()] = this->videoLibrary;
     //    this->databaseResultDispatcher[this->audioLibrary->getMajorDBIDRequest()] = this->audioLibrary;
     this->readSettings();
-//    this->videoLibrary->reloadDataModels(true);
+    //    this->videoLibrary->reloadDataModels(true);
 }
 
 void CoreApplication::readSettings()
 {
+#if defined Q_OS_ANDROID
+    QSettings settings("/sdcard/smooth_remote.ini", QSettings::NativeFormat);
+#else
     QSettings settings;
+#endif
     this->setXbmcServerUrl(settings.value("server/url", "").toUrl());
     this->setXbmcServerPort(settings.value("server/port", 8080).toInt());
     this->setXbmcServerPassword(settings.value("server/password", "").toString());
@@ -51,7 +55,11 @@ void CoreApplication::readSettings()
 
 void CoreApplication::saveSettings()
 {
+#if defined Q_OS_ANDROID
+    QSettings settings("/sdcard/smooth_remote.ini", QSettings::NativeFormat);
+#else
     QSettings settings;
+#endif
     settings.setValue("server/url", this->xbmcServerUrl);
     settings.setValue("server/port", this->xbmcServerPort);
     settings.setValue("server/username", this->xbmcServerUserName);
@@ -211,4 +219,41 @@ QObject *CoreApplication::getMovieModel() const
 QObject *CoreApplication::getAudioArtistsModel() const
 {
     return this->audioLibrary->getArtistsLibraryModel();
+}
+
+void CoreApplication::refreshAlbumsForArtist(int artistId) const
+{
+    this->audioLibrary->refreshAlbumsForArtist(artistId);
+}
+
+void CoreApplication::buttonAction(int buttonAction, QVariant value)
+{
+    qDebug() << "Calling with " << buttonAction;
+    switch (buttonAction)
+    {
+    case Up:
+        this->remoteManager->moveKey("Input.Up");
+        break;
+    case Left:
+        this->remoteManager->moveKey("Input.Left");
+        break;
+    case Right:
+        this->remoteManager->moveKey("Input.Right");
+        break;
+    case Down:
+        this->remoteManager->moveKey("Input.Down");
+        break;
+    case Back:
+        this->remoteManager->moveKey("Input.Back");
+        break;
+    case Validate:
+        this->remoteManager->moveKey("Input.Select");
+        break;
+    case Home:
+        this->remoteManager->moveKey("Input.Home");
+        break;
+    case PlayFile:
+        this->playerManager->playFile(value.toString());
+        break;
+    }
 }

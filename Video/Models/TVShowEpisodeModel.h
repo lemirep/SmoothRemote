@@ -58,13 +58,11 @@ public:
     QString getSummary() const;
     int getSeason() const;
     int getTVShowId() const;
-    int getEpisodeNum() const;
 
     void setAired(const QString &aired);
     void setSummary(const QString &summary);
     void setSeason(int season);
     void setTVShowId(int tvShowId);
-    void setEpisodeNum(int episodeNum);
 
 
 private:
@@ -73,8 +71,6 @@ private:
     int m_tvShowId;
     int m_season;
     int m_episodeId;
-    int m_episodeNum;
-
 
 };
 

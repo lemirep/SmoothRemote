@@ -45,12 +45,15 @@ public:
         title = Qt::UserRole + 1,
         rating,
         file,
+        streamingFile,
         runtime,
+        fanart,
         thumbnail
     };
 
     static QUrl xbmcHostUrl;
-    static QString formatImageUrl(const QString &imageUrl);
+    static QString formatImageUrl(const QString &imageUrl, const QString &defaultPic = "");
+    static QString streamingFileUrl(const QString &fileUrl);
 
     PlayableItemModel(QObject *parent = 0);
     PlayableItemModel(const PlayableItemModel &item);
@@ -66,6 +69,8 @@ public:
     virtual QString getTitle() const;
     virtual QString getThumbnail() const;
     virtual QString getThumbnailUrl() const;
+    virtual QString getFanart() const;
+    virtual QString getFanartUrl() const;
     virtual int getRating() const;
     virtual int getRuntime() const;
 
@@ -74,6 +79,7 @@ public:
     virtual void setThumbnail(const QString &thumbnail);
     virtual void setRating(int rating);
     virtual void setRuntime(int runtime);
+    virtual void setFanart(const QString &fanart);
 
 protected :
     int m_rating;
@@ -81,9 +87,7 @@ protected :
     QString m_title;
     QString m_file;
     QString m_thumbnail;
-    QString m_thumbnailUrl;
-
-
+    QString m_fanArt;
 
 };
 

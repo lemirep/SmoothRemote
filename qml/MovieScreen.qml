@@ -6,37 +6,43 @@ Rectangle
     anchors.fill: parent
     color : "#e8e8e8"
 
-    DynamicGridView
+    GridView
     {
         id : grid_view
         anchors.fill: parent
-        horizontal : true
+        flow : GridView.TopToBottom
         model : core.movieModel
+        cellHeight : Math.floor(tvShowScreen.height * 0.5)
+        cellWidth : Math.floor(0.675 * cellHeight)
+        snapMode : GridView.SnapToRow
 
-        delegate : Component {
-            Image
+        delegate : VideoCoverDelegate {
+            width : GridView.view.cellWidth
+            height: GridView.view.cellHeight
+            fillMode: Image.PreserveAspectCrop
+            source: model.thumbnail
+            text : model.title + " (" + model.year + ")"
+            onClicked:
             {
-                fillMode: Image.PreserveAspectFit
-                source: model.thumbnail
-                cache: true
-                asynchronous: true
-                scale : (status == Image.Ready) ? 1 : 0
-                Behavior on scale {NumberAnimation { duration: 500; easing.type: Easing.InOutQuad }}
-                verticalAlignment: Image.AlignVCenter
-                horizontalAlignment: Image.AlignHCenter
-                height : tvShowScreen.height * 0.5
-                Text
-                {
-                    color : "white"
-                    text : model.title + " (" + model.year + ")"
-                    anchors
-                    {
-                        horizontalCenter: parent.horizontalCenter
-                        bottom: parent.bottom
-                        bottomMargin : 15
-                    }
-                }
+                movie_detail.holder = model;
+                movie_detail.animateCover(x - grid_view.contentX)
             }
         }
+    }
+
+    ScrollBar    {flickable: grid_view}
+
+    MediaDetailScreen
+    {
+        id : movie_detail
+        anchors.fill: parent
+        background: holder.fanart
+        cover : holder.thumbnail
+        content : "MovieDetail.qml"
+    }
+
+    Player
+    {
+        id : movie_player;
     }
 }

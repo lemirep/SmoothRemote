@@ -30,6 +30,7 @@ private:
     QQuickView *viewer;
     QQmlContext *context;
     static ViewManagement *instance;
+
 };
 
 

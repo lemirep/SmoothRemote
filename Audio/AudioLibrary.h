@@ -68,6 +68,7 @@ public:
     void                      retrieveAlbumsForArtist(int artistId, Models::ListModel *dataModel);
     void                      refreshAudioLibrary();
     void                      reloadDataModels(bool webReload = false);
+    void                      refreshAlbumsForArtist(int artistId);
 
     // DATABASRE
     void                      saveArtistsToDB();
@@ -105,11 +106,7 @@ private:
     void                     retrieveSongsCallBack(QNetworkReply *reply, QPointer<QObject> data);
     void                     refreshAudioLibraryCallBack(QNetworkReply *reply, QPointer<QObject> data);
 
-    QJsonObject              getSongsRequestBaseJSON();
-
-    AlbumModel*               parseJsonAlbum(const QJsonObject & jsonAlbum);
-    ArtistModel*              parseJsonArtist(const QJsonObject & jsonArtist);
-    SongModel*                parseJsonSong(const QJsonObject & jsonSong);
+    QJsonObject              getSongsRequestBaseJSON(Models::ListModel *dataModel);
 
     int                       m_asyncRequests;
 

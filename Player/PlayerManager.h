@@ -94,7 +94,6 @@ public:
     void                    addPlaylist();
     void                    removePlaylist();
 
-
     int                     getAudioPlaylistId();
     int                     getVideoPlaylistId();
 

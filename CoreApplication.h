@@ -3,11 +3,11 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QtQml>
 #include "AudioLibrary.h"
 #include "VideoLibrary.h"
 #include "RemoteManager.h"
 #include "PlayerManager.h"
-
 #include "databaseThread.h"
 #include "WebServiceManager.h"
 
@@ -17,6 +17,7 @@ class AudioLibrary;
 class VideoLibrary;
 class RemoteManager;
 class PlayerManager;
+
 
 class CoreApplication : public QObject,
         public WebServiceUserInterface,
@@ -32,7 +33,36 @@ class CoreApplication : public QObject,
     Q_PROPERTY(QObject* tvShowModel READ getTvShowModel CONSTANT)
     Q_PROPERTY(QObject* movieModel READ getMovieModel CONSTANT)
     Q_PROPERTY(QObject* audioArtistsModel READ getAudioArtistsModel CONSTANT)
+
 public:
+    enum ActionEnums
+    {
+        Up = 0,
+        Down = 1,
+        Left = 2,
+        Right = 3,
+        Validate = 4,
+        Back = 5,
+        Home = 6,
+        Play = 7,
+        Stop = 8,
+        Next = 9,
+        Previous = 10,
+        Seek = 11,
+        Forward = 12,
+        Backward = 13,
+        PlayFile = 14,
+        ArtistToPlaylist = 15,
+        AlbumToPlaylist = 16,
+        EpisodeToPlaylist = 17,
+        FileToPlaylist = 18,
+        PlayPlaylist = 19,
+        RemovePlaylist = 20,
+        ClearPlaylist = 21,
+        RemoveItemInPlaylist = 22
+    };
+
+
     ~CoreApplication();
     static CoreApplication* getInstance();
 
@@ -83,7 +113,8 @@ public:
     QObject*                    getMovieModel() const;
     // MUSIC
     QObject*                    getAudioArtistsModel() const;
-    QObject*                    getAlbumsForArtist(int artistId) const;
+    Q_INVOKABLE void            refreshAlbumsForArtist(int artistId) const;
+    Q_INVOKABLE void            buttonAction(int buttonAction, QVariant value = QVariant());
 
     // WebServiceUserInterface interface
     void receiveResultFromHttpRequest(QNetworkReply *reply, int requestId, QPointer<QObject> data);

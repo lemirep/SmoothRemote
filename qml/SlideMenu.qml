@@ -12,10 +12,15 @@ Item
     QtObject
     {
         id : d
-        property int  dragOffset : 20
+        property int  dragOffset : 50
     }
 
     onDeployedChanged: {checkDeployMenu(deployed)}
+
+    function setMenuItemIndex(idx)
+    {
+        slideMenuListView.currentIndex = idx;
+    }
 
     function checkDeployMenu(deploy)
     {
@@ -23,6 +28,7 @@ Item
             deployed = deploy;
         else
             d.dragOffset = (deploy) ? (slideMenuPanel.width) : (20);
+        return deployed;
     }
     Rectangle
     {
@@ -48,6 +54,7 @@ Item
             anchors.fill: parent
             anchors.topMargin: 2
             clip : true
+            enabled : deployed
             onCurrentIndexChanged:  {slideMenu.currentIndexChanged(slideMenuListView.currentIndex);}
         }
         Rectangle
@@ -74,8 +81,6 @@ Item
         anchors.fill: parent
         property int    oldOffset
         property bool   dragging
-
-        propagateComposedEvents: true
 
         onPressed :
         {
@@ -111,7 +116,7 @@ Item
                 mouse.accepted = false;
             else
             {
-                checkDeployMenu(d.dragOffset > 0.5 * slideMenuPanel.width);
+                propagateComposedEvents = (deployed === checkDeployMenu(d.dragOffset > 0.5 * slideMenuPanel.width)) && (d.dragOffset === slideMenuPanel.width);
                 mouse.accepted = true;
                 dragging = false;
             }

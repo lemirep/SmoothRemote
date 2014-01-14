@@ -17,20 +17,33 @@ Item
     {
         id : flickable
         anchors.fill: parent
-        contentHeight : (horizontal) ? parent.height : flow.childrenRect.height
-        contentWidth : (!horizontal) ? parent.width : flow.childrenRect.width
+        contentHeight : (horizontal) ? undefined : flow.childrenRect.height
+        contentWidth : (!horizontal) ? undefined : flow.childrenRect.width
 
         Flow
         {
             id : flow
             flow : (horizontal) ? Flow.TopToBottom : Flow.LeftToRight
-            width : (!horizontal) ? parent.width : width;
-            height : (horizontal) ? parent.height : height;
+            width : (!horizontal) ? parent.width : undefined;
+            height : (horizontal) ? parent.height : undefined;
 
             Repeater
             {
                 id : repeater
             }
+
+//            populate: trans
+//            add : trans
+//            move : trans
+
+//            Transition
+//            {
+//                id : trans
+////                NumberAnimation {duration : 5000; property: "x"}
+//                NumberAnimation {duration : 5000; property: "opacity"; from: 0; to : 1}
+//                NumberAnimation {duration : 7500; property: "scale"; from : 0; to : 1}
+//            }
+
         }
     }
 

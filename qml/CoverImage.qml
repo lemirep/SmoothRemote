@@ -4,7 +4,8 @@ Image
 {
     id : detail_pic
     fillMode: Image.PreserveAspectFit
-    asynchronous: true
+    asynchronous: false
+    cache : true
     signal clicked();
 
     Rectangle

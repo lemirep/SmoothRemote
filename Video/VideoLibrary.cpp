@@ -77,6 +77,7 @@ void VideoLibrary::retrieveMovies(Models::ListModel *dataModel)
     QJsonArray   properties;
 
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    fields.remove(PlayableItemModel::streamingFile);
     fields.remove(MovieModel::movieId);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
@@ -147,6 +148,7 @@ void VideoLibrary::retrieveTVShowEpisodes(int tvShowId, int season, Models::List
     paramObj.insert("season", QJsonValue(season));
 
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    fields.remove(PlayableItemModel::streamingFile);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
@@ -245,29 +247,29 @@ void VideoLibrary::saveSeasonToDB(TVShowSeasonModel *season)
 
 void VideoLibrary::saveEpisodeToDB(TVShowEpisodeModel *episode)
 {
-    if (episode != NULL)
-    {
-        QString getSeasonId = QString("(SELECT id FROM tv_serie_season WHERE"
-                                      " tv_serie_id = %1 AND season_number = %2)")
-                .arg(QString::number(episode->getTVShowId()),
-                     QString::number(episode->getSeason()));
+//    if (episode != NULL)
+//    {
+//        QString getSeasonId = QString("(SELECT id FROM tv_serie_season WHERE"
+//                                      " tv_serie_id = %1 AND season_number = %2)")
+//                .arg(QString::number(episode->getTVShowId()),
+//                     QString::number(episode->getSeason()));
 
-        QString insertEpisodeQuery = QString("INSERT OR REPLACE INTO tv_serie_episode "
-                                             "(id, tv_serie_season_id, aired,"
-                                             " episode_number, summary, title, file, rating, thumbnail, runtime) VALUES("
-                                             " %1, %2,'%3', %4, '%5', '%6', '%7', %8, '%9', %10);")
-                .arg(QString::number(episode->id()),
-                     getSeasonId,
-                     episode->getAired(),
-                     QString::number(episode->getEpisodeNum()),
-                     Utils::escapeSqlQuery(episode->getSummary()))
-                .arg( Utils::escapeSqlQuery(episode->getTitle()),
-                      Utils::escapeSqlQuery(episode->getFile()),
-                      QString::number(episode->getRating()),
-                      episode->getThumbnail(),
-                      QString::number(episode->getRuntime()));
-        emit performSQLQuery(insertEpisodeQuery, 0);
-    }
+//        QString insertEpisodeQuery = QString("INSERT OR REPLACE INTO tv_serie_episode "
+//                                             "(id, tv_serie_season_id, aired,"
+//                                             " episode_number, summary, title, file, rating, thumbnail, runtime) VALUES("
+//                                             " %1, %2,'%3', %4, '%5', '%6', '%7', %8, '%9', %10);")
+//                .arg(QString::number(episode->id()),
+//                     getSeasonId,
+//                     episode->getAired(),
+//                     QString::number(episode->getEpisodeNum()),
+//                     Utils::escapeSqlQuery(episode->getSummary()))
+//                .arg( Utils::escapeSqlQuery(episode->getTitle()),
+//                      Utils::escapeSqlQuery(episode->getFile()),
+//                      QString::number(episode->getRating()),
+//                      episode->getThumbnail(),
+//                      QString::number(episode->getRuntime()));
+//        emit performSQLQuery(insertEpisodeQuery, 0);
+//    }
 }
 
 void VideoLibrary::saveMoviesToDB()
@@ -441,26 +443,26 @@ void VideoLibrary::retrieveTVShowSeasonsFromDBCallBack(QList<QSqlRecord> result,
 
 void VideoLibrary::retrieveTVShowEpisodesFromDBCallBack(QList<QSqlRecord> result, QPointer<QObject> data)
 {
-    if (!data.isNull() && result.size() > 0)
-    {
-        result.pop_front();
-        TVShowSeasonModel *season = reinterpret_cast<TVShowSeasonModel *>(data.data());
-        foreach (QSqlRecord record, result)
-        {
-            TVShowEpisodeModel *episode = new TVShowEpisodeModel(NULL, record.value(0).toInt());
-            episode->setAired(record.value(1).toString());
-            episode->setEpisodeNum(record.value(2).toInt());
-            episode->setSummary(record.value(3).toString());
-            episode->setTitle(record.value(4).toString());
-            episode->setFile(record.value(5).toString());
-            episode->setRating(record.value(6).toInt());
-            episode->setThumbnail(record.value(7).toString());
-            episode->setRuntime(record.value(8).toInt());
-            episode->setSeason(season->id());
-            episode->setTVShowId(season->getTVShowId());
-            season->submodel()->appendRow(episode);
-        }
-    }
+//    if (!data.isNull() && result.size() > 0)
+//    {
+//        result.pop_front();
+//        TVShowSeasonModel *season = reinterpret_cast<TVShowSeasonModel *>(data.data());
+//        foreach (QSqlRecord record, result)
+//        {
+//            TVShowEpisodeModel *episode = new TVShowEpisodeModel(NULL, record.value(0).toInt());
+//            episode->setAired(record.value(1).toString());
+//            episode->setEpisodeNum(record.value(2).toInt());
+//            episode->setSummary(record.value(3).toString());
+//            episode->setTitle(record.value(4).toString());
+//            episode->setFile(record.value(5).toString());
+//            episode->setRating(record.value(6).toInt());
+//            episode->setThumbnail(record.value(7).toString());
+//            episode->setRuntime(record.value(8).toInt());
+//            episode->setSeason(season->id());
+//            episode->setTVShowId(season->getTVShowId());
+//            season->submodel()->appendRow(episode);
+//        }
+//    }
 }
 
 void VideoLibrary::retrieveMoviesCallBack(QNetworkReply *reply, QPointer<QObject> data)
@@ -506,13 +508,8 @@ void VideoLibrary::retrieveTVShowsCallBack(QNetworkReply *reply, QPointer<QObjec
                 {
                     TVShowModel *tvShow = new TVShowModel();
                     Models::JSONListItemBinder::fromQJsonValue(tvShowObj, tvShow);
-                    //                    qDebug() << tvShow->toSQLQuery("tvshows");
                     if (tvShow->id() != -1)
-                    {
-                        //                        qDebug() << "Parsing seems efficient";
-                        //                        this->retrieveTVShowSeasons(tvShow->id(), tvShow->submodel());
-                        reinterpret_cast<Models::ListModel *>(data.data())->appendRow(tvShow);
-                    }
+                       reinterpret_cast<Models::ListModel *>(data.data())->appendRow(tvShow);
                 }
             }
         }
@@ -527,7 +524,7 @@ void VideoLibrary::retrieveTVShowSeasonsCallBack(QNetworkReply *reply, QPointer<
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
-            qDebug() << "Results " << jsonResponse.toJson();
+//            qDebug() << "Results " << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  tvShowsSeasonsArray;
             if (!resultObj.isEmpty())
@@ -556,6 +553,7 @@ void VideoLibrary::retrieveTVShowEpisodesCallBack(QNetworkReply *reply, QPointer
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
+//            qDebug() << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  tvShowEpisodesArray;
             if (!resultObj.isEmpty())
@@ -566,9 +564,7 @@ void VideoLibrary::retrieveTVShowEpisodesCallBack(QNetworkReply *reply, QPointer
                     TVShowEpisodeModel *episode = new TVShowEpisodeModel();
                     Models::JSONListItemBinder::fromQJsonValue(episodeObj, episode);
                     if (episode->id() != -1)
-                    {
                         reinterpret_cast<Models::ListModel *>(data.data())->appendRow(episode);
-                    }
                 }
             }
         }
@@ -589,75 +585,6 @@ void VideoLibrary::refreshVideoLibraryCallBack(QNetworkReply *reply, QPointer<QO
                 this->reloadDataModels(true);
         }
     }
-}
-
-TVShowModel *VideoLibrary::parseTVShow(const QJsonObject &tvShowObj)
-{
-    if (!tvShowObj.isEmpty())
-    {
-        TVShowModel *show = new TVShowModel(NULL, tvShowObj.value("tvshowid").toDouble());
-        show->setFile(tvShowObj.value("file").toString());
-        show->setTitle(tvShowObj.value("title").toString());
-        show->setYear(tvShowObj.value("year").toDouble());
-        show->setThumbnail(tvShowObj.value("thumbnail").toString());
-        show->setRating(tvShowObj.value("rating").toDouble());
-        show->setEpisode(tvShowObj.value("episode").toDouble());
-        show->setPlaycount(tvShowObj.value("playcount").toDouble());
-        return show;
-    }
-    return NULL;
-}
-
-TVShowSeasonModel *VideoLibrary::parseTVShowSeason(const QJsonObject &tvShowSeasonObj)
-{
-    if (!tvShowSeasonObj.isEmpty())
-    {
-        TVShowSeasonModel *season = new TVShowSeasonModel(NULL, tvShowSeasonObj.value("season").toDouble());
-        season->setEpisode(tvShowSeasonObj.value("episode").toDouble());
-        season->setTVShowId(tvShowSeasonObj.value("tvshowid").toDouble());
-        season->setThumbnail(tvShowSeasonObj.value("thumbnail").toString());
-        return season;
-    }
-    return NULL;
-}
-
-TVShowEpisodeModel *VideoLibrary::parseTVShowEpisode(const QJsonObject &tvShowEpisodeObj)
-{
-    if (!tvShowEpisodeObj.isEmpty())
-    {
-        TVShowEpisodeModel *episode = new TVShowEpisodeModel(NULL, tvShowEpisodeObj.value("episodeid").toDouble());
-        episode->setSeason(tvShowEpisodeObj.value("season").toDouble());
-        episode->setRating(tvShowEpisodeObj.value("rating").toDouble());
-        episode->setFile(tvShowEpisodeObj.value("file").toString());
-        episode->setTitle(tvShowEpisodeObj.value("title").toString());
-        episode->setThumbnail(tvShowEpisodeObj.value("thumbnail").toString());
-        episode->setTVShowId(tvShowEpisodeObj.value("tvshowid").toDouble());
-        episode->setAired(tvShowEpisodeObj.value("firstaired").toString());
-        episode->setRuntime(tvShowEpisodeObj.value("runtime").toDouble());
-        episode->setEpisodeNum(tvShowEpisodeObj.value("episode").toDouble());
-        return episode;
-    }
-    return NULL;
-}
-
-MovieModel *VideoLibrary::parseMovie(const QJsonObject &movieObj)
-{
-    if (!movieObj.isEmpty())
-    {
-        MovieModel *movie = new MovieModel(NULL, movieObj.value("movieid").toDouble());
-        movie->setTitle(movieObj.value("title").toString());
-        movie->setGenre(movieObj.value("genre").toArray().first().toString());
-        movie->setStudio(movieObj.value("studio").toArray().first().toString());
-        movie->setThumbnail(movieObj.value("thumbnail").toString());
-        movie->setPlot(movieObj.value("plot").toString());
-        movie->setYear(movieObj.value("year").toDouble());
-        movie->setRating(movieObj.value("rating").toDouble());
-        movie->setFile(movieObj.value("file").toString());
-        movie->setRuntime(movieObj.value("runtime").toDouble());
-        // PARSE STREAM DETAILS LATERS
-        return movie;
-    }
-    return NULL;
 }
 
 void VideoLibrary::increaseAsyncRequest()

@@ -8,7 +8,7 @@ Item
     property alias echoMode : textInput.echoMode
     property alias text : textInput.text
     signal accepted()
-    height : 28
+    height : 28 * mainScreen.dpiMultiplier
 
     Rectangle
     {
@@ -32,6 +32,7 @@ Item
         color: "gray"
         font.italic: true
         visible : textInput.text.length === 0
+        font.pointSize: 11 * mainScreen.dpiMultiplier
     }
 
     TextInput
@@ -49,5 +50,6 @@ Item
         selectByMouse: true
         onAccepted: {textFocusScope.accepted(); textInput.focus = false}
         onFocusChanged: textFocusScope.accepted()
+        font.pointSize: 11 * mainScreen.dpiMultiplier
     }
 }

@@ -29,13 +29,6 @@
 
 RemoteManager::RemoteManager(QObject *parent) : QObject(parent)
 {
-    this->webServiceMethods[Up] = "Input.Up";
-    this->webServiceMethods[Left] = "Input.Left";
-    this->webServiceMethods[Right] = "Input.Right";
-    this->webServiceMethods[Down] = "Input.Down";
-    this->webServiceMethods[Back] = "Input.Back";
-    this->webServiceMethods[Select] = "Input.Select";
-    this->webServiceMethods[Home] = "Input.Home";
 }
 
 RemoteManager::~RemoteManager()
@@ -54,12 +47,12 @@ int RemoteManager::getMajorIDRequestHandled() const
     return MAJOR_ID_REQUEST_REMOTE;
 }
 
-void RemoteManager::moveKey(NavigationKeys key)
+void RemoteManager::moveKey(const QString &keyCode)
 {
      QJsonObject requestJson;
      requestJson.insert("jsonrpc", QJsonValue(QString("2.0")));
-     qDebug() << "Executing Key " << this->webServiceMethods[key];
-     requestJson.insert("method", QJsonValue(this->webServiceMethods[key]));
+     qDebug() << "Executing Key " << keyCode;
+     requestJson.insert("method", QJsonValue(keyCode));
      emit performJsonRPCRequest(requestJson, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_REMOTE, KEY_PRESSED));
 }
 

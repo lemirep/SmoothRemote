@@ -68,7 +68,7 @@ QVariant SongModel::data(int role) const
     case artistId:
         return this->getArtistId();
     case duration:
-        return this->getDuration();
+        return this->getRuntime();
     case track:
         return this->getTrack();
     case genre:
@@ -78,13 +78,40 @@ QVariant SongModel::data(int role) const
     }
 }
 
+bool SongModel::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case songId:
+        this->m_songId = value.toInt();
+        return true;
+    case albumId:
+        this->setAlbumId(value.toInt());
+        return true;
+    case artistId:
+        this->setArtistId(value.toInt());
+        return true;
+    case track:
+        this->setTrack(value.toInt());
+        return true;
+    case genre:
+        this->setGenre(value.toString());
+        return true;
+    case duration:
+        this->setRuntime(value.toInt());
+        return true;
+    default:
+        return PlayableItemModel::setData(role, value);
+    }
+}
+
 QHash<int, QByteArray> SongModel::roleNames() const
 {
     QHash<int, QByteArray>  roleNames = PlayableItemModel::roleNames();
 
-    roleNames[songId] = "songId";
-    roleNames[albumId] = "albumId";
-    roleNames[artistId] = "artistId";
+    roleNames[songId] = "songid";
+    roleNames[albumId] = "albumid";
+    roleNames[artistId] = "artistid";
     roleNames[duration] = "duration";
     roleNames[track] = "track";
     roleNames[genre] = "genre";

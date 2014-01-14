@@ -80,6 +80,7 @@ void AudioLibrary::retrieveAudioAlbums(Models::ListModel *dataModel)
     QJsonArray   properties;
     QJsonObject sortObj;
 
+
     properties.prepend(QJsonValue(QString("title")));
     properties.prepend(QJsonValue(QString("artistid")));
     properties.prepend(QJsonValue(QString("description")));
@@ -108,11 +109,14 @@ void AudioLibrary::retrieveAudioArtists(Models::ListModel *dataModel)
     QJsonObject paramObj;
     QJsonArray   properties;
     QJsonObject sortObj;
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
 
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    properties.prepend(QJsonValue(QString("born")));
-    properties.prepend(QJsonValue(QString("mood")));
-    properties.prepend(QJsonValue(QString("genre")));
+    fields.remove(ArtistModel::artistId);
+    fields.remove(ArtistModel::albumsModel);
+    fields.remove(ArtistModel::artist);
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
+
     sortObj.insert("order", QJsonValue(QString("ascending")));
     sortObj.insert("method", QJsonValue(QString("artist")));
     paramObj.insert("properties", QJsonValue(properties));
@@ -125,14 +129,14 @@ void AudioLibrary::retrieveAudioArtists(Models::ListModel *dataModel)
 
 void AudioLibrary::retrieveAllSongs(Models::ListModel *dataModel)
 {
-    QJsonObject requestJson = this->getSongsRequestBaseJSON();
+    QJsonObject requestJson = this->getSongsRequestBaseJSON(dataModel);
     this->increaseAsyncRequest();
     emit performJsonRPCRequest(requestJson, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_AUDIO, RETRIEVE_SONGS), QPointer<QObject>(dataModel));
 }
 
 void AudioLibrary::retrieveSongsForAlbum(int albumId, Models::ListModel *dataModel)
 {
-    QJsonObject requestJson = this->getSongsRequestBaseJSON();
+    QJsonObject requestJson = this->getSongsRequestBaseJSON(dataModel);
     QJsonObject params = requestJson.take("params").toObject();
     QJsonObject filter;
 
@@ -153,16 +157,14 @@ void AudioLibrary::retrieveAlbumsForArtist(int artistId, Models::ListModel *data
     QJsonArray   properties;
     QJsonObject filter;
 
-    filter.insert("artistid", QJsonValue(artistId));
-    properties.prepend(QJsonValue(QString("title")));
-    properties.prepend(QJsonValue(QString("artistid")));
-    properties.prepend(QJsonValue(QString("description")));
-    properties.prepend(QJsonValue(QString("genre")));
-    properties.prepend(QJsonValue(QString("rating")));
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    properties.prepend(QJsonValue(QString("year")));
-    properties.prepend(QJsonValue(QString("mood")));
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
 
+    fields.remove(AlbumModel::albumId);
+    fields.remove(AlbumModel::songsModel);
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
+
+    filter.insert("artistid", QJsonValue(artistId));
     paramObj.insert("filter", QJsonValue(filter));
     paramObj.insert("properties", QJsonValue(properties));
 
@@ -196,6 +198,17 @@ void AudioLibrary::reloadDataModels(bool webReload)
         this->retrieveAudioArtists(this->artistsLibraryModel);
     else
         this->retrieveAudioArtistsFromDB();
+}
+
+void AudioLibrary::refreshAlbumsForArtist(int artistId)
+{
+    Models::SubListedListItem *artistItem = NULL;
+    if ((artistItem = reinterpret_cast<Models::SubListedListItem *>
+         (this->artistsLibraryModel->find(artistId))) != NULL)
+    {
+        artistItem->submodel()->clear();
+        this->retrieveAlbumsForArtist(artistId, artistItem->submodel());
+    }
 }
 
 void AudioLibrary::saveArtistsToDB()
@@ -386,6 +399,8 @@ void AudioLibrary::retrieveAudioAlbumsCallBack(QNetworkReply *reply,  QPointer<Q
     if (reply != NULL && !data.isNull())
     {
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
+//        qDebug() << jsonResponse.toJson();
+
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
@@ -396,8 +411,9 @@ void AudioLibrary::retrieveAudioAlbumsCallBack(QNetworkReply *reply,  QPointer<Q
                 albumsArray = resultObj.value("albums").toArray();
                 foreach (QJsonValue albumObj, albumsArray)
                 {
-                    AlbumModel *album = this->parseJsonAlbum(albumObj.toObject());
-                    if (album != NULL)
+                    AlbumModel *album = new AlbumModel();
+                    Models::JSONListItemBinder::fromQJsonValue(albumObj, album);
+                    if (album->id() != -1)
                     {
                         reinterpret_cast<Models::ListModel*>(data.data())->appendRow(album);
                         this->retrieveSongsForAlbum(album->id(), album->submodel());
@@ -453,11 +469,12 @@ void AudioLibrary::retrieveSongsCallBack(QNetworkReply *reply,  QPointer<QObject
                 songsArray = resultObj.value("songs").toArray();
                 foreach (QJsonValue songObj, songsArray)
                 {
-                    SongModel*  song = this->parseJsonSong(songObj.toObject());
-                    if (song != NULL)
+                    SongModel* song = new SongModel();
+                    Models::JSONListItemBinder::fromQJsonValue(songObj, song);
+                    if (song->id() != -1)
+                    {
                         reinterpret_cast<Models::ListModel*>(data.data())->appendRow(song);
-                    else
-                        qDebug() << "Song is NULL";
+                    }
                 }
             }
             else
@@ -485,7 +502,7 @@ void AudioLibrary::refreshAudioLibraryCallBack(QNetworkReply *reply,  QPointer<Q
     }
 }
 
-QJsonObject AudioLibrary::getSongsRequestBaseJSON( )
+QJsonObject AudioLibrary::getSongsRequestBaseJSON(Models::ListModel *dataModel)
 {
     QJsonObject requestJson;
     QJsonObject paramObj;
@@ -494,75 +511,18 @@ QJsonObject AudioLibrary::getSongsRequestBaseJSON( )
     requestJson.insert("jsonrpc", QJsonValue(QString("2.0")));
     requestJson.insert("method", QJsonValue(QString("AudioLibrary.GetSongs")));
 
-    properties.prepend(QJsonValue(QString("title")));
-    properties.prepend(QJsonValue(QString("artist")));
-    properties.prepend(QJsonValue(QString("genre")));
-    properties.prepend(QJsonValue(QString("rating")));
-    properties.prepend(QJsonValue(QString("track")));
-    properties.prepend(QJsonValue(QString("duration")));
-    properties.prepend(QJsonValue(QString("thumbnail")));
-    properties.prepend(QJsonValue(QString("file")));
-    properties.prepend(QJsonValue(QString("artistid")));
-    properties.prepend(QJsonValue(QString("albumid")));
+    QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
+    fields.remove(PlayableItemModel::streamingFile);
+    fields.remove(SongModel::songId);
+    fields.remove(SongModel::runtime);
+    foreach (const QByteArray field, fields)
+        properties.prepend(QJsonValue(QString(field)));
 
     paramObj.insert("properties", QJsonValue(properties));
     requestJson.insert("params", QJsonValue(paramObj));
     requestJson.insert("id", QJsonValue(QString("songs")));
 
     return requestJson;
-}
-
-AlbumModel *AudioLibrary::parseJsonAlbum(const QJsonObject &jsonAlbum)
-{
-    if (!jsonAlbum.isEmpty())
-    {
-        AlbumModel *album = new AlbumModel(NULL, jsonAlbum.value("albumid").toDouble());
-        album->setArtistId(jsonAlbum.value("artistid").toArray().first().toDouble());
-        album->setDescription(jsonAlbum.value("description").toString());
-        album->setGenre(jsonAlbum.value("genre").toArray().first().toString());
-        album->setMood(jsonAlbum.value("mood").toArray().first().toString());
-        album->setAlbumTitle(jsonAlbum.value("title").toString());
-        album->setRating(jsonAlbum.value("rating").toDouble());
-        album->setAlbumYear((jsonAlbum.value("year").toDouble()));
-        album->setThumbnail(jsonAlbum.value("thumbnail").toString());
-        return album;
-    }
-    return NULL;
-}
-
-ArtistModel *AudioLibrary::parseJsonArtist(const QJsonObject &jsonArtist)
-{
-    if (!jsonArtist.isEmpty())
-    {
-        ArtistModel *artist = new ArtistModel(NULL, jsonArtist.value("artistid").toDouble());
-        artist->setArtistName(jsonArtist.value("artist").toString());
-        artist->setBirthDate(jsonArtist.value("born").toString());
-        artist->setGenre(jsonArtist.value("genre").toArray().first().toString());
-        artist->setMood(jsonArtist.value("mood").toArray().first().toString());
-        artist->setThumbnail(jsonArtist.value("thumbnail").toString());
-        return artist;
-    }
-    return NULL;
-}
-
-SongModel *AudioLibrary::parseJsonSong(const QJsonObject &jsonSong)
-{
-    if (!jsonSong.isEmpty())
-    {
-        SongModel *song = new SongModel(NULL, jsonSong.value("songid").toDouble());
-        song->setAlbumId(jsonSong.value("albumid").toDouble());
-        song->setArtistId(jsonSong.value("artistid").toArray().first().toDouble());
-        song->setDuration(jsonSong.value("duration").toDouble());
-        song->setRuntime(jsonSong.value("duration").toDouble());
-        song->setFile(jsonSong.value("file").toString());
-        song->setGenre(jsonSong.value("genre").toArray().first().toString());
-        song->setRating(jsonSong.value("rating").toDouble());
-        song->setThumbnail(jsonSong.value("thumbnail").toString());
-        song->setTitle(jsonSong.value("title").toString());
-        song->setTrack(jsonSong.value("track").toDouble());
-        return song;
-    }
-    return NULL;
 }
 
 void AudioLibrary::increaseAsyncRequest()
@@ -579,7 +539,7 @@ void AudioLibrary::decreaseAsyncRequest()
         emit performSQLQuery("DELETE FROM song;", 0);
         emit performSQLQuery("DELETE FROM album;", 0);
         emit performSQLQuery("DELETE FROM artist;", 0);
-        this->saveArtistsToDB();
+//        this->saveArtistsToDB();
     }
     emit asyncRequestChanged();
 }

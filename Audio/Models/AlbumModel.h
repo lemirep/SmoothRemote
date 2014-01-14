@@ -40,15 +40,17 @@ public:
 
     enum    AlbumModelItemRoles
     {
-        albumYear = Qt::UserRole + 1,
+        year = Qt::UserRole + 1,
         rating,
-        artistId,
-        albumTitle,
+        artistid,
+        title,
         genre,
         mood,
         thumbnail,
         description,
-        albumId
+        fanart,
+        albumId,
+        songsModel
     };
 
     explicit AlbumModel(QObject *parent = 0, int albumId = -1);
@@ -57,6 +59,7 @@ public:
 
     int                 id() const;
     QVariant      data(int role) const;
+    bool          setData(int role, const QVariant &value);
     QHash<int, QByteArray>  roleNames() const;
     Models::ListModel*  submodel() const;
     Models::ListItem *  getNewItemInstance(QObject *parent) const;
@@ -64,6 +67,8 @@ public:
     QString getDescription() const;
     QString getThumbnail() const;
     QUrl    getThumbnailUrl() const;
+    QString getFanart() const;
+    QUrl    getFanartUrl() const;
     QString getMood() const;
     QString getGenre() const;
     QString getAlbumTitle() const;
@@ -73,6 +78,7 @@ public:
 
     void setDescription(const QString &description);
     void setThumbnail(const QString &thumbnail);
+    void setFanart(const QString &fanart);
     void setMood(const QString &mood);
     void setGenre(const QString &genre);
     void setAlbumTitle(const QString &albumTitle);
@@ -89,7 +95,7 @@ private :
     QString m_genre;
     QString m_mood;
     QString m_thumbnail;
-    QUrl m_thumbnailUrl;
+    QString m_fanart;
     QString m_description;
 
     Models::ListModel *songModel;

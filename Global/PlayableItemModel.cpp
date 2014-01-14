@@ -29,14 +29,25 @@
 
 QUrl PlayableItemModel::xbmcHostUrl;
 
-QString PlayableItemModel::formatImageUrl(const QString &imageUrl)
+QString PlayableItemModel::formatImageUrl(const QString &imageUrl, const QString &defaultPic)
 {
     if (imageUrl.isEmpty())
-        return "empty_cd.png";
+        return defaultPic;
     QUrl url(PlayableItemModel::xbmcHostUrl);
     QByteArray encodeUrl = imageUrl.toLatin1().toPercentEncoding();
     url.setPath(PlayableItemModel::xbmcHostUrl.path() + "/image/");
     return url.toString().append(encodeUrl);
+}
+
+QString PlayableItemModel::streamingFileUrl(const QString &fileUrl)
+{
+    if (fileUrl.isEmpty())
+        return "";
+    QUrl url(PlayableItemModel::xbmcHostUrl);
+    QByteArray encodeUrl = fileUrl.toLatin1().toPercentEncoding();
+    url.setPath(PlayableItemModel::xbmcHostUrl.path() + "/vfs/");
+    return url.toString().append(encodeUrl);
+    return fileUrl;
 }
 
 PlayableItemModel::PlayableItemModel(QObject *parent) : Models::ListItem(parent)
@@ -78,6 +89,10 @@ QVariant PlayableItemModel::data(int role) const
         return this->getThumbnailUrl();
     case runtime :
         return this->getRuntime();
+    case fanart:
+        return this->getFanartUrl();
+    case streamingFile:
+        return PlayableItemModel::streamingFileUrl(this->getFile());
     default:
         return QVariant();
     }
@@ -102,6 +117,9 @@ bool PlayableItemModel::setData(int role, const QVariant &value)
     case runtime:
         this->setRuntime(value.toInt());
         return true;
+    case fanart:
+        this->setFanart(value.toString());
+        return true;
     default :
         return false;
     }
@@ -116,7 +134,8 @@ QHash<int, QByteArray> PlayableItemModel::roleNames() const
     roleNames[thumbnail] = "thumbnail";
     roleNames[rating] = "rating";
     roleNames[runtime] = "runtime";
-
+    roleNames[fanart] = "fanart";
+    roleNames[streamingFile] = "streamingFile";
     return roleNames;
 }
 
@@ -137,7 +156,17 @@ QString PlayableItemModel::getThumbnail() const
 
 QString PlayableItemModel::getThumbnailUrl() const
 {
-    return this->m_thumbnailUrl;
+    return PlayableItemModel::formatImageUrl(this->m_thumbnail, "Resources/empty_cd.png");
+}
+
+QString PlayableItemModel::getFanart() const
+{
+    return this->m_fanArt;
+}
+
+QString PlayableItemModel::getFanartUrl() const
+{
+    return PlayableItemModel::formatImageUrl(this->m_fanArt);
 }
 
 int PlayableItemModel::getRating() const
@@ -162,10 +191,7 @@ void PlayableItemModel::setFile(const QString &file)
 
 void PlayableItemModel::setThumbnail(const QString &thumbnail)
 {
-    if (thumbnail.isNull())
-        this->m_thumbnail = "";
     this->m_thumbnail =  thumbnail;
-    this->m_thumbnailUrl = PlayableItemModel::formatImageUrl(this->m_thumbnail);
 }
 
 void PlayableItemModel::setRating(int rating)
@@ -176,6 +202,11 @@ void PlayableItemModel::setRating(int rating)
 void PlayableItemModel::setRuntime(int runtime)
 {
     this->m_runtime = runtime;
+}
+
+void PlayableItemModel::setFanart(const QString &fanart)
+{
+    this->m_fanArt = fanart;
 }
 
 Models::ListItem *PlayableItemModel::getNewItemInstance(QObject *parent) const

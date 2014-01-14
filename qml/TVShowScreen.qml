@@ -6,48 +6,48 @@ Rectangle
     anchors.fill: parent
     color : "#e8e8e8"
 
-    DynamicGridView
+    GridView
     {
         id : grid_view
         anchors.fill: parent
-        horizontal : true
         model : core.tvShowModel
+        flow : GridView.TopToBottom
+        cellHeight : Math.floor(tvShowScreen.height * 0.5)
+        cellWidth : Math.floor(0.675 * cellHeight)
+        snapMode : GridView.SnapToRow
 
-        delegate : Component {
-            Image
+        delegate : VideoCoverDelegate {
+            width : GridView.view.cellWidth
+            height: GridView.view.cellHeight
+            source: model.thumbnail
+            text : model.title
+            fillMode: Image.PreserveAspectCrop
+            onClicked:
             {
-                id : delegate_pic
-                fillMode: Image.PreserveAspectFit
-                source: model.thumbnail
-                height : tvShowScreen.height * 0.5
-
-                Text
-                {
-                    color : "white"
-                    text : model.title
-                    visible: delegate_pic.status === Image.Ready
-                    anchors.centerIn: parent
-                    width : delegate_pic.width
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                MouseArea
-                {
-                    anchors.fill: parent
-                    onClicked:
-                    {
-                        detail_view.tvShow = model;
-                        detail_view.animateCover(delegate_pic.x - grid_view.contentX)
-                    }
-                }
+                tvshow_detail.holder = model;
+                tvshow_detail.animateCover(x - grid_view.contentX)
             }
         }
     }
 
-    TVShowDetailScreen
+    ScrollBar    {flickable: grid_view}
+
+    FocusScope
     {
-        id : detail_view
         anchors.fill: parent
+        MediaDetailScreen
+        {
+            id : tvshow_detail
+            anchors.fill: parent
+            background: holder.fanart
+            cover : holder.thumbnail
+            content : "TVShowDetail.qml"
+            focus : !tv_show_player.focus && shown
+        }
+
+        Player
+        {
+            id : tv_show_player;
+        }
     }
 }
