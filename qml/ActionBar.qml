@@ -9,7 +9,7 @@ Rectangle
         right : parent.right
         bottom : parent.bottom
     }
-    height : 70 * mainScreen.dpiMultiplier
+    height : (enabled) ? 70 * mainScreen.dpiMultiplier : 0
     color : "#101010"
     Rectangle
     {

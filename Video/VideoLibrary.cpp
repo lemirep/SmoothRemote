@@ -472,7 +472,7 @@ void VideoLibrary::retrieveMoviesCallBack(QNetworkReply *reply, QPointer<QObject
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
-            qDebug() << "Results " << jsonResponse.toJson();
+//            qDebug() << "Results " << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  moviesArray;
             if (!resultObj.isEmpty())

@@ -39,10 +39,11 @@ Rectangle
         background: holder.fanart
         cover : holder.thumbnail
         content : "MovieDetail.qml"
+        hasActionBar: true
     }
 
     Player
-    {
-        id : movie_player;
-    }
+//    {
+//        id : movie_player;
+//    }
 }

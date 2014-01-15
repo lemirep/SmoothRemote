@@ -2,6 +2,7 @@ import QtQuick 2.0
 
 Item
 {
+    id : mainView
     property int oldIdx : -1;
     focus : true
 

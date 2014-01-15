@@ -11,15 +11,16 @@ Item
     property variant holder;
     property bool portrait : mainScreen.portrait
     property bool shown : false;
+    property bool hasActionBar : false
+    enabled : shown
 
     function animateCover(x)
     {
         detail_pic.x = x;
         shown = true;
-        forceActiveFocus();
     }
 
-//    focus : true
+    focus : shown
 
     onActiveFocusChanged:
     {
@@ -40,8 +41,6 @@ Item
             event.accepted = true;
         }
     }
-
-//    Keys.onBack: {if (shown) shown = false; event.accepted = true;}
 
     states : [State {
             PropertyChanges {target : detail_pic; scale : 1; x : 50}
@@ -81,7 +80,7 @@ Item
     {
         id : action_bar
         opacity : detail_pic.scale
-        enabled: detail_pic.scale === 1
+        enabled: detail_pic.scale === 1 && hasActionBar
     }
 
     Item
@@ -144,7 +143,7 @@ Item
             enabled: scale === 1
             onClicked: shown = false;
             horizontalAlignment : (portrait) ? Image.AlignHCenter : Image.AlignLeft
-            width : parent.width * 0.3
+            width : parent.width * 0.2
             anchors.topMargin: 25
         }
 
@@ -161,21 +160,12 @@ Item
                 rightMargin : 50
             }
 
-            Flickable
+            Loader
             {
-                id : show_flickable
-                contentHeight: (description_loader.item !== undefined) ? description_loader.item.childrenRect.height : undefined
-                clip : true
-                boundsBehavior: Flickable.DragOverBounds
+                id : description_loader
                 anchors.fill: parent
-                Loader
-                {
-                    id : description_loader
-                    anchors.fill: parent
-                    function getHolder() {return detail_view.holder}
-                }
+                function getHolder() {return detail_view.holder}
             }
-            ScrollBar {flickable: show_flickable}
         }
     }
 }

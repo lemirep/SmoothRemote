@@ -7,6 +7,8 @@ Item
     property alias text : delegate_text.text
     property alias fillMode : delegate_pic.fillMode
     signal clicked();
+    scale : delegate_ma.pressed ? 0.9 : 1
+    Behavior on scale {NumberAnimation {duration : 250}}
 
     Image
     {
@@ -15,8 +17,13 @@ Item
         scale : status === Image.Ready ? 1 : 0
         Behavior on scale {NumberAnimation {duration : 500; easing.type: Easing.InOutQuad}}
         horizontalAlignment: Image.AlignHCenter
-        anchors.centerIn: parent
         anchors.fill: parent
+    }
+    MouseArea
+    {
+        id : delegate_ma
+        anchors.fill: parent
+        onClicked: {delegate_item.clicked()}
     }
     Text
     {
@@ -36,10 +43,5 @@ Item
             bottom: parent.bottom
             bottomMargin : 15
         }
-    }
-    MouseArea
-    {
-        anchors.fill: parent
-        onClicked: {delegate_item.clicked()}
     }
 }

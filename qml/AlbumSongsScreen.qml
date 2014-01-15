@@ -75,7 +75,7 @@ Item
                 Rectangle
                 {
                     anchors.fill: parent
-                    color : index % 2 === 0 ? "#101010" : "#080808"
+                    color : index % 2 === 0 ? "#151515" : "#080808"
                 }
                 Image
                 {

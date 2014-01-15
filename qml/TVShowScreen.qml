@@ -15,6 +15,7 @@ Rectangle
         cellHeight : Math.floor(tvShowScreen.height * 0.5)
         cellWidth : Math.floor(0.675 * cellHeight)
         snapMode : GridView.SnapToRow
+        enabled : !tvshow_detail.shown
 
         delegate : VideoCoverDelegate {
             width : GridView.view.cellWidth
@@ -35,6 +36,13 @@ Rectangle
     FocusScope
     {
         anchors.fill: parent
+        Component.onCompleted: forceActiveFocus()
+        onFocusChanged:
+        {
+            if (!focus)
+            mainView.forceActiveFocus()
+        }
+
         MediaDetailScreen
         {
             id : tvshow_detail
@@ -48,6 +56,7 @@ Rectangle
         Player
         {
             id : tv_show_player;
+            enabled : (tv_show_player.focus === true)
         }
     }
 }

@@ -10,6 +10,7 @@ VideoOutput
     opacity : playing ? 1 : 0
     anchors.fill: parent
     source: player
+    enabled : (opacity === 1)
 
     focus : playing
 
