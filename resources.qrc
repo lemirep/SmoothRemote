@@ -35,5 +35,29 @@
         <file>qml/AlbumSongsScreen.qml</file>
         <file>qml/ActionBar.qml</file>
         <file>qml/SlideMenuDelegate.qml</file>
+        <file>qml/Resources/arrow_down.png</file>
+        <file>qml/Resources/at.png</file>
+        <file>qml/Resources/back_arrow.png</file>
+        <file>qml/Resources/camera.png</file>
+        <file>qml/Resources/check.png</file>
+        <file>qml/Resources/close.png</file>
+        <file>qml/Resources/cloud.png</file>
+        <file>qml/Resources/cog.png</file>
+        <file>qml/Resources/denied.png</file>
+        <file>qml/Resources/download_arrow.png</file>
+        <file>qml/Resources/download.png</file>
+        <file>qml/Resources/equalizer.png</file>
+        <file>qml/Resources/fork.png</file>
+        <file>qml/Resources/headphones.png</file>
+        <file>qml/Resources/last.png</file>
+        <file>qml/Resources/magnifying_glass.png</file>
+        <file>qml/Resources/move2.png</file>
+        <file>qml/Resources/movie.png</file>
+        <file>qml/Resources/play.png</file>
+        <file>qml/Resources/sync.png</file>
+        <file>qml/Resources/view.png</file>
+        <file>qml/Resources/volume_mute.png</file>
+        <file>qml/Resources/volume.png</file>
+        <file>qml/Resources/info.png</file>
     </qresource>
 </RCC>

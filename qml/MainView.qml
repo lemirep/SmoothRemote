@@ -31,30 +31,35 @@ Item
             sectionName : "Remote"
             sectionSource : "RemoteScreen.qml"
             sectionColor : "yellow"
+            sectionIcon : "Resources/move2.png"
         }
         ListElement
         {
             sectionName : "Audio"
             sectionSource : "AudioScreen.qml"
             sectionColor : "red"
+            sectionIcon : "Resources/headphones.png"
         }
         ListElement
         {
             sectionName : "Movies"
             sectionSource : "MovieScreen.qml"
             sectionColor : "purple"
+            sectionIcon : "Resources/movie.png"
         }
         ListElement
         {
             sectionName : "TV Shows"
             sectionSource : "TVShowScreen.qml"
             sectionColor : "blue"
+            sectionIcon : ""
         }
         ListElement
         {
             sectionName : "Settings"
             sectionSource : "SettingsScreen.qml"
             sectionColor : "grey"
+            sectionIcon : "Resources/cog.png"
         }
     }
 
@@ -63,10 +68,10 @@ Item
         id : screenLoader
         anchors
         {
+            top : topBanner.bottom
             left : parent.left
             right : parent.right
             bottom : parent.bottom
-            top : topBanner.bottom
         }
     }
 

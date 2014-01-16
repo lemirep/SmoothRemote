@@ -48,6 +48,7 @@ OTHER_FILES += \
     qml/Resources/player_stop.png \
     qml/Resources/player_fforward.png \
     qml/Resources/empty_cd.png \
+    qml/Resources/download_arrow.png \
     qml/Resources/player_backward.png \
     qml/Resources/arrow.png \
     qml/Resources/player_pause.png \
@@ -56,7 +57,31 @@ OTHER_FILES += \
     qml/CoverFlow.qml \
     qml/AlbumSongsScreen.qml \
     qml/ActionBar.qml \
-    qml/SlideMenuDelegate.qml
+    qml/SlideMenuDelegate.qml \
+    qml/Resources/arrow_down.png \
+    qml/Resources/at.png \
+    qml/Resources/back_arrow.png \
+    qml/Resources/camera.png \
+    qml/Resources/check.png \
+    qml/Resources/close.png \
+    qml/Resources/cloud.png \
+    qml/Resources/cog.png \
+    qml/Resources/denied.png \
+    qml/Resources/download.png \
+    qml/Resources/equalizer.png \
+    qml/Resources/fork.png \
+    qml/Resources/headphones.png \
+    qml/Resources/last.png \
+    qml/Resources/magnifying_glass.png \
+    qml/Resources/move2.png \
+    qml/Resources/movie.png \
+    qml/Resources/play.png \
+    qml/Resources/sync.png \
+    qml/Resources/view.png \
+    qml/Resources/volume_mute.png \
+    qml/Resources/volume.png \
+    qml/Resources/info.png
+
 
 ANDROID_TARGET_ARCH = armeabi-v7a
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

@@ -20,6 +20,18 @@ Item
         }
         font.pointSize: 15
     }
+    Image
+    {
+        anchors
+        {
+            top : parent.top
+            bottom : parent.bottom
+            right : parent.right
+            margins : 10 * mainScreen.dpiMultiplier
+        }
+        source : model.sectionIcon
+        fillMode: Image.PreserveAspectFit
+    }
     MouseArea
     {
         anchors.fill: parent

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.1
 
 Rectangle
 {
@@ -32,18 +32,30 @@ Rectangle
 
     ScrollBar    {flickable: grid_view}
 
-    MediaDetailScreen
+    FocusScope
     {
-        id : movie_detail
         anchors.fill: parent
-        background: holder.fanart
-        cover : holder.thumbnail
-        content : "MovieDetail.qml"
-        hasActionBar: true
-    }
+        Component.onCompleted: forceActiveFocus()
+        onFocusChanged:
+        {
+            if (!focus)
+            mainView.forceActiveFocus()
+        }
 
-    Player
-//    {
-//        id : movie_player;
-//    }
+        MediaDetailScreen
+        {
+            id : movie_detail
+            anchors.fill: parent
+            background: holder.fanart
+            cover : holder.thumbnail
+            contentComponent: MovieDetail {
+            }
+            hasActionBar: true
+        }
+
+        //    Player
+        //    {
+        //        id : movie_player;
+        //    }
+    }
 }

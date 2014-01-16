@@ -2,17 +2,28 @@ import QtQuick 2.1
 
 Item
 {
-    property variant tvShow : parent.getHolder();
+    property variant tvShow : parent.getHolder()
     property bool episodeView : false;
     onTvShowChanged: {if (tvShow !== undefined) core.refreshSeasonsForShow(tvShow.tvshowid); episode_listview.model = undefined;}
     anchors.fill: parent
+
+    Component.onCompleted:
+    {
+        tvshow_detail.backFunction = function()
+        {
+            if (episodeView)
+                episodeView = false;
+            else
+                tvshow_detail.shown = false;
+        }
+    }
 
     onEpisodeViewChanged:
     {
         if (episodeView)
             forceActiveFocus();
         else
-            tvshow_detail.forceActiveFocus();
+            parent.forceActiveFocus();
     }
 
     states : [

@@ -3,6 +3,8 @@ import QtQuick 2.0
 Rectangle
 {
     property alias text : titleText.text
+    property alias menuComponent : component_loader.sourceComponent;
+
     width : parent.width
     height : (mainScreen.mediaPlaying) ? 0 : mainScreen.height * 0.05 * mainScreen.dpiMultiplier
     color : "#e5e5e5"
@@ -28,5 +30,16 @@ Rectangle
         id : titleText
         anchors.centerIn: parent
         color : "#101010"
+    }
+
+    Loader
+    {
+        id : component_loader
+        anchors
+        {
+            left : parent.left
+            top : parent.top
+            bottom : parent.bottom
+        }
     }
 }

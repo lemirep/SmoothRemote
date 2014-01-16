@@ -10,7 +10,43 @@ Item
     focus : shown && !songs_listview.focus
     onArtistChanged: core.refreshAlbumsForArtist(artist.artistid)
 
-    onShownChanged: if (shown) forceActiveFocus();
+    onShownChanged:
+    {
+        if (shown)
+        {
+            topBanner.menuComponent = back_arrow;
+            forceActiveFocus();
+        }
+        else
+            topBanner.menuComponent = undefined;
+    }
+
+    Component
+    {
+        id : back_arrow
+        Image
+        {
+            anchors
+            {
+                left : parent.left
+                top : parent.top
+                bottom : parent.bottom
+            }
+            fillMode: Image.PreserveAspectFit
+            source : "Resources/back_arrow.png"
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    if (songs_listview.shown)
+                        songs_listview.shown = false;
+                    else
+                        shown = false;
+                }
+            }
+        }
+    }
 
     Keys.onReleased:
     {
@@ -140,7 +176,7 @@ Item
                     NumberAnimation {id : flip_animation; target: flip_rotation; property: "angle"; duration:800; from : 0; to : 360; easing.type: Easing.InOutQuad }
 
                     transform: [Rotation {id : rotation; angle : rotAngle; axis {x : 0; y: 1; z : 0} origin.x : width * 0.5; origin.y : height * 0.5},
-                                Rotation {id : flip_rotation; axis {x : 0; y: 1; z : 0} origin.x : width * 0.5; origin.y : height * 0.5}]
+                        Rotation {id : flip_rotation; axis {x : 0; y: 1; z : 0} origin.x : width * 0.5; origin.y : height * 0.5}]
 
                     onIsCurrentItemChanged :
                     {

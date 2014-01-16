@@ -4,13 +4,73 @@ Item
 {
     anchors.fill: parent
 
+    Row
+    {
+        spacing : 20 * mainScreen.dpiMultiplier
+        anchors
+        {
+           // right : parent.right
+            bottom : arrow_controls.top
+            top : parent.top
+            horizontalCenter : parent.horizontalCenter
+            //left : parent.left
+        }
+
+        Image
+        {
+            source : "Resources/sync.png"
+            rotation : -90
+            height: 128
+            width : 128
+            fillMode: Image.PreserveAspectFit
+            scale : refresh_ma.pressed ? 0.9 : 1
+
+            anchors
+            {
+                verticalCenter : parent.verticalCenter
+            }
+
+            MouseArea
+            {
+                id : refresh_ma
+                anchors.fill: parent
+                onClicked:
+                {
+                    core.buttonAction(-1);
+                }
+            }
+        }
+
+        Image
+        {
+            source : "Resources/info.png"
+            scale : info_ma.pressed ? 0.9 : 1
+            height: 128
+            width : 128
+            fillMode: Image.PreserveAspectFit
+            anchors
+            {
+                verticalCenter : parent.verticalCenter
+            }
+
+            MouseArea
+            {
+                id : info_ma
+                anchors.fill: parent
+                onClicked:
+                {
+                    core.buttonAction(-1);
+                }
+            }
+        }
+    }
+
 
     Item
     {
         id : arrow_controls
-        width : 400 * mainScreen.dpiMultiplier
+        width : 400
         height: width
-
         anchors.centerIn: parent
 
         Image
@@ -118,24 +178,18 @@ Item
             }
         }
     }
-    Item
+    Image
     {
-        width : 128
-        height : width
+        source : "Resources/arrow_down.png"
+        rotation : 90
+        scale : back_button_ma.pressed ? 0.9 : 1
+
         anchors
         {
             top : arrow_controls.bottom
             right : arrow_controls.left
         }
-        scale : back_button_ma.pressed ? 0.9 : 1
 
-        Rectangle
-        {
-            color : "#2c2c2c"
-            rotation : 45
-            height: parent.height * 0.5
-            width : height
-        }
         MouseArea
         {
             id : back_button_ma

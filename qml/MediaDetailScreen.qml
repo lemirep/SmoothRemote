@@ -7,11 +7,12 @@ Item
 
     property alias background : background_pic.source
     property alias cover : detail_pic.source
-    property alias content : description_loader.source
+    property alias contentComponent : description_loader.sourceComponent
     property variant holder;
     property bool portrait : mainScreen.portrait
     property bool shown : false;
     property bool hasActionBar : false
+    property var backFunction : function() {shown = false};
     enabled : shown
 
     function animateCover(x)
@@ -21,6 +22,39 @@ Item
     }
 
     focus : shown
+
+    onShownChanged:
+    {
+        if (shown)
+            topBanner.menuComponent = back_arrow
+        else
+            topBanner.menuComponent = undefined
+    }
+
+    Component
+    {
+        id : back_arrow
+        Image
+        {
+            anchors
+            {
+                left : parent.left
+                top : parent.top
+                bottom : parent.bottom
+            }
+            fillMode: Image.PreserveAspectFit
+            source : "Resources/back_arrow.png"
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    console.log("clicked");
+                    backFunction();
+                }
+            }
+        }
+    }
 
     onActiveFocusChanged:
     {
@@ -133,7 +167,6 @@ Item
                 }
                 when : portrait
             }
-
         ]
 
         CoverImage

@@ -40,7 +40,7 @@ Rectangle
         onFocusChanged:
         {
             if (!focus)
-            mainView.forceActiveFocus()
+                mainView.forceActiveFocus()
         }
 
         MediaDetailScreen
@@ -49,7 +49,9 @@ Rectangle
             anchors.fill: parent
             background: holder.fanart
             cover : holder.thumbnail
-            content : "TVShowDetail.qml"
+            contentComponent: TVShowDetail {
+
+            }
             focus : !tv_show_player.focus && shown
         }
 
