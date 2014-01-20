@@ -33,6 +33,7 @@ class CoreApplication : public QObject,
     Q_PROPERTY(QObject* tvShowModel READ getTvShowModel CONSTANT)
     Q_PROPERTY(QObject* movieModel READ getMovieModel CONSTANT)
     Q_PROPERTY(QObject* audioArtistsModel READ getAudioArtistsModel CONSTANT)
+    Q_PROPERTY(QObject* playlistsModel READ getPlaylistsModel CONSTANT)
 
 public:
     enum ActionEnums
@@ -114,7 +115,11 @@ public:
     // MUSIC
     QObject*                    getAudioArtistsModel() const;
     Q_INVOKABLE void            refreshAlbumsForArtist(int artistId) const;
+    // REMOTE
     Q_INVOKABLE void            buttonAction(int buttonAction, QVariant value = QVariant());
+    // PLAYLISTS
+    QObject*                    getPlaylistsModel() const;
+
 
     // WebServiceUserInterface interface
     void receiveResultFromHttpRequest(QNetworkReply *reply, int requestId, QPointer<QObject> data);

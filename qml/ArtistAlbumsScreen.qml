@@ -9,6 +9,7 @@ Item
     opacity : 2 * artist_albums_item.width / width
     focus : shown && !songs_listview.focus
     onArtistChanged: core.refreshAlbumsForArtist(artist.artistid)
+    enabled: shown
 
     onShownChanged:
     {

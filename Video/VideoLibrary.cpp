@@ -74,6 +74,7 @@ void VideoLibrary::retrieveMovies(Models::ListModel *dataModel)
     requestJson.insert("method", QJsonValue(QString("VideoLibrary.GetMovies")));
 
     QJsonObject paramObj;
+    QJsonObject sortObj;
     QJsonArray   properties;
 
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
@@ -82,7 +83,9 @@ void VideoLibrary::retrieveMovies(Models::ListModel *dataModel)
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
-
+    sortObj.insert("order", QJsonValue(QString("ascending")));
+    sortObj.insert("method", QJsonValue(QString("title")));
+    paramObj.insert("sort", QJsonValue(sortObj));
     requestJson.insert("params", QJsonValue(paramObj));
     // "ID IS TRANSMITTED BACK WITH RESPONSE TO IDENTITFY THE QUERY
     requestJson.insert("id", QJsonValue(QString("movies")));

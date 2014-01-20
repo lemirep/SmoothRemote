@@ -14,13 +14,13 @@ int main(int argc, char *argv[])
     QScopedPointer<CoreApplication> coreApplication(CoreApplication::getInstance());
 
     ViewManagement *viewManager = ViewManagement::getInstance();
-    QObject::connect(viewManager, SIGNAL(destroyed()), app.data(), SLOT(quit()));
-
 
     viewManager->setSource(QUrl("qrc:/qml/main.qml"));
     viewManager->getContext()->setContextProperty("core", coreApplication.data());
+#ifdef Q_WS_ANDROID
     viewManager->showFullScreen();
-
-
+#else
+    viewManager->show();
+#endif
     return app->exec();
 }

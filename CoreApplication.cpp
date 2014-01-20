@@ -257,3 +257,9 @@ void CoreApplication::buttonAction(int buttonAction, QVariant value)
         break;
     }
 }
+
+QObject *CoreApplication::getPlaylistsModel() const
+{
+    this->playerManager->reloadPlaylists();
+    return this->playerManager->getPlaylistsModel();
+}

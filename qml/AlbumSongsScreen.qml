@@ -7,7 +7,7 @@ Item
     property bool shown : false
 
     opacity : 0
-    enabled: shown
+    enabled: opacity !== 0
     focus : shown
 
     onShownChanged:
@@ -75,7 +75,7 @@ Item
                 Rectangle
                 {
                     anchors.fill: parent
-                    color : index % 2 === 0 ? "#151515" : "#080808"
+                    color : song_del_ma.pressed ? "#a0a0a0" : index % 2 === 0 ? "#151515" : "#080808"
                 }
                 Image
                 {
@@ -107,6 +107,7 @@ Item
                 }
                 MouseArea
                 {
+                    id : song_del_ma
                     anchors.fill: parent
                     onClicked:
                     {

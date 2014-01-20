@@ -80,7 +80,9 @@ OTHER_FILES += \
     qml/Resources/view.png \
     qml/Resources/volume_mute.png \
     qml/Resources/volume.png \
-    qml/Resources/info.png
+    qml/Resources/info.png \
+    qml/PlaylistsScreen.qml \
+    qml/RemoteControls.qml
 
 
 ANDROID_TARGET_ARCH = armeabi-v7a

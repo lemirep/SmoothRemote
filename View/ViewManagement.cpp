@@ -5,16 +5,18 @@ ViewManagement* ViewManagement::instance = NULL;
 
 ViewManagement::ViewManagement(QObject *parent) : QObject(parent),
     source(QUrl()),
-    viewer(new QQuickView()),
-    context(this->viewer->rootContext())
+    appEngine(new QQmlApplicationEngine()),
+    context(this->appEngine->rootContext())
 {
+    this->window = NULL;
 }
 
 ViewManagement::ViewManagement(const QUrl &source, QObject *parent) : QObject(parent),
     source(source),
-    viewer(new QQuickView()),
-    context(this->viewer->rootContext())
+    appEngine(new QQmlApplicationEngine(source)),
+    context(this->appEngine->rootContext())
 {
+    this->window = qobject_cast<QQuickWindow *>(this->appEngine->rootObjects().at(0));
 }
 
 ViewManagement *ViewManagement::getInstance()
@@ -26,7 +28,7 @@ ViewManagement *ViewManagement::getInstance()
 
 ViewManagement::~ViewManagement()
 {
-    delete this->viewer;
+    delete this->appEngine;
 }
 
 
@@ -35,7 +37,8 @@ void ViewManagement::setSource(const QUrl &source)
     if (this->source != source)
     {
         this->source = source;
-        this->viewer->setSource(this->source);
+        this->appEngine->load(this->source);
+        this->window = qobject_cast<QQuickWindow *>(this->appEngine->rootObjects().at(0));
     }
 }
 
@@ -50,17 +53,23 @@ QQmlContext *ViewManagement::getContext() const
     return this->context;
 }
 
-void ViewManagement::show()
+QQuickWindow *ViewManagement::getWindow() const
 {
-    this->viewer->show();
+    return this->window;
 }
 
-void ViewManagement::showMaximized()
+void ViewManagement::show()
 {
-    this->viewer->showMaximized();
+    this->window->show();
 }
 
 void ViewManagement::showFullScreen()
 {
-    this->viewer->showFullScreen();
+    this->window->showFullScreen();
 }
+
+void ViewManagement::showMaximized()
+{
+    this->window->showMaximized();
+}
+

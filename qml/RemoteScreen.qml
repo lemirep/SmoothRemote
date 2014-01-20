@@ -4,197 +4,109 @@ Item
 {
     anchors.fill: parent
 
-    Row
+    ListModel
     {
-        spacing : 20 * mainScreen.dpiMultiplier
-        anchors
+        id : remote_model
+        ListElement
         {
-           // right : parent.right
-            bottom : arrow_controls.top
-            top : parent.top
-            horizontalCenter : parent.horizontalCenter
-            //left : parent.left
+            tabName : "Remote"
+            delegateComponent : "RemoteControls.qml"
         }
-
-        Image
+        ListElement
         {
-            source : "Resources/sync.png"
-            rotation : -90
-            height: 128
-            width : 128
-            fillMode: Image.PreserveAspectFit
-            scale : refresh_ma.pressed ? 0.9 : 1
-
-            anchors
-            {
-                verticalCenter : parent.verticalCenter
-            }
-
-            MouseArea
-            {
-                id : refresh_ma
-                anchors.fill: parent
-                onClicked:
-                {
-                    core.buttonAction(-1);
-                }
-            }
+            tabName : "Playlist"
+            delegateComponent : "PlaylistsScreen.qml"
         }
-
-        Image
+        ListElement
         {
-            source : "Resources/info.png"
-            scale : info_ma.pressed ? 0.9 : 1
-            height: 128
-            width : 128
-            fillMode: Image.PreserveAspectFit
-            anchors
-            {
-                verticalCenter : parent.verticalCenter
-            }
-
-            MouseArea
-            {
-                id : info_ma
-                anchors.fill: parent
-                onClicked:
-                {
-                    core.buttonAction(-1);
-                }
-            }
+            tabName : "Player"
+            delegateComponent : ""
         }
     }
 
-
-    Item
+    ListView
     {
-        id : arrow_controls
-        width : 400
-        height: width
-        anchors.centerIn: parent
-
-        Image
+        id : section_switcher_listview
+        height : 70 * mainScreen.dpiMultiplier
+        model : remote_model
+        orientation : ListView.Horizontal
+        interactive: false
+        anchors
         {
-            source : "Resources/arrow.png"
-            rotation : -90
-            scale : left_ma.pressed ? 0.9 : 1
-
-            anchors
-            {
-                left : parent.left
-                verticalCenter : parent.verticalCenter
-            }
-
-            MouseArea
-            {
-                id : left_ma
-                anchors.fill: parent
-                onClicked:
-                {
-                    core.buttonAction(2);
-                }
-            }
+            left : parent.left
+            right : parent.right
+            bottom : parent.bottom
         }
-        Image
-        {
-            source : "Resources/arrow.png"
-            scale : up_ma.pressed ? 0.9 : 1
-
-            anchors
+        delegate: Component {
+            Rectangle
             {
-                top : parent.top
-                horizontalCenter : parent.horizontalCenter
-            }
-
-            MouseArea
-            {
-                id : up_ma
-                anchors.fill: parent
-                onClicked:
+                width : ListView.view.width / 3
+                height : ListView.view.height
+                color : "#e5e5e5"
+                Text
                 {
-                    core.buttonAction(0);
+                    anchors.centerIn: parent
+                    color : "black"
+                    text : model.tabName
+                    font.pointSize: 15 * mainScreen.dpiMultiplier
                 }
-            }
-        }
-        Image
-        {
-            source : "Resources/arrow.png"
-            rotation : 90
-            scale : right_ma.pressed ? 0.9 : 1
-
-            anchors
-            {
-                right : parent.right
-                verticalCenter : parent.verticalCenter
-            }
-
-            MouseArea
-            {
-                id : right_ma
-                anchors.fill: parent
-                onClicked:
+                Rectangle
                 {
-                    core.buttonAction(3);
+                    anchors
+                    {
+                        left : parent.left
+                        right : parent.right
+                        bottom : parent.bottom
+                    }
+                    height : 10
+                    color : "#00ccff"
+                    visible: index === remote_listview.currentIndex
                 }
-            }
-        }
-        Image
-        {
-            source : "Resources/arrow.png"
-            rotation : 180
-            scale : down_ma.pressed ? 0.9 : 1
-
-            anchors
-            {
-                bottom : parent.bottom
-                horizontalCenter : parent.horizontalCenter
-            }
-
-            MouseArea
-            {
-                id : down_ma
-                anchors.fill: parent
-                onClicked:
+                MouseArea
                 {
-                    core.buttonAction(1);
+                    anchors.fill: parent
+                    onClicked: remote_listview.currentIndex = index;
                 }
             }
         }
 
         Rectangle
         {
-            anchors.centerIn: parent
-            width : 128;
-            height : 128
-            radius : width
-            color : "#2c2c2c"
-            scale : validate_ma.pressed ? 0.9 : 1
-
-            MouseArea
+            anchors
             {
-                id : validate_ma
-                anchors.fill: parent
-                onClicked: core.buttonAction(4);
+                bottom : parent.top
+                left : parent.left
+                right : parent.right
+            }
+            height : 5
+            gradient : Gradient {
+                GradientStop {position : 0.0; color : "#aa000000"}
+                GradientStop {position : 1.0; color : "#00000000"}
             }
         }
     }
-    Image
-    {
-        source : "Resources/arrow_down.png"
-        rotation : 90
-        scale : back_button_ma.pressed ? 0.9 : 1
 
+    ListView
+    {
+        id : remote_listview
         anchors
         {
-            top : arrow_controls.bottom
-            right : arrow_controls.left
+            left : parent.left
+            right : parent.right
+            top : parent.top
+            bottom : section_switcher_listview.top
         }
-
-        MouseArea
-        {
-            id : back_button_ma
-            anchors.fill: parent
-            onClicked: core.buttonAction(5);
+        snapMode: ListView.SnapOneItem
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        model : remote_model
+        orientation : ListView.Horizontal
+        delegate : Component {
+            Loader
+            {
+                width : ListView.view.width
+                height : ListView.view.height
+                source: model.delegateComponent
+            }
         }
     }
 }

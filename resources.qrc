@@ -59,5 +59,7 @@
         <file>qml/Resources/volume_mute.png</file>
         <file>qml/Resources/volume.png</file>
         <file>qml/Resources/info.png</file>
+        <file>qml/RemoteControls.qml</file>
+        <file>qml/PlaylistsScreen.qml</file>
     </qresource>
 </RCC>

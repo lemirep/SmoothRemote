@@ -1,17 +1,36 @@
 import QtQuick 2.1
-import QtQuick.Window 2.0
+import QtQuick.Window 2.1
 
-Item
+Window
 {
     id : mainScreen
     width: Screen.width
     height: Screen.height
+    //    minimumWidth : 240;
+    //    minimumHeight : 240;
+    //    maximumWidth: Screen.width
+    //    maximumHeight: Screen.height
+    //    contentOrientation: Qt.Pr
 
     property bool portrait : height > width;
     property bool mediaPlaying : false;
     property string screenSize : setScreenSize(Screen.pixelDensity)
 
-    property real dpiMultiplier;
+    onPortraitChanged:
+    {
+        if (!portrait)
+        {
+            width = Screen.width
+            height = Screen.height
+        }
+        else
+        {
+            width = Screen.height
+            height = Screen.width
+        }
+    }
+
+    property real dpiMultiplier : 1;
 
     function setScreenSize(dpi)
     {
@@ -35,7 +54,6 @@ Item
         dpiMultiplier = 1;
         return "ldpi";
     }
-
 
     MainView
     {

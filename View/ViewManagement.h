@@ -2,8 +2,9 @@
 #define __VIEWMANAGEMENT_H_
 
 #include <QObject>
-#include <QQuickView>
+#include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickWindow>
 
 class ViewManagement : public QObject
 {
@@ -16,10 +17,11 @@ public:
     QUrl    getSource() const;
 
     QQmlContext *getContext() const;
+    QQuickWindow *getWindow() const;
 
     void    show();
-    void    showMaximized();
     void    showFullScreen();
+    void    showMaximized();
 
 private:
     ViewManagement(QObject *parent = NULL);
@@ -27,8 +29,9 @@ private:
 
 private:
     QUrl source;
-    QQuickView *viewer;
+    QQmlApplicationEngine *appEngine;
     QQmlContext *context;
+    QQuickWindow *window;
     static ViewManagement *instance;
 
 };
