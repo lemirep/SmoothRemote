@@ -27,19 +27,20 @@
 
 #include "PlaylistModelItem.h"
 
-PlaylistModelItem::PlaylistModelItem(QObject *parent) : Models::SubListedListItem(parent)
+PlaylistModelItem::PlaylistModelItem(QObject *parent) :
+    Models::SubListedListItem(parent),
+    m_playlistItemsModel(new Models::ListModel(new PlayableItemModel(NULL))),
+    m_playlistTypeString(""),
+    m_playlistId(-1)
 {
-    this->m_playlistItemsModel = new Models::ListModel(new PlayableItemModel(NULL));
-    this->m_playlistTypeString = "";
-    this->m_playlistId = -1;
 }
 
 PlaylistModelItem::PlaylistModelItem(int playlistId, const QString& playlistTypeString, QObject *parent)
     : Models::SubListedListItem(parent),
       m_playlistId(playlistId),
-      m_playlistTypeString(playlistTypeString)
+      m_playlistTypeString(playlistTypeString),
+      m_playlistItemsModel(new Models::ListModel(new PlayableItemModel(NULL)))
 {
-    this->m_playlistItemsModel = new Models::ListModel(new PlayableItemModel(NULL));
     qDebug() << "Type " << this->m_playlistTypeString;
     qDebug() << "Id " << this->m_playlistId;
 }
@@ -69,8 +70,25 @@ QVariant PlaylistModelItem::data(int role) const
         return this->id();
     case playlistTypeString:
         return this->getPlaylistTypeString();
+    case playlistItemsModel:
+        return QVariant::fromValue(this->submodel());
     default :
         return QVariant();
+    }
+}
+
+bool PlaylistModelItem::setData(int role, const QVariant &value)
+{
+    switch (role)
+    {
+    case (playlistId):
+        this->m_playlistId = value.toInt();
+        return true;
+    case (playlistTypeString):
+        this->m_playlistTypeString = value.toString();
+        return true;
+    default :
+        return false;
     }
 }
 
@@ -78,8 +96,9 @@ QHash<int, QByteArray> PlaylistModelItem::roleNames() const
 {
     QHash<int, QByteArray> roleNames;
 
-    roleNames[playlistId] = "playlistId";
-    roleNames[playlistTypeString] = "playlistTypeString";
+    roleNames[playlistId] = "playlistid";
+    roleNames[playlistTypeString] = "type";
+    roleNames[playlistItemsModel] = "playlistItemsModel";
 
     return roleNames;
 }

@@ -129,11 +129,16 @@ Item
                 top : parent.top
                 topMargin : 25
             }
-            font.pointSize: 25
+            font.pointSize: 25 * mainScreen.dpiMultiplier
             text : artist.artist
             style: Text.Outline
             styleColor: "#e8e8e8"
-            color : "#1474fa"
+            elide: Text.ElideRight
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            width : parent.width
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            color : "white"
         }
 
         Text
@@ -145,9 +150,14 @@ Item
                 bottom : parent.bottom
                 bottomMargin : 25
             }
-            font.pointSize: 35
+            font.pointSize: 25 * mainScreen.dpiMultiplier
             style: Text.Outline
             styleColor: "#e8e8e8"
+            elide: Text.ElideRight
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            width : parent.width
             color : "white"
         }
 
@@ -195,6 +205,7 @@ Item
                                 flip_animation.start();
                                 songs_listview.model = model.songsModel;
                                 songs_listview.shown = true;
+                                songs_listview.albumId = model.albumid;
                             }
                             else
                                 albums_gridview.currentIndex = index;

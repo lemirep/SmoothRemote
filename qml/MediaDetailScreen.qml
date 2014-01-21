@@ -8,6 +8,7 @@ Item
     property alias background : background_pic.source
     property alias cover : detail_pic.source
     property alias contentComponent : description_loader.sourceComponent
+    property alias actionBarComponent : action_bar_loader.sourceComponent
     property variant holder;
     property bool portrait : mainScreen.portrait
     property bool shown : false;
@@ -36,12 +37,12 @@ Item
         id : back_arrow
         Image
         {
-            anchors
-            {
-                left : parent.left
-                top : parent.top
-                bottom : parent.bottom
-            }
+//            anchors
+//            {
+//                left : parent.left
+//                top : parent.top
+//                bottom : parent.bottom
+//            }
             fillMode: Image.PreserveAspectFit
             source : "Resources/back_arrow.png"
             MouseArea
@@ -115,6 +116,11 @@ Item
         id : action_bar
         opacity : detail_pic.scale
         enabled: detail_pic.scale === 1 && hasActionBar
+        Loader
+        {
+            id : action_bar_loader
+            anchors.fill: parent
+        }
     }
 
     Item

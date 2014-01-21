@@ -43,6 +43,7 @@ public:
     enum PlayableItemModelRoles
     {
         title = Qt::UserRole + 1,
+        itemId,
         rating,
         file,
         streamingFile,
@@ -84,6 +85,7 @@ public:
 protected :
     int m_rating;
     int m_runtime;
+    int m_itemId;
     QString m_title;
     QString m_file;
     QString m_thumbnail;

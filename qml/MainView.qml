@@ -73,6 +73,7 @@ Item
             right : parent.right
             bottom : parent.bottom
         }
+        onSourceChanged: topBanner.menuComponent = undefined;
     }
 
     TopBanner

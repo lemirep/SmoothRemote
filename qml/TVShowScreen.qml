@@ -37,11 +37,11 @@ Rectangle
     {
         anchors.fill: parent
         Component.onCompleted: forceActiveFocus()
-        onFocusChanged:
-        {
-            if (!focus)
-                mainView.forceActiveFocus()
-        }
+//        onFocusChanged:
+//        {
+//            if (!focus)
+//                mainView.forceActiveFocus()
+//        }
 
         MediaDetailScreen
         {

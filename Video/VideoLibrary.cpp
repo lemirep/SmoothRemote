@@ -80,6 +80,8 @@ void VideoLibrary::retrieveMovies(Models::ListModel *dataModel)
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
     fields.remove(PlayableItemModel::streamingFile);
     fields.remove(MovieModel::movieId);
+    fields.remove(PlayableItemModel::itemId);
+
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
@@ -152,6 +154,8 @@ void VideoLibrary::retrieveTVShowEpisodes(int tvShowId, int season, Models::List
 
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
     fields.remove(PlayableItemModel::streamingFile);
+    fields.remove(PlayableItemModel::itemId);
+
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));

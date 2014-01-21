@@ -61,5 +61,14 @@
         <file>qml/Resources/info.png</file>
         <file>qml/RemoteControls.qml</file>
         <file>qml/PlaylistsScreen.qml</file>
+        <file>qml/Resources/cloud_inv.png</file>
+        <file>qml/Resources/download_inv.png</file>
+        <file>qml/Resources/pause.png</file>
+        <file>qml/Resources/play_inv.png</file>
+        <file>qml/Resources/plus_inv.png</file>
+        <file>qml/Resources/plus.png</file>
+        <file>qml/Resources/remove_inv.png</file>
+        <file>qml/Resources/remove.png</file>
+        <file>qml/Resources/star.png</file>
     </qresource>
 </RCC>

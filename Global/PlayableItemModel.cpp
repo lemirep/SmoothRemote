@@ -50,14 +50,20 @@ QString PlayableItemModel::streamingFileUrl(const QString &fileUrl)
     return fileUrl;
 }
 
-PlayableItemModel::PlayableItemModel(QObject *parent) : Models::ListItem(parent)
+PlayableItemModel::PlayableItemModel(QObject *parent) :
+    Models::ListItem(parent),
+    m_itemId(-1)
 {
 }
 
-PlayableItemModel::PlayableItemModel(const PlayableItemModel &item) : Models::ListItem(NULL)
+PlayableItemModel::PlayableItemModel(const PlayableItemModel &item) :
+    Models::ListItem(NULL),
+    m_itemId(-1)
 {
     if (&item != this)
     {
+        this->m_fanArt = item.getFanart();
+        this->m_itemId = item.id();
         this->m_rating = item.getRating();
         this->m_runtime = item.getRuntime();
         this->m_title = item.getTitle();
@@ -72,13 +78,15 @@ PlayableItemModel::~PlayableItemModel()
 
 int PlayableItemModel::id() const
 {
-    return -1;
+    return this->m_itemId;
 }
 
 QVariant PlayableItemModel::data(int role) const
 {
     switch (role)
     {
+    case itemId:
+        return this->id();
     case title:
         return this->getTitle();
     case rating:
@@ -102,6 +110,9 @@ bool PlayableItemModel::setData(int role, const QVariant &value)
 {
     switch (role)
     {
+    case itemId:
+        this->m_itemId = value.toInt();
+        return true;
     case title:
         this->setTitle(value.toString());
         return true;
@@ -129,6 +140,7 @@ QHash<int, QByteArray> PlayableItemModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames;
 
+    roleNames[itemId] = "id";
     roleNames[title] = "title";
     roleNames[file] = "file";
     roleNames[thumbnail] = "thumbnail";
@@ -136,6 +148,7 @@ QHash<int, QByteArray> PlayableItemModel::roleNames() const
     roleNames[runtime] = "runtime";
     roleNames[fanart] = "fanart";
     roleNames[streamingFile] = "streamingFile";
+
     return roleNames;
 }
 

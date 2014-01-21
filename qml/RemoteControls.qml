@@ -36,7 +36,7 @@ Item
                 anchors.fill: parent
                 onClicked:
                 {
-                    core.buttonAction(-1);
+                    core.buttonAction(23);
                 }
             }
         }
@@ -59,7 +59,7 @@ Item
                 anchors.fill: parent
                 onClicked:
                 {
-                    core.buttonAction(-1);
+                    core.buttonAction(24);
                 }
             }
         }

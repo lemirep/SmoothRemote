@@ -36,6 +36,7 @@
 #include <QJsonDocument>
 #include <QList>
 #include <SubListedListModel.h>
+#include <JSONListItemBinder.h>
 #include "IWebRequestDispatcher.h"
 #include "PlayableItemModel.h"
 #include "MovieModel.h"

@@ -255,6 +255,18 @@ void CoreApplication::buttonAction(int buttonAction, QVariant value)
     case PlayFile:
         this->playerManager->playFile(value.toString());
         break;
+    case AlbumToPlaylist:
+        this->playerManager->addAlbumToPlaylist(value.toInt());
+        break;
+    case SongToPlaylist:
+        this->playerManager->addSongToPlaylist(value.toInt());
+        break;
+    case EpisodeToPlaylist:
+        this->playerManager->addEpisodeToPlaylist(value.toInt());
+        break;
+    case MovieToPlaylist:
+        this->playerManager->addMovieToPlaylist(value.toInt());
+        break;
     }
 }
 

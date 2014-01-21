@@ -60,7 +60,11 @@ public:
         PlayPlaylist = 19,
         RemovePlaylist = 20,
         ClearPlaylist = 21,
-        RemoveItemInPlaylist = 22
+        RemoveItemInPlaylist = 22,
+        RefreshLibraries = 23,
+        GetInfo = 24,
+        SongToPlaylist = 25,
+        MovieToPlaylist = 26
     };
 
 

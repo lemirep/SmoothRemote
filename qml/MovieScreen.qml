@@ -39,7 +39,7 @@ Rectangle
         onFocusChanged:
         {
             if (!focus)
-            mainView.forceActiveFocus()
+                mainView.forceActiveFocus()
         }
 
         MediaDetailScreen
@@ -48,9 +48,56 @@ Rectangle
             anchors.fill: parent
             background: holder.fanart
             cover : holder.thumbnail
-            contentComponent: MovieDetail {
-            }
+            contentComponent: MovieDetail {}
             hasActionBar: true
+            actionBarComponent: Row   {
+                spacing : 25
+//                anchors
+//                {
+//                    right : parent.right
+//                    top : parent.top
+//                    bottom : parent.bottom
+//                    rightMargin : 25
+//                }
+
+                Image
+                {
+                    height: parent.height - 15
+                    anchors.verticalCenter: parent.verticalCenter
+                    fillMode: Image.PreserveAspectFit
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                    source : "Resources/play_inv.png"
+                    MouseArea
+                    {
+                        anchors.fill: parent
+                        onClicked: core.buttonAction(14, movie_detail.holder.file);
+                    }
+                }
+                Image
+                {
+                    height: parent.height - 15
+                    anchors.verticalCenter: parent.verticalCenter
+                    fillMode: Image.PreserveAspectFit
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                    source : "Resources/plus_inv.png"
+                    MouseArea
+                    {
+                        anchors.fill: parent
+                        onClicked: core.buttonAction(26, movie_detail.holder.movieid);
+                    }
+                }
+                Image
+                {
+                    height: parent.height - 15
+                    anchors.verticalCenter: parent.verticalCenter
+                    fillMode: Image.PreserveAspectFit
+                    horizontalAlignment: Image.AlignHCenter
+                    verticalAlignment: Image.AlignVCenter
+                    source : "Resources/cloud_inv.png"
+                }
+            }
         }
 
         //    Player

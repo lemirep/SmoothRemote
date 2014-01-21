@@ -6,6 +6,8 @@ Item
     property variant movie : parent.getHolder();
     ScrollBar {flickable: movie_flickable}
 
+    onMovieChanged: action_bar_loader.sourceComponent = action_bar_component;
+
     Flickable
     {
         id : movie_flickable

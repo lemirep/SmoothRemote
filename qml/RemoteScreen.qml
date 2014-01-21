@@ -27,7 +27,7 @@ Item
     ListView
     {
         id : section_switcher_listview
-        height : 70 * mainScreen.dpiMultiplier
+        height : 50 * mainScreen.dpiMultiplier
         model : remote_model
         orientation : ListView.Horizontal
         interactive: false
@@ -46,9 +46,8 @@ Item
                 Text
                 {
                     anchors.centerIn: parent
-                    color : "black"
+                    color : "#101010"
                     text : model.tabName
-                    font.pointSize: 15 * mainScreen.dpiMultiplier
                 }
                 Rectangle
                 {
@@ -56,11 +55,23 @@ Item
                     {
                         left : parent.left
                         right : parent.right
-                        bottom : parent.bottom
+                        bottom : bottom_border.top
                     }
-                    height : 10
+                    height : 7
                     color : "#00ccff"
                     visible: index === remote_listview.currentIndex
+                }
+                Rectangle
+                {
+                    id : bottom_border
+                    anchors
+                    {
+                        left : parent.left
+                        right : parent.right
+                        bottom : parent.bottom
+                    }
+                    height : 1
+                    color : "#040404"
                 }
                 MouseArea
                 {
@@ -104,7 +115,8 @@ Item
             Loader
             {
                 width : ListView.view.width
-                height : ListView.view.height
+                height : ListView.view.height - 5
+                clip : true
                 source: model.delegateComponent
             }
         }

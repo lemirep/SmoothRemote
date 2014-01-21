@@ -20,10 +20,11 @@ Item
 
     onEpisodeViewChanged:
     {
+        console.log("Episode View changed " + episodeView);
         if (episodeView)
             forceActiveFocus();
         else
-            parent.forceActiveFocus();
+            tvshow_detail.forceActiveFocus();
     }
 
     states : [
@@ -46,10 +47,11 @@ Item
 
     Keys.onReleased:
     {
-        console.log("Detail Key Released");
-        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace && episodeView)
+        console.log("Detail 2 Key Released");
+        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
         {
-            episodeView = false;
+            if (episodeView)
+                episodeView = false;
             event.accepted = true;
         }
     }

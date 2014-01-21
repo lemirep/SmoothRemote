@@ -515,6 +515,8 @@ QJsonObject AudioLibrary::getSongsRequestBaseJSON(Models::ListModel *dataModel)
     fields.remove(PlayableItemModel::streamingFile);
     fields.remove(SongModel::songId);
     fields.remove(SongModel::runtime);
+    fields.remove(PlayableItemModel::itemId);
+
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 

@@ -82,7 +82,16 @@ OTHER_FILES += \
     qml/Resources/volume.png \
     qml/Resources/info.png \
     qml/PlaylistsScreen.qml \
-    qml/RemoteControls.qml
+    qml/RemoteControls.qml \
+    qml/Resources/cloud_inv.png \
+    qml/Resources/download_inv.png \
+    qml/Resources/pause.png \
+    qml/Resources/play_inv.png \
+    qml/Resources/plus_inv.png \
+    qml/Resources/plus.png \
+    qml/Resources/remove_inv.png \
+    qml/Resources/remove.png \
+    qml/Resources/star.png
 
 
 ANDROID_TARGET_ARCH = armeabi-v7a
