@@ -36,11 +36,6 @@ Rectangle
     {
         anchors.fill: parent
         Component.onCompleted: forceActiveFocus()
-        onFocusChanged:
-        {
-            if (!focus)
-                mainView.forceActiveFocus()
-        }
 
         MediaDetailScreen
         {
@@ -50,15 +45,10 @@ Rectangle
             cover : holder.thumbnail
             contentComponent: MovieDetail {}
             hasActionBar: true
+
             actionBarComponent: Row   {
                 spacing : 25
-//                anchors
-//                {
-//                    right : parent.right
-//                    top : parent.top
-//                    bottom : parent.bottom
-//                    rightMargin : 25
-//                }
+                height : 55 * mainScreen.dpiMultiplier
 
                 Image
                 {
@@ -82,8 +72,10 @@ Rectangle
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
                     source : "Resources/plus_inv.png"
+                    scale : add_ma.pressed ? 0.9 : 1
                     MouseArea
                     {
+                        id : add_ma
                         anchors.fill: parent
                         onClicked: core.buttonAction(26, movie_detail.holder.movieid);
                     }
@@ -96,6 +88,13 @@ Rectangle
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
                     source : "Resources/cloud_inv.png"
+                    scale : cloud_ma.pressed ? 0.9 : 1
+                    MouseArea
+                    {
+                        id : cloud_ma
+                        anchors.fill: parent
+                        onClicked: core.buttonAction(27, movie_detail.holder.streamingFile);
+                    }
                 }
             }
         }

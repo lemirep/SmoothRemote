@@ -107,6 +107,7 @@ Item
             top : parent.top
             bottom : section_switcher_listview.top
         }
+        boundsBehavior: ListView.StopAtBounds
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
         model : remote_model

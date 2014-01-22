@@ -180,7 +180,7 @@ Item
     }
     Image
     {
-        source : "Resources/arrow_down.png"
+        source : "Resources/repeat.png"
         rotation : 90
         width : 100
         height : 100

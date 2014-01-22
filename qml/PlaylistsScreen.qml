@@ -4,6 +4,7 @@ Rectangle
 {
     color : "#1e2124"
     anchors.fill: parent
+
     ListView
     {
         id : playlists_listview

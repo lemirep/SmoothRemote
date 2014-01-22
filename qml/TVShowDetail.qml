@@ -41,17 +41,16 @@ Item
     ]
 
     transitions:
-    [
+        [
         Transition {AnchorAnimation {duration : 500}}
     ]
 
     Keys.onReleased:
     {
         console.log("Detail 2 Key Released");
-        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
+        if (episodeView && event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
         {
-            if (episodeView)
-                episodeView = false;
+            episodeView = false;
             event.accepted = true;
         }
     }
@@ -97,14 +96,14 @@ Item
                     color : "#e8e8e8"
                     anchors.horizontalCenter: parent.horizontalCenter
                     text : tvShow.title
-                    font.pointSize: 15 * mainScreen.dpiMultiplier
+                    font.pointSize: 18 * mainScreen.dpiMultiplier
                 }
                 Text
                 {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color : "#e8e8e8"
                     text : tvShow.year
-                    font.pointSize: 15 * mainScreen.dpiMultiplier
+                    font.pointSize: 16 * mainScreen.dpiMultiplier
                 }
                 Text
                 {
@@ -112,7 +111,7 @@ Item
                     color : "#e8e8e8"
                     text : tvShow.plot
                     width: parent.width
-                    font.pointSize: 11 * mainScreen.dpiMultiplier
+                    font.pointSize: 14 * mainScreen.dpiMultiplier
                     elide: Text.ElideRight
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 }
@@ -146,7 +145,7 @@ Item
         }
     }
 
-    GridView
+    ListView
     {
         id : episode_listview
         anchors
@@ -156,23 +155,70 @@ Item
             top : seasons_view.bottom
             bottom : parent.bottom
         }
-        height: seasons_listview.width * 0.5
-        cellWidth: height
-        cellHeight: height
         clip: true
         snapMode: GridView.SnapToRow
-
         model : showSeason.episodeModel
-        delegate : VideoCoverDelegate {
-            width : GridView.view.cellWidth
-            height: GridView.view.cellHeight
-            source : model.thumbnail
-            text : model.episode
-            onClicked:
+        delegate : Component {
+            Item
             {
-                console.log(model.file)
-                tv_show_player.player.source = model.file;
-                tv_show_player.player.play();
+                property bool editMode : false
+                width : ListView.view.width
+                height : mainScreen.portrait ? ListView.view.height * 0.2 * mainScreen.dpiMultiplier : ListView.view.width * 0.15 * mainScreen.dpiMultiplier
+                Rectangle
+                {
+                    anchors.fill: parent
+                    opacity : 0.5
+                    color : episode_del_ma.pressed ? "#a0a0a0" : index % 2 === 0 ? "#151515" : "#080808"
+                }
+                Image
+                {
+                    id : episode_cover_pic
+                    anchors
+                    {
+                        left : parent.left
+                        leftMargin : 15
+                        verticalCenter : parent.verticalCenter
+                    }
+                    height : parent.height * 0.8
+                    fillMode: Image.PreserveAspectFit
+                    source : model.thumbnail
+                }
+                Text
+                {
+                    color : "white"
+                    text : model.episode + " " + model.title
+                    anchors
+                    {
+                        left : episode_cover_pic.right
+                        verticalCenter : parent.verticalCenter
+                        leftMargin : 15
+                    }
+                    width : parent.width - (episode_cover_pic.width + 25)
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    elide: Text.ElideRight
+                    font.pointSize: 14
+                }
+                MouseArea
+                {
+                    id : episode_del_ma
+                    anchors.fill: parent
+                    onClicked: {editMode = true}
+                }
+                MediaActionBar
+                {
+                    onPlayClicked: core.buttonAction(14, model.file);
+                    onAddClicked: core.buttonAction(17, model.tvshowid);
+                    onStreamClicked: core.buttonAction(27, model.streamingFile);
+                    opacity : editMode ? 1 : 0
+                    Behavior on opacity {NumberAnimation {duration : 250}}
+                }
+                Timer
+                {
+                    running : editMode
+                    interval : 5000
+                    repeat : false
+                    onTriggered: editMode = !editMode
+                }
             }
         }
         ScrollBar {flickable: episode_listview}

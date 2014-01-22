@@ -267,6 +267,9 @@ void CoreApplication::buttonAction(int buttonAction, QVariant value)
     case MovieToPlaylist:
         this->playerManager->addMovieToPlaylist(value.toInt());
         break;
+    case StreamFile:
+        this->launchStreamingApp(value.toString());
+        break;
     }
 }
 
@@ -274,4 +277,10 @@ QObject *CoreApplication::getPlaylistsModel() const
 {
     this->playerManager->reloadPlaylists();
     return this->playerManager->getPlaylistsModel();
+}
+
+void CoreApplication::launchStreamingApp(const QString &fileUrl)
+{
+    qDebug() << "Corvette " << fileUrl;
+    QDesktopServices::openUrl(fileUrl);
 }

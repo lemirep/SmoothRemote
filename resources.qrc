@@ -70,5 +70,26 @@
         <file>qml/Resources/remove_inv.png</file>
         <file>qml/Resources/remove.png</file>
         <file>qml/Resources/star.png</file>
+        <file>qml/MediaActionBar.qml</file>
+        <file>qml/Resources/fast_forward.png</file>
+        <file>qml/Resources/favorite.png</file>
+        <file>qml/Resources/home.png</file>
+        <file>qml/Resources/repeat.png</file>
+        <file>qml/Resources/rewind.png</file>
+        <file>qml/Resources/skip_backward.png</file>
+        <file>qml/Resources/skip_forward.png</file>
+        <file>qml/Resources/stop.png</file>
+        <file>qml/Resources/television.png</file>
+        <file>qml/Resources/test.png</file>
+        <file>qml/Resources/tools.png</file>
+        <file>qml/Resources/volume_down.png</file>
+        <file>qml/Resources/volume_up.png</file>
+        <file>qml/Resources/folder_inv.png</file>
+        <file>qml/Resources/folder.png</file>
+        <file>qml/Resources/page_inv.png</file>
+        <file>qml/Resources/page.png</file>
+        <file>qml/FileBrowser.qml</file>
+        <file>qml/Resources/check_inv.png</file>
+        <file>qml/Resources/arrow_left.png</file>
     </qresource>
 </RCC>

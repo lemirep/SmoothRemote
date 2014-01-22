@@ -58,10 +58,10 @@ Item
             anchors
             {
                 right : parent.right
-                top : parent.top
-                bottom : parent.bottom
+                verticalCenter : parent.verticalCenter
                 rightMargin : 25
             }
+            height : 55 * mainScreen.dpiMultiplier
 
             Image
             {
@@ -162,86 +162,16 @@ Item
                     anchors.fill: parent
                     onClicked: {editMode = true}
                 }
-                Row
+
+                MediaActionBar
                 {
-                    id : songs_action
-                    spacing : 25
-                    anchors
-                    {
-                        verticalCenter : parent.verticalCenter
-                        right : parent.right
-                        rightMargin : 25
-                    }
                     opacity : editMode ? 1 : 0
-                    enabled : editMode
+                    onPlayClicked: core.buttonAction(14, model.file);
+                    onAddClicked:  core.buttonAction(25, model.songid);
+                    onStreamClicked: core.buttonAction(27, model.streamingFile);
                     Behavior on opacity {NumberAnimation {duration : 250}}
-                    height : 65
-                    Image
-                    {
-                        height: parent.height - 15
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        source : "Resources/play_inv.png"
-                        scale : play_button_ma.pressed ? 0.9 : 1
-                        MouseArea
-                        {
-                            id : play_button_ma
-                            anchors.fill: parent
-                            onClicked: core.buttonAction(14, model.file);
-                        }
-                    }
-                    Image
-                    {
-                        height: parent.height - 15
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        source : "Resources/plus_inv.png"
-                        scale : add_button_ma.pressed ? 0.9 : 1
-                        MouseArea
-                        {
-                            id : add_button_ma
-                            anchors.fill: parent
-                            onClicked: core.buttonAction(25, model.songid);
-                        }
-                    }
-                    Image
-                    {
-                        height: parent.height - 15
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        source : "Resources/cloud_inv.png"
-                        scale : cloud_button_ma.pressed ? 0.9 : 1
-                        MouseArea
-                        {
-                            id : cloud_button_ma
-                            anchors.fill: parent
-                            onClicked: ;
-                        }
-                    }
-                    Image
-                    {
-                        height: parent.height - 15
-                        rotation : 180
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        horizontalAlignment: Image.AlignHCenter
-                        verticalAlignment: Image.AlignVCenter
-                        source : "Resources/download_inv.png"
-                        scale : dl_button_ma.pressed ? 0.9 : 1
-                        MouseArea
-                        {
-                            id : dl_button_ma
-                            anchors.fill: parent
-                            onClicked: ;
-                        }
-                    }
                 }
+
                 Timer
                 {
                     running : editMode

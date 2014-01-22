@@ -18,9 +18,12 @@ Item
 
     Keys.onReleased:
     {
-        console.log("Main Key Released");
+        console.log("MainView Key Released");
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
+        {
             slideMenu.setMenuItemIndex(0);
+            event.accepted = true;
+        }
     }
 
     ListModel
@@ -52,7 +55,7 @@ Item
             sectionName : "TV Shows"
             sectionSource : "TVShowScreen.qml"
             sectionColor : "blue"
-            sectionIcon : ""
+            sectionIcon : "Resources/television.png"
         }
         ListElement
         {
@@ -79,6 +82,11 @@ Item
     TopBanner
     {
         id : topBanner
+    }
+
+    FileBrowser
+    {
+        shown: true
     }
 
     SlideMenu

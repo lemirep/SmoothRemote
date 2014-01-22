@@ -37,12 +37,6 @@ Item
         id : back_arrow
         Image
         {
-//            anchors
-//            {
-//                left : parent.left
-//                top : parent.top
-//                bottom : parent.bottom
-//            }
             fillMode: Image.PreserveAspectFit
             source : "Resources/back_arrow.png"
             MouseArea
@@ -50,7 +44,6 @@ Item
                 anchors.fill: parent
                 onClicked:
                 {
-                    console.log("clicked");
                     backFunction();
                 }
             }
@@ -119,7 +112,12 @@ Item
         Loader
         {
             id : action_bar_loader
-            anchors.fill: parent
+            anchors
+            {
+                right : parent.right
+                verticalCenter : parent.verticalCenter
+                rightMargin : 25
+            }
         }
     }
 

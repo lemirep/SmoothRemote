@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QtQml>
+#include <QDesktopServices>
 #include "AudioLibrary.h"
 #include "VideoLibrary.h"
 #include "RemoteManager.h"
@@ -64,7 +65,8 @@ public:
         RefreshLibraries = 23,
         GetInfo = 24,
         SongToPlaylist = 25,
-        MovieToPlaylist = 26
+        MovieToPlaylist = 26,
+        StreamFile = 27
     };
 
 
@@ -123,6 +125,8 @@ public:
     Q_INVOKABLE void            buttonAction(int buttonAction, QVariant value = QVariant());
     // PLAYLISTS
     QObject*                    getPlaylistsModel() const;
+
+    void                        launchStreamingApp(const QString &fileUrl);
 
 
     // WebServiceUserInterface interface

@@ -1,5 +1,6 @@
 
-HEADERS += CoreApplication.h
+HEADERS += CoreApplication.h \
+    qml/MediaActionBar.h
 
 SOURCES += main.cpp \
            CoreApplication.cpp
@@ -91,7 +92,9 @@ OTHER_FILES += \
     qml/Resources/plus.png \
     qml/Resources/remove_inv.png \
     qml/Resources/remove.png \
-    qml/Resources/star.png
+    qml/Resources/star.png \
+    qml/MediaActionBar.qml \
+    qml/FileBrowser.qml
 
 
 ANDROID_TARGET_ARCH = armeabi-v7a

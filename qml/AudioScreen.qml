@@ -7,11 +7,7 @@ Rectangle
     //    color : "#e8e8e8"
     color : "#1e2124"
 
-    ListModel
-    {
-        id : artist_index
-
-    }
+    ListModel {id : artist_index}
 
 
     function build_artist_index()
@@ -152,8 +148,9 @@ Rectangle
                         console.log("Going to " + model.artistIdx);
                         if (artistIdx !== -1)
                         {
-                            artists_cover_flow.currentIndex = model.artistIdx
-                           artist_idx_listview.currentIndex = index;
+                            artists_cover_flow.currentIndex = model.artistIdx + 1;
+                            artist_idx_listview.currentIndex = index;
+                            artists_cover_flow.currentIndex -= 1;
                         }
                      }
                 }

@@ -33,21 +33,21 @@ Item
                 color : "#e8e8e8"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text : movie.title
-                font.pointSize: 15 * mainScreen.dpiMultiplier
+                font.pointSize: 18 * mainScreen.dpiMultiplier
             }
             Text
             {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color : "#e8e8e8"
                 text : movie.year
-                font.pointSize: 15 * mainScreen.dpiMultiplier
+                font.pointSize: 16 * mainScreen.dpiMultiplier
             }
             Text
             {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color : "#e8e8e8"
                 text : movie.studio
-                font.pointSize: 12 * mainScreen.dpiMultiplier
+                font.pointSize: 14 * mainScreen.dpiMultiplier
             }
             Text
             {
@@ -55,7 +55,7 @@ Item
                 color : "#e8e8e8"
                 text : movie.plot
                 width: parent.width
-                font.pointSize: 11  * mainScreen.dpiMultiplier
+                font.pointSize: 14  * mainScreen.dpiMultiplier
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
