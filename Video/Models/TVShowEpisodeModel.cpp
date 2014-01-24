@@ -30,6 +30,7 @@
 TVShowEpisodeModel::TVShowEpisodeModel(QObject *parent, int episodeId) : PlayableItemModel(parent)
 {
     this->m_episodeId = episodeId;
+    this->m_episodeNum = 0;
 }
 
 TVShowEpisodeModel::~TVShowEpisodeModel()
@@ -55,6 +56,8 @@ QVariant TVShowEpisodeModel::data(int role) const
         return this->getTVShowId();
     case season:
         return this->getSeason();
+    case episodeNum:
+        return this->m_episodeNum;
     default:
         return PlayableItemModel::data(role);
     }
@@ -66,6 +69,9 @@ bool TVShowEpisodeModel::setData(int role, const QVariant &value)
     {
     case episodeId:
         this->m_episodeId = value.toInt();
+        return true;
+    case episodeNum:
+        this->m_episodeNum = value.toInt();
         return true;
     case aired:
         this->setAired(value.toString());
@@ -91,7 +97,8 @@ Models::ListItem *TVShowEpisodeModel::getNewItemInstance(QObject *parent) const
 QHash<int, QByteArray> TVShowEpisodeModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames = PlayableItemModel::roleNames();
-    roleNames[episodeId] = "episode";
+    roleNames[episodeId] = "episodeid";
+    roleNames[episodeNum] = "episode";
     roleNames[aired] = "firstaired";
     roleNames[summary] = "plot";
     roleNames[tvShowId] = "tvshowid";

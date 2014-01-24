@@ -126,7 +126,7 @@ Item
                     delegate: VideoCoverDelegate {
                         width : seasons_listview.height
                         height: width
-                        source : model.thumbnail
+                        source : model.thumbnailUrl
                         text : "Season " + model.season
                         anchors.margins: 15
                         onClicked: {episode_listview.model = model.episodeModel; episodeView = true;}
@@ -139,7 +139,7 @@ Item
                     color : "#e8e8e8"
                     text : tvShow.plot
                     width: parent.width
-                    font.pointSize: 14 * mainScreen.dpiMultiplier
+                    font.pointSize: 12 * mainScreen.dpiMultiplier
                     elide: Text.ElideRight
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 }
@@ -186,7 +186,7 @@ Item
                     }
                     height : parent.height * 0.8
                     fillMode: Image.PreserveAspectFit
-                    source : model.thumbnail
+                    source : model.thumbnailUrl
                 }
                 Text
                 {
@@ -214,7 +214,7 @@ Item
                 {
                     id : media_action_bar
                     onPlayClicked: core.buttonAction(14, model.file);
-                    onAddClicked: core.buttonAction(17, model.tvshowid);
+                    onAddClicked: {console.log("TTTTTTTTTTTTTTTT " + model.episode); core.buttonAction(17, model.episodeid);}
                     onStreamClicked:  mainView.launchMediaPlayer(model.streamingFile); /*core.buttonAction(27, model.streamingFile);*/
                     opacity : editMode ? 1 : 0
                     Behavior on opacity {NumberAnimation {duration : 250}}

@@ -71,6 +71,7 @@ private:
     int m_tvShowId;
     int m_season;
     int m_episodeId;
+    int m_episodeNum;
 
 };
 

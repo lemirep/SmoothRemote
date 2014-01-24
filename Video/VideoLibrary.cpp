@@ -81,6 +81,8 @@ void VideoLibrary::retrieveMovies(Models::ListModel *dataModel)
     fields.remove(PlayableItemModel::streamingFile);
     fields.remove(MovieModel::movieId);
     fields.remove(PlayableItemModel::itemId);
+    fields.remove(PlayableItemModel::fanartUrl);
+    fields.remove(PlayableItemModel::thumbnailUrl);
 
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
@@ -107,6 +109,8 @@ void VideoLibrary::retrieveTVShows(Models::ListModel *dataModel)
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
     fields.remove(TVShowModel::tvshowid);
     fields.remove(TVShowModel::seasonsModel);
+    fields.remove(TVShowModel::fanartUrl);
+    fields.remove(TVShowModel::thumbnailUrl);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -130,6 +134,7 @@ void VideoLibrary::retrieveTVShowSeasons(int tvShowId, Models::ListModel *dataMo
     paramObj.insert("tvshowid", QJsonValue(tvShowId));
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
     fields.remove(TVShowSeasonModel::episodeModel);
+    fields.remove(TVShowSeasonModel::thumbnailUrl);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
     paramObj.insert("properties", QJsonValue(properties));
@@ -155,6 +160,10 @@ void VideoLibrary::retrieveTVShowEpisodes(int tvShowId, int season, Models::List
     QHash<int, QByteArray> fields = dataModel->getPrototype()->roleNames();
     fields.remove(PlayableItemModel::streamingFile);
     fields.remove(PlayableItemModel::itemId);
+    fields.remove(PlayableItemModel::fanartUrl);
+    fields.remove(PlayableItemModel::thumbnailUrl);
+    fields.remove(TVShowEpisodeModel::episodeId);
+//    fields.remove(TVShowEpisodeModel::episodeNum);
 
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
@@ -560,7 +569,7 @@ void VideoLibrary::retrieveTVShowEpisodesCallBack(QNetworkReply *reply, QPointer
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
-//            qDebug() << jsonResponse.toJson();
+            qDebug() << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  tvShowEpisodesArray;
             if (!resultObj.isEmpty())

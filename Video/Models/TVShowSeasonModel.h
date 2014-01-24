@@ -43,6 +43,7 @@ public:
         tvShowId,
         episode,
         thumbnail,
+        thumbnailUrl,
         episodeModel
     };
 

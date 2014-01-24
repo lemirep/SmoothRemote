@@ -40,8 +40,10 @@ Item
         {
             fillMode: Image.PreserveAspectFit
             source : "Resources/back_arrow.png"
+            scale : back_ma.pressed ? 0.9 : 1
             MouseArea
             {
+                id : back_ma
                 anchors.fill: parent
                 onClicked:
                 {

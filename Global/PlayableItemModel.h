@@ -49,6 +49,8 @@ public:
         streamingFile,
         runtime,
         fanart,
+        thumbnailUrl,
+        fanartUrl,
         thumbnail
     };
 

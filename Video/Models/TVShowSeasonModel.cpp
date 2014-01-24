@@ -56,8 +56,10 @@ QVariant TVShowSeasonModel::data(int role) const
         return this->getTVShowId();
     case episode:
         return this->getEpisode();
-    case thumbnail:
+    case thumbnailUrl:
         return this->getThumbnailUrl();
+    case thumbnail:
+        return this->getThumbnail();
     case episodeModel:
         return QVariant::fromValue(this->submodel());
     default:
@@ -101,6 +103,7 @@ QHash<int, QByteArray> TVShowSeasonModel::roleNames() const
     roleNames[episode] = "episode";
     roleNames[thumbnail] = "thumbnail";
     roleNames[episodeModel] = "episodeModel";
+    roleNames[thumbnailUrl] = "thumbnailUrl";
 
     return roleNames;
 }

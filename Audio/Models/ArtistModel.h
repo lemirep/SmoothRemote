@@ -48,6 +48,8 @@ public:
         thumbnail,
         mood,
         fanart,
+        thumbnailUrl,
+        fanartUrl,
         albumsModel
     };
 

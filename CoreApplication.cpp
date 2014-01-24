@@ -283,6 +283,12 @@ void CoreApplication::buttonAction(int buttonAction, QVariant value)
     case OSD:
         this->remoteManager->showOSD();
         break;
+    case RemoveItemInPlaylist:
+        this->playerManager->removeItemAtPositionFromPlaylist(value.toPoint().y(), value.toPoint().x());
+        break;
+    case PlayItemInPlaylist:
+        this->playerManager->playPlaylist(value.toPoint().x(), value.toPoint().y());
+        break;
     }
 }
 
@@ -290,6 +296,11 @@ QObject *CoreApplication::getPlaylistsModel() const
 {
     this->playerManager->reloadPlaylists();
     return this->playerManager->getPlaylistsModel();
+}
+
+QObject *CoreApplication::getCurrentXBMCPlayedItem() const
+{
+    return this->playerManager->getPlayedItem();
 }
 
 void CoreApplication::launchStreamingApp(const QString &fileUrl)

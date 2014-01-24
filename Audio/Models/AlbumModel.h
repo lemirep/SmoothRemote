@@ -50,6 +50,8 @@ public:
         description,
         fanart,
         albumId,
+        thumbnailUrl,
+        fanartUrl,
         songsModel
     };
 

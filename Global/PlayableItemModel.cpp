@@ -94,10 +94,14 @@ QVariant PlayableItemModel::data(int role) const
     case file:
         return this->getFile();
     case thumbnail:
-        return this->getThumbnailUrl();
+        return this->getThumbnail();
     case runtime :
         return this->getRuntime();
     case fanart:
+        return this->getFanart();
+    case thumbnailUrl:
+        return this->getThumbnailUrl();
+    case fanartUrl:
         return this->getFanartUrl();
     case streamingFile:
         return PlayableItemModel::streamingFileUrl(this->getFile());
@@ -148,6 +152,8 @@ QHash<int, QByteArray> PlayableItemModel::roleNames() const
     roleNames[runtime] = "runtime";
     roleNames[fanart] = "fanart";
     roleNames[streamingFile] = "streamingFile";
+    roleNames[fanartUrl] = "fanartUrl";
+    roleNames[thumbnailUrl] = "thumbnailUrl";
 
     return roleNames;
 }

@@ -25,6 +25,8 @@ Item
                 right : parent.right
                 top : parent.top
                 topMargin : 25
+                leftMargin : 10
+                rightMargin : 10
             }
             spacing: 15
 
@@ -55,7 +57,7 @@ Item
                 color : "#e8e8e8"
                 text : movie.plot
                 width: parent.width
-                font.pointSize: 14  * mainScreen.dpiMultiplier
+                font.pointSize: 12  * mainScreen.dpiMultiplier
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }

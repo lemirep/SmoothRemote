@@ -67,6 +67,8 @@ QHash<int, QByteArray> ArtistModel::roleNames() const
     roleNames[mood] = "mood";
     roleNames[fanart] = "fanart";
     roleNames[albumsModel] = "albumsModel";
+    roleNames[fanartUrl] = "fanartUrl";
+    roleNames[thumbnailUrl] = "thumbnailUrl";
     return roleNames;
 }
 
@@ -80,14 +82,18 @@ QVariant ArtistModel::data(int role) const
         return this->getArtistName();
     case born:
         return this->getBirthDate();
-    case thumbnail:
+    case thumbnailUrl:
         return this->getThumbnailUrl();
     case genre:
         return this->getGenre();
     case mood:
         return this->getMood();
-    case fanart:
+    case fanartUrl:
         return this->getFanartUrl();
+    case fanart:
+        return this->getFanart();
+    case thumbnail:
+        return this->getThumbnail();
     case albumsModel:
         return QVariant::fromValue(this->submodel());
     default:

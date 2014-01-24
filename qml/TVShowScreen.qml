@@ -20,7 +20,7 @@ Rectangle
         delegate : VideoCoverDelegate {
             width : GridView.view.cellWidth
             height: GridView.view.cellHeight
-            source: model.thumbnail
+            source: model.thumbnailUrl
             text : model.title
             fillMode: Image.PreserveAspectCrop
             onClicked:
@@ -42,8 +42,8 @@ Rectangle
         {
             id : tvshow_detail
             anchors.fill: parent
-            background: holder.fanart
-            cover : holder.thumbnail
+            background: holder.fanartUrl
+            cover : holder.thumbnailUrl
             contentComponent: TVShowDetail {
 
             }

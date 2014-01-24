@@ -20,7 +20,7 @@ Rectangle
             width : GridView.view.cellWidth
             height: GridView.view.cellHeight
             fillMode: Image.PreserveAspectCrop
-            source: model.thumbnail
+            source: model.thumbnailUrl
             text : model.title + " (" + model.year + ")"
             onClicked:
             {
@@ -41,8 +41,8 @@ Rectangle
         {
             id : movie_detail
             anchors.fill: parent
-            background: holder.fanart
-            cover : holder.thumbnail
+            background: holder.fanartUrl
+            cover : holder.thumbnailUrl
             contentComponent: MovieDetail {}
             hasActionBar: true
 
@@ -58,8 +58,10 @@ Rectangle
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
                     source : "Resources/play_inv.png"
+                    scale : play_ma.pressed ? 0.9 : 1
                     MouseArea
                     {
+                        id : play_ma
                         anchors.fill: parent
                         onClicked: core.buttonAction(14, movie_detail.holder.file);
                     }

@@ -114,6 +114,8 @@ void AudioLibrary::retrieveAudioArtists(Models::ListModel *dataModel)
     fields.remove(ArtistModel::artistId);
     fields.remove(ArtistModel::albumsModel);
     fields.remove(ArtistModel::artist);
+    fields.remove(ArtistModel::fanartUrl);
+    fields.remove(ArtistModel::thumbnailUrl);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -161,6 +163,8 @@ void AudioLibrary::retrieveAlbumsForArtist(int artistId, Models::ListModel *data
 
     fields.remove(AlbumModel::albumId);
     fields.remove(AlbumModel::songsModel);
+    fields.remove(AlbumModel::fanartUrl);
+    fields.remove(AlbumModel::thumbnailUrl);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -516,6 +520,8 @@ QJsonObject AudioLibrary::getSongsRequestBaseJSON(Models::ListModel *dataModel)
     fields.remove(SongModel::songId);
     fields.remove(SongModel::runtime);
     fields.remove(PlayableItemModel::itemId);
+    fields.remove(PlayableItemModel::fanartUrl);
+    fields.remove(PlayableItemModel::thumbnailUrl);
 
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));

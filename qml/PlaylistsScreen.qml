@@ -16,9 +16,14 @@ Rectangle
         }
         height : 50 * mainScreen.dpiMultiplier
         model : core.playlistsModel
-        onModelChanged: playlists_listview.currentIndex = 0;
+        onModelChanged: positionViewAtBeginning();
         orientation: ListView.Horizontal
         interactive : false
+        onCurrentIndexChanged :
+        {
+            playlist_items_listview.model = playlists_listview.model ? playlists_listview.model.get(playlists_listview.currentIndex).playlistItemsModel : undefined
+        }
+
         delegate : Component {
             Item
             {
@@ -109,18 +114,88 @@ Rectangle
         }
         clip : true
         ScrollBar {flickable: playlist_items_listview}
-        model : playlists_listview.model.get(playlists_listview.currentIndex).playlistItemsModel
+
+        remove : Transition {
+            ParallelAnimation
+            {
+                NumberAnimation {property : "x"; to : width; duration : 500}
+                NumberAnimation {property : "opacity"; to : 0; duration : 500}
+            }
+        }
+
+        displaced : Transition {
+            NumberAnimation {property : "y"; duration : 500}
+        }
+
         delegate : Component {
             Rectangle
             {
                 width : ListView.view.width
-                height : 70
-                color : index % 2 === 0?  "#101010" : "#505050"
+                height : mainScreen.portrait ? playlist_items_listview.height * 0.1 * mainScreen.dpiMultiplier : playlist_items_listview.width * 0.075 * mainScreen.dpiMultiplier
+                color : del_ma.pressed ? "#a0a0a0" : index % 2 === 0 ? "#151515" : "#080808"
+                Image
+                {
+                    id : pic
+                    anchors
+                    {
+                        left : parent.left
+                        leftMargin : 15
+                        verticalCenter : parent.verticalCenter
+                    }
+                    height : parent.height * 0.8
+                    fillMode: Image.PreserveAspectFit
+                    source : model.thumbnailUrl
+                }
                 Text
                 {
-                    anchors.centerIn: parent
                     color : "white"
-                    text: model.title
+                    text : model.title
+                    anchors
+                    {
+                        left : pic.right
+                        verticalCenter : parent.verticalCenter
+                        right : remove_button.left
+                        rightMargin : 10
+                        leftMargin : 15
+                    }
+                    width : parent.width - (pic.width + 25)
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    elide: Text.ElideRight
+                    font.pointSize: 14
+                    opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
+                    clip : true
+                }
+                MouseArea
+                {
+                    id : del_ma
+                    anchors.fill: parent
+                    onClicked:
+                    {
+                        core.buttonAction(30, Qt.point(playlists_listview.model.get(playlists_listview.currentIndex).playlistid, index));
+                    }
+                }
+                Image
+                {
+                    id : remove_button
+                    anchors
+                    {
+                        right : parent.right
+                        rightMargin : 10
+                        verticalCenter : parent.verticalCenter
+                    }
+                    height :  Math.min(55, parent.height * 0.8) * mainScreen.dpiMultiplier
+                    fillMode: Image.PreserveAspectFit
+                    source : "Resources/remove_inv.png"
+                    scale : rm_ma.pressed ? 0.9 : 1
+                    MouseArea
+                    {
+                        id : rm_ma
+                        anchors.fill: parent
+                        onClicked:
+                        {
+                            core.buttonAction(22, Qt.point(playlists_listview.model.get(playlists_listview.currentIndex).playlistid, index));
+                        }
+                    }
                 }
             }
         }

@@ -35,8 +35,10 @@ Item
             }
             fillMode: Image.PreserveAspectFit
             source : "Resources/back_arrow.png"
+            scale : back_ma.pressed ? 0.9 : 1
             MouseArea
             {
+                id : back_ma
                 anchors.fill: parent
                 onClicked:
                 {
@@ -180,7 +182,7 @@ Item
                     scale : delScale
                     z : PathView.onPath ? PathView.delZ : -1
                     onStatusChanged: if (status === Image.Ready) scale_anim.start();
-                    source : model.thumbnail
+                    source : model.thumbnailUrl
                     smooth : true
 
                     NumberAnimation {id : scale_anim; target : album_delegate; property: "scale"; from : 0; to : delScale; duration : 500; easing.type: Easing.InOutQuad}

@@ -39,7 +39,7 @@ PlayerManager::PlayerManager(QObject *parent) : QObject(parent)
     this->webCallBacks[EDITED_PLAYLIST] = &PlayerManager::playlistEditedCallBack;
     this->webCallBacks[PLAY_FILE] = &PlayerManager::playFileCallBack;
     this->currentActivePlayer = -1;
-    this->currentlyPlayerItems = new Models::ListModel(new PlayableItemModel());
+    this->currentlyPlayedItem = new PlayableItemModel();
     this->playlistsModels = new Models::SubListedListModel(new PlaylistModelItem(NULL));
     this->isPlayging = false;
     this->playerAdvance = 0;
@@ -226,7 +226,6 @@ void PlayerManager::removeItemAtPositionFromPlaylist(const int position, const i
 
 void PlayerManager::reloadPlaylists()
 {
-    this->playlistsModels->clear();
     QJsonObject requestJson;
     requestJson.insert("jsonrpc", QJsonValue(QString("2.0")));
     requestJson.insert("method", QJsonValue(QString("Playlist.GetPlaylists")));
@@ -237,7 +236,7 @@ void PlayerManager::reloadPlaylists()
 
 void PlayerManager::getPlaylistItems(PlaylistModelItem *playlist)
 {
-    playlist->submodel()->clear();
+    //playlist->submodel()->clear();
     QJsonObject requestJson;
     requestJson.insert("jsonrpc", QJsonValue(QString("2.0")));
     requestJson.insert("method", QJsonValue(QString("Playlist.GetItems")));
@@ -249,6 +248,8 @@ void PlayerManager::getPlaylistItems(PlaylistModelItem *playlist)
     QHash<int, QByteArray> fields = playlist->submodel()->getPrototype()->roleNames();
     fields.remove(PlayableItemModel::streamingFile);
     fields.remove(PlayableItemModel::itemId);
+    fields.remove(PlayableItemModel::fanartUrl);
+    fields.remove(PlayableItemModel::thumbnailUrl);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -447,9 +448,11 @@ void PlayerManager::getCurrentlyPlayedItem()
     QJsonObject paramObj;
     QJsonArray properties;
 
-    QHash<int, QByteArray> fields = this->currentlyPlayerItems->getPrototype()->roleNames();
+    QHash<int, QByteArray> fields = this->currentlyPlayedItem->roleNames();
     fields.remove(PlayableItemModel::streamingFile);
     fields.remove(PlayableItemModel::itemId);
+    fields.remove(PlayableItemModel::fanartUrl);
+    fields.remove(PlayableItemModel::thumbnailUrl);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -524,21 +527,9 @@ void PlayerManager::playPlaylist(int playlistId, int position)
     emit performJsonRPCRequest(requestJson, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_PLAYER, PLAY_FILE));
 }
 
-Models::ListModel* PlayerManager::getCurrentlyPlayedItemModel() const
+Models::ListItem* PlayerManager::getPlayedItem() const
 {
-    return this->currentlyPlayerItems;
-}
-
-PlayableItemModel *PlayerManager::playableItemModelFromType(QString type)
-{
-    if (type.compare("movie") == 0)
-        return new MovieModel();
-    else if (type.compare("song") == 0)
-        return new SongModel();
-    else if (type.compare("episode") == 0)
-        return new TVShowEpisodeModel();
-    else
-        return NULL;
+    return this->currentlyPlayedItem;
 }
 
 void PlayerManager::genericCallBack(QNetworkReply *reply,  QPointer<QObject> data)
@@ -585,18 +576,8 @@ void PlayerManager::getCurrentlyPlayedItemCallBack(QNetworkReply *reply,  QPoint
              jsonRep.isObject() &&
              jsonRep.object().value("result").isObject())
         {
-            this->currentlyPlayerItems->clear();
             QJsonObject item = jsonRep.object().value("result").toObject().value("item").toObject();
-            PlayableItemModel *playableItem = this->playableItemModelFromType(item.value("type").toString());
-            if (playableItem != NULL)
-            {
-                playableItem->setFile(item.value("file").toString());
-                playableItem->setTitle(item.value("title").toString());
-                playableItem->setRating(item.value("rating").toDouble());
-                playableItem->setThumbnail(item.value("thumbnail").toString());
-                playableItem->setRuntime(qMax(item.value("duration").toDouble(), item.value("runtime").toDouble()));
-                this->currentlyPlayerItems->appendRow(playableItem);
-            }
+            Models::JSONListItemBinder::fromQJsonValue(item, this->currentlyPlayedItem);
         }
     }
 }
@@ -635,6 +616,7 @@ void PlayerManager::getPlaylistsCallBack(QNetworkReply *reply,  QPointer<QObject
              jsonRep.isObject())
         {
             QJsonArray resultObj = jsonRep.object().value("result").toArray();
+            Models::ListModel *model = reinterpret_cast<Models::ListModel *>(data.data());
             foreach (QJsonValue playlistValue, resultObj)
             {
                 QJsonObject playlistObj = playlistValue.toObject();
@@ -642,11 +624,17 @@ void PlayerManager::getPlaylistsCallBack(QNetworkReply *reply,  QPointer<QObject
                 {
                     PlaylistModelItem *playlistItem = new PlaylistModelItem();
                     Models::JSONListItemBinder::fromQJsonValue(playlistObj, playlistItem);
-
                     if (playlistItem->id() != -1)
                     {
-                        this->getPlaylistItems(playlistItem);
-                        reinterpret_cast<Models::ListModel *>(data.data())->appendRow(playlistItem);
+                        Models::ListItem  *oldItem;
+                        if ((oldItem = model->find(playlistItem->id())) == NULL)
+                        {
+                            model->appendRow(playlistItem);
+                            oldItem = playlistItem;
+                        }
+                        else
+                            delete playlistItem;
+                        this->getPlaylistItems(reinterpret_cast<PlaylistModelItem *>(oldItem));
                     }
                 }
             }
@@ -665,13 +653,42 @@ void PlayerManager::getPlaylistItemsCallBack(QNetworkReply *reply, QPointer<QObj
         {
             QJsonObject resultObj = jsonRep.object().value("result").toObject();
             QJsonArray itemsArray = resultObj.value("items").toArray();
+            Models::ListModel *model = reinterpret_cast<Models::ListModel *>(data.data());
+            QList<Models::ListItem *> updatedItems;
+            QList<Models::ListItem *> oldItems = model->toList();
             foreach (QJsonValue itemElem, itemsArray)
             {
                 QJsonObject item = itemElem.toObject();
-                Models::ListItem *playableItem = reinterpret_cast<Models::ListModel *>(data.data())->getPrototype()->getNewItemInstance();
+                Models::ListItem *playableItem = model->getPrototype()->getNewItemInstance();
                 Models::JSONListItemBinder::fromQJsonValue(item, playableItem);
                 if (playableItem->id() != -1)
-                    reinterpret_cast<Models::ListModel *>(data.data())->appendRow(playableItem);
+                {
+                    Models::ListItem* oldItem = model->find(playableItem->id());
+                    if (oldItem != NULL)
+                    {
+                        *oldItem = *playableItem;
+                        delete playableItem;
+                        updatedItems << oldItem;
+                    }
+                    else
+                        model->appendRow(playableItem);
+                }
+            }
+            for (int i = oldItems.count(); i > 0; i--)
+            {
+                bool found = false;
+                Models::ListItem *item = oldItems.at(i - 1);
+                for (int j = updatedItems.count() - 1; j >= 0; j--)
+                {
+                    if (updatedItems.at(j)->id() == item->id())
+                    {
+                        updatedItems.removeAt(j);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    model->removeRow(model->getRowFromItem(item));
             }
         }
     }

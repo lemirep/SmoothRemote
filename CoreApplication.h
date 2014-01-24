@@ -35,6 +35,7 @@ class CoreApplication : public QObject,
     Q_PROPERTY(QObject* movieModel READ getMovieModel CONSTANT)
     Q_PROPERTY(QObject* audioArtistsModel READ getAudioArtistsModel CONSTANT)
     Q_PROPERTY(QObject* playlistsModel READ getPlaylistsModel CONSTANT)
+    Q_PROPERTY(QObject* currentXBMCPlayedItem READ getCurrentXBMCPlayedItem CONSTANT)
 
 public:
     enum ActionEnums
@@ -68,7 +69,8 @@ public:
         MovieToPlaylist = 26,
         StreamFile = 27,
         GetCodecs = 28,
-        OSD = 29
+        OSD = 29,
+        PlayItemInPlaylist = 30
     };
 
 
@@ -127,6 +129,7 @@ public:
     Q_INVOKABLE void            buttonAction(int buttonAction, QVariant value = QVariant());
     // PLAYLISTS
     QObject*                    getPlaylistsModel() const;
+    QObject*                    getCurrentXBMCPlayedItem() const;
 
     void                        launchStreamingApp(const QString &fileUrl);
 

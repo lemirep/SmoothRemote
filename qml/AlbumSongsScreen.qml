@@ -71,8 +71,10 @@ Item
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
                 source : "Resources/play_inv.png"
+                scale : play_ma.pressed ? 0.9 : 1
                 MouseArea
                 {
+                    id : play_ma
                     anchors.fill: parent
                     onClicked: core.buttonAction(-1);
                 }
@@ -85,8 +87,10 @@ Item
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
                 source : "Resources/plus_inv.png"
+                scale : add_ma.pressed ? 0.9 : 1
                 MouseArea
                 {
+                    id : add_ma
                     anchors.fill: parent
                     onClicked: core.buttonAction(16, albumId);
                 }
@@ -99,6 +103,12 @@ Item
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
                 source : "Resources/cloud_inv.png"
+                scale : cloud_ma.pressed ? 0.9 : 1
+                MouseArea
+                {
+                    id : cloud_ma
+                    anchors.fill: parent
+                }
             }
         }
     }
@@ -139,12 +149,12 @@ Item
                     }
                     height : parent.height * 0.8
                     fillMode: Image.PreserveAspectFit
-                    source : model.thumbnail
+                    source : model.thumbnailUrl
                 }
                 Text
                 {
                     color : "white"
-                    text : model.title
+                    text : model.track + " " + model.title
                     anchors
                     {
                         left : song_cover_pic.right

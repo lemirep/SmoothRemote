@@ -69,10 +69,14 @@ QVariant TVShowModel::data(int role) const
         return this->getWatchedEpisodes();
     case file:
         return this->getFile();
-    case thumbnail:
+    case thumbnailUrl:
         return this->getThumbnailUrl();
-    case fanart:
+    case fanartUrl:
         return this->getFanartUrl();
+    case fanart:
+        return this->getFanart();
+    case thumbnail:
+        return this->getThumbnail();
     case seasonsModel:
         return QVariant::fromValue(this->submodel());
     case plot:
@@ -144,6 +148,8 @@ QHash<int, QByteArray> TVShowModel::roleNames() const
     roleNames[seasonsModel] = "seasonsModel";
     roleNames[plot] = "plot";
     roleNames[fanart] = "fanart";
+    roleNames[fanartUrl] = "fanartUrl";
+    roleNames[thumbnailUrl] = "thumbnailUrl";
 
     return roleNames;
 }

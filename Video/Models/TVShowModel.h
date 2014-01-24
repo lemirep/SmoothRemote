@@ -22,7 +22,9 @@ public:
         watchedepisodes, //UNUSED
         file,
         thumbnail,
+        thumbnailUrl,
         seasonsModel,
+        fanartUrl,
         fanart
     };
 

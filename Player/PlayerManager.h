@@ -99,13 +99,13 @@ public:
     int                     getVideoPlaylistId();
 
     Models::ListModel*      getPlaylistsModel() const;
-    Models::ListModel*      getCurrentlyPlayedItemModel() const;
+    Models::ListItem*       getPlayedItem() const;
 
 
 private:
     QHash<int, void (PlayerManager::*)(QNetworkReply *reply, QPointer<QObject> data)>   webCallBacks;
     QList<void (PlayerManager::*)()>    playerActionQueue;
-    Models::ListModel                   *currentlyPlayerItems;
+    PlayableItemModel                   *currentlyPlayedItem;
     Models::SubListedListModel          *playlistsModels;
 
     int                                 currentActivePlayer;
@@ -122,8 +122,6 @@ private:
     void                    getPlaylistItemsCallBack(QNetworkReply *reply, QPointer<QObject> data);
     void                    playlistEditedCallBack(QNetworkReply *reply, QPointer<QObject> data);
     void                    playFileCallBack(QNetworkReply *reply, QPointer<QObject> );
-
-    PlayableItemModel       *playableItemModelFromType(QString type);
 
 signals:
     void                    performJsonRPCRequest(const QJsonObject &request, int requestId, QPointer<QObject> data=QPointer<QObject>());

@@ -70,7 +70,7 @@ Rectangle
                         artist_idx_listview.currentIndex = model.artist.charAt(0).toUpperCase().charCodeAt(0) - 65;
                     }
                 }
-                source : model.thumbnail
+                source : model.thumbnailUrl
                 fillMode: Image.PreserveAspectCrop
                 smooth : true
 

@@ -91,5 +91,6 @@
         <file>qml/FileBrowser.qml</file>
         <file>qml/Resources/check_inv.png</file>
         <file>qml/Resources/arrow_left.png</file>
+        <file>qml/OSDPanel.qml</file>
     </qresource>
 </RCC>
