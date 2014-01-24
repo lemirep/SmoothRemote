@@ -196,8 +196,8 @@ void AudioLibrary::reloadDataModels(bool webReload)
     //    WHEN ALL REQUESTS HAVE BEEN ANSWERED
     if (webReload)
         this->retrieveAudioArtists(this->artistsLibraryModel);
-    else
-        this->retrieveAudioArtistsFromDB();
+//    else
+//        this->retrieveAudioArtistsFromDB();
 }
 
 void AudioLibrary::refreshAlbumsForArtist(int artistId)
@@ -495,9 +495,9 @@ void AudioLibrary::refreshAudioLibraryCallBack(QNetworkReply *reply,  QPointer<Q
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
-            QString result = jsonResponse.object().value("result").toString();
-            if (result.compare("OK") == 0)
-                this->reloadDataModels(true);
+//            QString result = jsonResponse.object().value("result").toString();
+//            if (result.compare("OK") == 0)
+//                this->reloadDataModels(true);
         }
     }
 }

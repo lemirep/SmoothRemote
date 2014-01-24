@@ -57,7 +57,7 @@ Rectangle
                 top : parent.top
                 bottom : parent.bottom
                 right : parent.right
-                rightMargin : 15
+                margins : 15
             }
             MouseArea
             {
@@ -76,7 +76,7 @@ Rectangle
                 top : parent.top
                 bottom : parent.bottom
                 left : parent.left
-                leftMargin : 15
+                margins : 15
             }
             MouseArea
             {

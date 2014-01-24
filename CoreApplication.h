@@ -66,7 +66,9 @@ public:
         GetInfo = 24,
         SongToPlaylist = 25,
         MovieToPlaylist = 26,
-        StreamFile = 27
+        StreamFile = 27,
+        GetCodecs = 28,
+        OSD = 29
     };
 
 

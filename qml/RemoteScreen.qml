@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import QtMultimedia 5.0
 
 Item
 {
@@ -20,14 +21,14 @@ Item
         ListElement
         {
             tabName : "Player"
-            delegateComponent : ""
+            delegateComponent : "Player.qml"
         }
     }
 
     ListView
     {
         id : section_switcher_listview
-        height : 50 * mainScreen.dpiMultiplier
+        height : (mainScreen.mediaPlaying) ? 0 : 50 * mainScreen.dpiMultiplier
         model : remote_model
         orientation : ListView.Horizontal
         interactive: false
@@ -43,6 +44,7 @@ Item
                 width : ListView.view.width / 3
                 height : ListView.view.height
                 color : "#e5e5e5"
+                visible : height > 0
                 Text
                 {
                     anchors.centerIn: parent
@@ -100,6 +102,7 @@ Item
     ListView
     {
         id : remote_listview
+        interactive: (!mainScreen.mediaPlaying)
         anchors
         {
             left : parent.left
@@ -112,6 +115,12 @@ Item
         highlightRangeMode: ListView.StrictlyEnforceRange
         model : remote_model
         orientation : ListView.Horizontal
+        Component.onCompleted:
+        {
+            if (mainView.movieToPlay)
+                positionViewAtEnd();
+        }
+
         delegate : Component {
             Loader
             {

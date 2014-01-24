@@ -56,6 +56,33 @@ void RemoteManager::moveKey(const QString &keyCode)
      emit performJsonRPCRequest(requestJson, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_REMOTE, KEY_PRESSED));
 }
 
+void RemoteManager::showOSD()
+{
+    this->moveKey("Input.ShowOSD");
+}
+
+void RemoteManager::showInfos()
+{
+    this->moveKey("Input.Info");
+}
+
+void RemoteManager::showCodecs()
+{
+    this->moveKey("Input.ShowCodec");
+}
+
+void RemoteManager::sendText(const QString &text)
+{
+    QJsonObject requestJson;
+    requestJson.insert("jsonrpc", QJsonValue(QString("2.0")));
+    requestJson.insert("method", QJsonValue(QString("Input.SendText")));
+    QJsonObject params;
+    params.insert("text", QJsonValue(text));
+    requestJson.insert("params", QJsonValue(params));
+    qDebug() << "Sending Text";
+    emit performJsonRPCRequest(requestJson, REQUEST_ID_BUILDER(MAJOR_ID_REQUEST_REMOTE, KEY_PRESSED));
+}
+
 void RemoteManager::moveKeyCallBack(QNetworkReply *reply)
 {
     qDebug() << "Move Key CallBack";

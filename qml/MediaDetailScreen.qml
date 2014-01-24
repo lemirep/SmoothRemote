@@ -14,6 +14,7 @@ Item
     property bool shown : false;
     property bool hasActionBar : false
     property var backFunction : function() {shown = false};
+    property bool showCoverPic : true
     enabled : shown
 
     function animateCover(x)
@@ -140,10 +141,7 @@ Item
                     anchors.verticalCenter: parent.verticalCenter;
                     anchors.horizontalCenter: undefined;
                     anchors.top: undefined
-                }
-                PropertyChanges {
-                    target: detail_pic
-                    x : 50
+                    anchors.left: parent.left
                 }
                 AnchorChanges
                 {
@@ -162,6 +160,7 @@ Item
                     anchors.verticalCenter: undefined;
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
+                    anchors.left: undefined
                 }
                 AnchorChanges
                 {
@@ -179,22 +178,20 @@ Item
             scale : 0
             enabled: scale === 1
             onClicked: shown = false;
-            horizontalAlignment : (portrait) ? Image.AlignHCenter : Image.AlignLeft
-            width : parent.width * 0.2
-            anchors.topMargin: 25
+            anchors.leftMargin: showCoverPic ? 25 : 0
+            anchors.topMargin: showCoverPic ? 15 : 0
+            width : showCoverPic ? parent.width * 0.2 : 0
         }
 
         Item
         {
             id : show_detail
             enabled: opacity === 1
-            opacity: (detail_pic.scale === 1) ? 1 : 0
+            opacity: detail_pic.scale
             anchors
             {
                 right: parent.right
                 bottom: parent.bottom
-                leftMargin : 50
-                rightMargin : 50
             }
 
             Loader

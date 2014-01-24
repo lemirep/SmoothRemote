@@ -47,13 +47,13 @@ Rectangle
             contentComponent: TVShowDetail {
 
             }
-            focus : !tv_show_player.focus && shown
+            focus : /*!tv_show_player.focus &&*/ shown
         }
 
-        Player
-        {
-            id : tv_show_player;
-            enabled : (tv_show_player.focus === true)
-        }
+//        Player
+//        {
+//            id : tv_show_player;
+//            enabled : (tv_show_player.focus === true)
+//        }
     }
 }

@@ -4,7 +4,14 @@ Item
 {
     id : mainView
     property int oldIdx : -1;
+    property string movieToPlay : "";
     focus : true
+
+    function launchMediaPlayer(fileToPlay)
+    {
+        movieToPlay = fileToPlay;
+        slideMenu.setMenuItemIndex(0);
+    }
 
     onActiveFocusChanged:
     {

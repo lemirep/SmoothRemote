@@ -148,9 +148,8 @@ Rectangle
                         console.log("Going to " + model.artistIdx);
                         if (artistIdx !== -1)
                         {
-                            artists_cover_flow.currentIndex = model.artistIdx + 1;
+                            artists_cover_flow.positionViewAtIndex(model.artistIdx, PathView.Center);
                             artist_idx_listview.currentIndex = index;
-                            artists_cover_flow.currentIndex -= 1;
                         }
                      }
                 }

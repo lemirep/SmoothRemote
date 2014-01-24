@@ -31,18 +31,20 @@ Item
         State
         {
             AnchorChanges {target : seasons_view; anchors.bottom : parent.top}
+            PropertyChanges {target: tvshow_detail; showCoverPic : false}
             when : episodeView
         },
         State
         {
             AnchorChanges {target : seasons_view; anchors.bottom : parent.bottom}
+            PropertyChanges {target: tvshow_detail; showCoverPic : true}
             when : !episodeView
         }
     ]
 
     transitions:
         [
-        Transition {AnchorAnimation {duration : 500}}
+        Transition {AnchorAnimation {duration : 500} NumberAnimation {duration : 500}}
     ]
 
     Keys.onReleased:
@@ -68,7 +70,7 @@ Item
         Flickable
         {
             id : show_flickable
-            contentHeight: tv_show_data.childrenRect.height * mainScreen.dpiMultiplier
+            contentHeight: seasons_listview.height + tv_show_data.childrenRect.height * mainScreen.dpiMultiplier
             clip : true
             boundsBehavior: Flickable.DragOverBounds
             anchors
@@ -76,8 +78,8 @@ Item
                 left : parent.left
                 top : parent.top
                 right : parent.right
+                bottom : parent.bottom
             }
-            height : parent.height * 0.6
 
             Column
             {
@@ -88,6 +90,9 @@ Item
                     right : parent.right
                     top : parent.top
                     topMargin : 25
+                    bottom : parent.bottom
+                    leftMargin : mainScreen.portrait ? 10 : 25
+                    rightMargin : mainScreen.portrait ? 10 : 25
                 }
                 spacing: 15
 
@@ -105,6 +110,29 @@ Item
                     text : tvShow.year
                     font.pointSize: 16 * mainScreen.dpiMultiplier
                 }
+                ListView
+                {
+                    id : seasons_listview
+                    anchors
+                    {
+                        left : parent.left
+                        right : parent.right
+                    }
+                    height : 0.4 * show_flickable.height
+                    orientation: ListView.Horizontal
+                    model : tvShow.seasonsModel
+                    clip : true
+
+                    delegate: VideoCoverDelegate {
+                        width : seasons_listview.height
+                        height: width
+                        source : model.thumbnail
+                        text : "Season " + model.season
+                        anchors.margins: 15
+                        onClicked: {episode_listview.model = model.episodeModel; episodeView = true;}
+                    }
+                    ScrollBar {flickable: seasons_listview}
+                }
                 Text
                 {
                     id : show_summary
@@ -116,32 +144,6 @@ Item
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 }
             }
-        }
-
-        ListView
-        {
-            id : seasons_listview
-            anchors
-            {
-                left : parent.left
-                right : parent.right
-                top : show_flickable.bottom
-                bottom : parent.bottom
-                margins : 15 * mainScreen.dpiMultiplier
-            }
-            orientation: ListView.Horizontal
-            model : tvShow.seasonsModel
-            clip : true
-
-            delegate: VideoCoverDelegate {
-                width : seasons_listview.height
-                height: width
-                source : model.thumbnail
-                text : "Season " + model.season
-                anchors.margins: 15
-                onClicked: {episode_listview.model = model.episodeModel; episodeView = true;}
-            }
-            ScrollBar {flickable: seasons_listview}
         }
     }
 
@@ -155,6 +157,9 @@ Item
             top : seasons_view.bottom
             bottom : parent.bottom
         }
+//        width : tvshow_detail.width
+//        height : tvshow_detail.height
+//        x : 0
         clip: true
         snapMode: GridView.SnapToRow
         model : showSeason.episodeModel
@@ -197,6 +202,7 @@ Item
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight
                     font.pointSize: 14
+                    opacity : mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                 }
                 MouseArea
                 {
@@ -206,16 +212,17 @@ Item
                 }
                 MediaActionBar
                 {
+                    id : media_action_bar
                     onPlayClicked: core.buttonAction(14, model.file);
                     onAddClicked: core.buttonAction(17, model.tvshowid);
-                    onStreamClicked: core.buttonAction(27, model.streamingFile);
+                    onStreamClicked:  mainView.launchMediaPlayer(model.streamingFile); /*core.buttonAction(27, model.streamingFile);*/
                     opacity : editMode ? 1 : 0
                     Behavior on opacity {NumberAnimation {duration : 250}}
                 }
                 Timer
                 {
                     running : editMode
-                    interval : 5000
+                    interval : 3000
                     repeat : false
                     onTriggered: editMode = !editMode
                 }

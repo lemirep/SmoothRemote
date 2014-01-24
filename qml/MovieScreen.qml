@@ -93,7 +93,8 @@ Rectangle
                     {
                         id : cloud_ma
                         anchors.fill: parent
-                        onClicked: core.buttonAction(27, movie_detail.holder.streamingFile);
+//                        onClicked: core.buttonAction(27, movie_detail.holder.streamingFile);
+                        onClicked: mainView.launchMediaPlayer(movie_detail.holder.streamingFile);
                     }
                 }
             }

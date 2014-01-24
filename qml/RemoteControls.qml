@@ -9,11 +9,9 @@ Item
         spacing : 20 * mainScreen.dpiMultiplier
         anchors
         {
-           // right : parent.right
             bottom : arrow_controls.top
             top : parent.top
             horizontalCenter : parent.horizontalCenter
-            //left : parent.left
         }
 
         Image

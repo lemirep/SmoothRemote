@@ -155,6 +155,7 @@ Item
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight
                     font.pointSize: 14
+                    opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                 }
                 MouseArea
                 {
@@ -165,6 +166,7 @@ Item
 
                 MediaActionBar
                 {
+                    id : media_action_bar
                     opacity : editMode ? 1 : 0
                     onPlayClicked: core.buttonAction(14, model.file);
                     onAddClicked:  core.buttonAction(25, model.songid);
@@ -175,7 +177,7 @@ Item
                 Timer
                 {
                     running : editMode
-                    interval : 5000
+                    interval : 3000
                     repeat : false
                     onTriggered: editMode = !editMode
                 }

@@ -270,6 +270,19 @@ void CoreApplication::buttonAction(int buttonAction, QVariant value)
     case StreamFile:
         this->launchStreamingApp(value.toString());
         break;
+    case RefreshLibraries:
+        this->videoLibrary->refreshVideoLibrary();
+        this->audioLibrary->refreshAudioLibrary();
+        break;
+    case GetInfo:
+        this->remoteManager->showInfos();
+        break;
+    case GetCodecs:
+        this->remoteManager->showCodecs();
+        break;
+    case OSD:
+        this->remoteManager->showOSD();
+        break;
     }
 }
 

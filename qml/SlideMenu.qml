@@ -13,9 +13,10 @@ Item
     {
         id : d
         property int  dragOffset : 50
+        property int  offsetVal : 50
     }
 
-    onDeployedChanged: {checkDeployMenu(deployed)}
+    onDeployedChanged: {checkDeployMenu(deployed);}
 
     function setMenuItemIndex(idx)
     {
@@ -27,7 +28,7 @@ Item
         if (deployed !== deploy)
             deployed = deploy;
         else
-            d.dragOffset = (deploy) ? (slideMenuPanel.width) : (20);
+            d.dragOffset = (deploy) ? (slideMenuPanel.width) : (d.offsetVal);
         return deployed;
     }
     Rectangle
@@ -40,7 +41,7 @@ Item
     Rectangle
     {
         id : slideMenuPanel
-        width : 400
+        width : mainScreen.portrait ? Math.floor(mainScreen.width * 0.8) : 400 * mainScreen.dpiMultiplier
         height : parent.height
         x : d.dragOffset - width
         color : "#e5e5e5"
@@ -105,8 +106,8 @@ Item
                 d.dragOffset = mouseX - oldOffset;
                 if (d.dragOffset > slideMenuPanel.width)
                     d.dragOffset = slideMenuPanel.width;
-                if (d.dragOffset < 20)
-                    d.dragOffset = 20;
+                if (d.dragOffset < d.offsetVal)
+                    d.dragOffset = d.offsetVal;
                 mouse.accepted = true;
             }
         }

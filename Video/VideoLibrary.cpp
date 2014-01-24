@@ -588,8 +588,8 @@ void VideoLibrary::refreshVideoLibraryCallBack(QNetworkReply *reply, QPointer<QO
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
             QString result = jsonResponse.object().value("result").toString();
-            if (result.compare("OK") == 0)
-                this->reloadDataModels(true);
+//            if (result.compare("OK") == 0)
+//                this->reloadDataModels(true);
         }
     }
 }

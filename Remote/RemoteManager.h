@@ -52,6 +52,10 @@ public:
     int             getMajorIDRequestHandled() const;
 
     void            moveKey(const QString &keyCode);
+    void            showOSD();
+    void            showInfos();
+    void            showCodecs();
+    void            sendText(const QString &text);
 
     void            rebootSystem();
     void            shutdownSystem();

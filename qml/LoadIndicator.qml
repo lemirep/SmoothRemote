@@ -37,7 +37,7 @@ Item
         height: parent.height - 40
         width: height
         anchors.centerIn: loader_ring
-        color : "black"
+        color : "#1e2124"
 
         Text
         {
