@@ -5,6 +5,14 @@ Rectangle
     color : "#e8e8e8"
     anchors.fill: parent
 
+    Component.onCompleted: forceActiveFocus();
+
+    Keys.onReleased:
+    {
+        if (event.key === Qt.Key_Backspace)
+            event.accepted = true;
+    }
+
     Grid
     {
         anchors.centerIn: parent
@@ -70,5 +78,4 @@ Rectangle
             onAccepted:  {core.xbmcServerPassword = text}
         }
     }
-
 }
