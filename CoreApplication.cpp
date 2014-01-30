@@ -42,6 +42,7 @@ CoreApplication::CoreApplication(QObject *parent) :
 
 void CoreApplication::readSettings()
 {
+    qDebug() << "Reading settings";
 #if defined Q_OS_ANDROID
     QSettings settings("/sdcard/smooth_remote.ini", QSettings::NativeFormat);
 #else
@@ -55,6 +56,7 @@ void CoreApplication::readSettings()
 
 void CoreApplication::saveSettings()
 {
+    qDebug() << "Saving settings";
 #if defined Q_OS_ANDROID
     QSettings settings("/sdcard/smooth_remote.ini", QSettings::NativeFormat);
 #else
@@ -307,4 +309,14 @@ void CoreApplication::launchStreamingApp(const QString &fileUrl)
 {
     qDebug() << "Corvette " << fileUrl;
     QDesktopServices::openUrl(fileUrl);
+}
+
+bool CoreApplication::getXBMCPlayerPlaying() const
+{
+    return this->playerManager->getIsPlaying();
+}
+
+int CoreApplication::getXBMCPlayerAdvance() const
+{
+    return this->playerManager->getPlayerAdvance();
 }

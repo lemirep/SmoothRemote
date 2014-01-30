@@ -49,6 +49,7 @@ Rectangle
             actionBarComponent: Row   {
                 spacing : 25
                 height : 55 * mainScreen.dpiMultiplier
+                opacity : parent.enabled ? 1 : 0
 
                 Image
                 {

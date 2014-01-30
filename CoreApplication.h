@@ -36,6 +36,8 @@ class CoreApplication : public QObject,
     Q_PROPERTY(QObject* audioArtistsModel READ getAudioArtistsModel CONSTANT)
     Q_PROPERTY(QObject* playlistsModel READ getPlaylistsModel CONSTANT)
     Q_PROPERTY(QObject* currentXBMCPlayedItem READ getCurrentXBMCPlayedItem CONSTANT)
+    Q_PROPERTY(bool xbmcPlayerPlaying READ getXBMCPlayerPlaying CONSTANT)
+    Q_PROPERTY(int xbmcPlayerAdvance READ getXBMCPlayerAdvance CONSTANT)
 
 public:
     enum ActionEnums
@@ -132,6 +134,9 @@ public:
     QObject*                    getCurrentXBMCPlayedItem() const;
 
     void                        launchStreamingApp(const QString &fileUrl);
+    // PLAYER
+    bool                        getXBMCPlayerPlaying() const;
+    int                         getXBMCPlayerAdvance() const;
 
 
     // WebServiceUserInterface interface

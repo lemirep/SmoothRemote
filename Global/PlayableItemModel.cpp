@@ -52,7 +52,13 @@ QString PlayableItemModel::streamingFileUrl(const QString &fileUrl)
 
 PlayableItemModel::PlayableItemModel(QObject *parent) :
     Models::ListItem(parent),
-    m_itemId(-1)
+    m_rating(0),
+    m_runtime(0),
+    m_itemId(-1),
+    m_title(""),
+    m_file(""),
+    m_thumbnail(""),
+    m_fanArt("")
 {
 }
 

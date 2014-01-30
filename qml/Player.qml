@@ -7,9 +7,10 @@ Rectangle
     color : "#1e2124"
     anchors.fill: parent
     property alias player : player
+    property variant xbmcPlayedItem : core.currentXBMCPlayedItem
     property bool osd : false;
-    property bool playing : player.playbackState === MediaPlayer.PlayingState
-    property bool local : false
+    property bool playing : player.playbackState === MediaPlayer.PlayingState || core.xbmcPlayerPlaying
+    property bool local : (player.playbackState !== MediaPlayer.StoppedState)
     focus : playing
     onPlayingChanged: {if (playing) forceActiveFocus()}
 
@@ -28,12 +29,24 @@ Rectangle
     {
         local = true;
         osd_panel.duration = player.duration;
-        osd_panel.advance = player.position;
+    }
+
+    onXbmcPlayedItemChanged:
+    {
+        if (!local)
+            playXBMCMedia();
+    }
+
+    onLocalChanged:
+    {
+        if (!local && playing)
+            playXBMCMedia();
     }
 
     function playXBMCMedia()
     {
         local = false;
+        osd_panel.duration = xbmcPlayedItem.runtime
     }
 
     Keys.onReleased:
@@ -59,6 +72,15 @@ Rectangle
         }
     }
 
+
+    Image
+    {
+        id: back_img
+        source: xbmcPlayedItem.thumbnail
+        fillMode: Image.PreserveAspectCrop
+        anchors.fill: parent
+    }
+
     MediaPlayer
     {
         id : player;
@@ -72,17 +94,16 @@ Rectangle
                 mainScreen.mediaPlaying = false;
         }
     }
+//    PinchArea
+//    {
+//        anchors.fill: parent
+//        pinch.maximumScale: 2
+//        pinch.minimumScale: 0.5
+//        pinch.target: player_output
 
-    PinchArea
-    {
-        anchors.fill: parent
-        pinch.maximumScale: 2
-        pinch.minimumScale: 0.5
-        pinch.target: player_output
-
-        property real oldScale;
-        onPinchStarted: oldScale = player_output.scale;
-    }
+//        property real oldScale;
+//        onPinchStarted: oldScale = player_output.scale;
+//    }
 
     VideoOutput
     {
@@ -123,25 +144,39 @@ Rectangle
         height : parent.height * 0.3
         shown : osd
         playing : local ? player_area.playing : false
+        advance: local ? player.position : core.xbmcPlayerAdvance
 
         onPlayPressed:
         {
-
+            if (local)
+            {
+                if (playing)
+                    player.pause();
+                else
+                    player.play();
+            }
         }
 
         onStopPressed:
         {
-
+            if (local)
+              player.stop();
         }
 
         onForwardPressed:
         {
+            if (!local)
+            {
 
+            }
         }
 
         onBackwardPressed:
         {
+            if (!local)
+            {
 
+            }
         }
     }
 }

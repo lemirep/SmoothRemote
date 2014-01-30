@@ -6,7 +6,7 @@ Rectangle
     property alias menuComponent : component_loader.sourceComponent;
 
     width : parent.width
-    height : (mainScreen.mediaPlaying) ? 0 : mainScreen.height * 0.05 * mainScreen.dpiMultiplier
+    height : (mainScreen.mediaPlaying) ? 0 : 55 * mainScreen.dpiMultiplier
     color : "#e5e5e5"
     visible : height > 0
     Behavior on height {NumberAnimation {duration : 750}}
