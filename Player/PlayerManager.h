@@ -43,6 +43,7 @@
 #include "TVShowEpisodeModel.h"
 #include "SongModel.h"
 #include "PlaylistModelItem.h"
+#include "PlayerModelItem.h"
 
 #define MAJOR_ID_REQUEST_PLAYER 2
 #define GENERIC_CALLBACK 0
@@ -63,21 +64,12 @@ public:
     void                    getActivesPlayers();
     void                    playFile(const QString &file);
 
-    void                    pause_resumeCurrentPlayer();
-    void                    playNext();
-    void                    playPrevious();
-    void                    stopCurrentPlayer();
-    void                    seekCurrentPlayer(int advance);
-    void                    smallForward();
-    void                    smallBackward();
-    void                    bigForward();
-    void                    bigBackward();
-    void                    getCurrentlyPlayedItem();
-    void                    getCurrentPlayerState();
-
-
-    bool                    getIsPlaying() const;
-    double                  getPlayerAdvance() const;
+    void                    performPlayerAction(const QString& action,
+                                                const QString &argName = "",
+                                                const QVariant& values = QVariant());
+    void                    getCurrentlyPlayedItem(PlayerModelItem * player);
+    void                    getPlayerState(PlayerModelItem * player);
+    void                    refreshPlayers();
 
     int                     getMajorIDRequestHandled() const;
     void                    receiveResultFromHttpRequest(QNetworkReply *reply, int id, QPointer<QObject> data);
@@ -99,18 +91,13 @@ public:
     int                     getVideoPlaylistId();
 
     Models::ListModel*      getPlaylistsModel() const;
-    Models::ListItem*       getPlayedItem() const;
+    Models::ListModel*      getPlayersModel() const;
 
 
 private:
     QHash<int, void (PlayerManager::*)(QNetworkReply *reply, QPointer<QObject> data)>   webCallBacks;
-    QList<void (PlayerManager::*)()>    playerActionQueue;
-    PlayableItemModel                   *currentlyPlayedItem;
+    Models::SubListedListModel          *playerModels;
     Models::SubListedListModel          *playlistsModels;
-
-    int                                 currentActivePlayer;
-    bool                                isPlayging;
-    double                              playerAdvance;
 
     void                    getPlaylistItems(PlaylistModelItem *playlist);
 

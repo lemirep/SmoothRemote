@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import "Utils.js" as Utils
 
 Item
 {
@@ -23,6 +24,7 @@ Item
     signal forwardPressed();
     signal backwardPressed();
     signal stopPressed();
+    signal durationSeek(real percentage);
 
     Column
     {
@@ -70,6 +72,32 @@ Item
                 opacity : 0.8
                 anchors.verticalCenter : parent.verticalCenter
                 anchors.left: parent.left
+            }
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    durationSeek(mouseX / width);
+                }
+            }
+
+            Text
+            {
+                color : "white"
+                x : advance_slide.width - (width * 0.5)
+                y : - advance_slide.height
+                font.pointSize: 10 * mainScreen.dpiMultiplier
+                text : Utils.printDuration(advance)
+            }
+
+            Text
+            {
+                color : "white"
+                x : parent.width - (width * 0.5)
+                y : - advance_slide.height
+                font.pointSize: 10 * mainScreen.dpiMultiplier
+                text : Utils.printDuration(duration)
             }
         }
 

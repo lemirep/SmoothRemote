@@ -7,6 +7,8 @@ Rectangle
 
     Component.onCompleted: forceActiveFocus();
 
+    Component.onDestruction: core.saveSettings();
+
     Keys.onReleased:
     {
         if (event.key === Qt.Key_Backspace)

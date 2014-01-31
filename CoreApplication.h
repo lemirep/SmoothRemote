@@ -35,9 +35,7 @@ class CoreApplication : public QObject,
     Q_PROPERTY(QObject* movieModel READ getMovieModel CONSTANT)
     Q_PROPERTY(QObject* audioArtistsModel READ getAudioArtistsModel CONSTANT)
     Q_PROPERTY(QObject* playlistsModel READ getPlaylistsModel CONSTANT)
-    Q_PROPERTY(QObject* currentXBMCPlayedItem READ getCurrentXBMCPlayedItem CONSTANT)
-    Q_PROPERTY(bool xbmcPlayerPlaying READ getXBMCPlayerPlaying CONSTANT)
-    Q_PROPERTY(int xbmcPlayerAdvance READ getXBMCPlayerAdvance CONSTANT)
+    Q_PROPERTY(QObject* xbmcPlayersModel READ getXBMCPlayers CONSTANT)
 
 public:
     enum ActionEnums
@@ -102,12 +100,12 @@ private:
     QHash<int, IWebRequestDispatcher*>  networkRequestResultDispatch;
 
     void        readSettings();
-    void        saveSettings();
 
 public:
 
     // XBMC CONF
 
+    Q_INVOKABLE void            saveSettings();
     void                        setXbmcServerPort(int port);
     void                        setXbmcServerUrl(const QUrl &url);
     void                        setXbmcServerUserName(const QString &username);
@@ -129,14 +127,12 @@ public:
     Q_INVOKABLE void            refreshAlbumsForArtist(int artistId) const;
     // REMOTE
     Q_INVOKABLE void            buttonAction(int buttonAction, QVariant value = QVariant());
-    // PLAYLISTS
+    // PLAYLISTS & PLAYER
     QObject*                    getPlaylistsModel() const;
-    QObject*                    getCurrentXBMCPlayedItem() const;
+    QObject*                    getXBMCPlayers() const;
+    Q_INVOKABLE void            refreshPlayers();
 
     void                        launchStreamingApp(const QString &fileUrl);
-    // PLAYER
-    bool                        getXBMCPlayerPlaying() const;
-    int                         getXBMCPlayerAdvance() const;
 
 
     // WebServiceUserInterface interface

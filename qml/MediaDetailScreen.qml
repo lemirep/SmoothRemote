@@ -179,7 +179,6 @@ Item
             id : detail_pic
             scale : 0
             enabled: scale === 1
-            onClicked: shown = false;
             anchors.leftMargin: showCoverPic ? 25 : 0
             anchors.topMargin: showCoverPic ? 15 : 0
             width : showCoverPic ? parent.width * 0.2 : 0

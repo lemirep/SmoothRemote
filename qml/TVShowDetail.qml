@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import "Utils.js" as Utils
 
 Item
 {
@@ -168,7 +169,7 @@ Item
             {
                 property bool editMode : false
                 width : ListView.view.width
-                height : mainScreen.portrait ? ListView.view.height * 0.2 * mainScreen.dpiMultiplier : ListView.view.width * 0.15 * mainScreen.dpiMultiplier
+                height : mainScreen.portrait ? ListView.view.height * 0.15 * mainScreen.dpiMultiplier : ListView.view.width * 0.15 * mainScreen.dpiMultiplier
                 Rectangle
                 {
                     anchors.fill: parent
@@ -185,11 +186,13 @@ Item
                         verticalCenter : parent.verticalCenter
                     }
                     height : parent.height * 0.8
+                    width : parent.width * 0.25
                     fillMode: Image.PreserveAspectFit
                     source : model.thumbnailUrl
                 }
                 Text
                 {
+                    id : episode_title_text
                     color : "white"
                     text : model.episode + " " + model.title
                     anchors
@@ -198,12 +201,31 @@ Item
                         verticalCenter : parent.verticalCenter
                         leftMargin : 15
                     }
+                    height : parent.height * 0.3
                     width : parent.width - (episode_cover_pic.width + 25)
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight
-                    font.pointSize: 14
+                    font.pointSize: 14 * mainScreen.dpiMultiplier
                     opacity : mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                 }
+                Text
+                {
+                    color : "white"
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    width : parent.width - (episode_cover_pic.width + 25)
+                    elide: Text.ElideRight
+                    opacity : mainScreen.portrait ? 1 - media_action_bar.opacity : 1
+                    text : Utils.printDuration(model.runtime)
+                    font.pointSize: 11 * mainScreen.dpiMultiplier
+                    anchors
+                    {
+                        top : episode_title_text.bottom
+                        topMargin : 5
+                        left : episode_title_text.left
+                    }
+
+                }
+
                 MouseArea
                 {
                     id : episode_del_ma

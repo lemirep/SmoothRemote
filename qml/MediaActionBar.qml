@@ -65,21 +65,21 @@ Row
             onClicked: streamClicked();
         }
     }
-    Image
-    {
-        height: parent.height - 15
-        rotation : 180
-        anchors.verticalCenter: parent.verticalCenter
-        fillMode: Image.PreserveAspectFit
-        horizontalAlignment: Image.AlignHCenter
-        verticalAlignment: Image.AlignVCenter
-        source : "Resources/download_inv.png"
-        scale : dl_button_ma.pressed ? 0.9 : 1
-        MouseArea
-        {
-            id : dl_button_ma
-            anchors.fill: parent
-            onClicked: downloadClicked();
-        }
-    }
+//    Image
+//    {
+//        height: parent.height - 15
+//        rotation : 180
+//        anchors.verticalCenter: parent.verticalCenter
+//        fillMode: Image.PreserveAspectFit
+//        horizontalAlignment: Image.AlignHCenter
+//        verticalAlignment: Image.AlignVCenter
+//        source : "Resources/download_inv.png"
+//        scale : dl_button_ma.pressed ? 0.9 : 1
+//        MouseArea
+//        {
+//            id : dl_button_ma
+//            anchors.fill: parent
+//            onClicked: downloadClicked();
+//        }
+//    }
 }

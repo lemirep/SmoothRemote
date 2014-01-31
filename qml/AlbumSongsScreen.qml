@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import "Utils.js" as Utils
 
 Item
 {
@@ -153,20 +154,39 @@ Item
                 }
                 Text
                 {
+                    id : song_title_text
                     color : "white"
                     text : model.track + " " + model.title
                     anchors
                     {
                         left : song_cover_pic.right
-                        verticalCenter : parent.verticalCenter
                         leftMargin : 15
+                        verticalCenter : parent.verticalCenter
                     }
+                    width : parent.width - (song_cover_pic.width + 25)
+                    height : parent.height * 0.5
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    elide: Text.ElideRight
+                    font.pointSize: 14 * mainScreen.dpiMultiplier
+                    opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
+                }
+                Text
+                {
+                    color : "white"
                     width : parent.width - (song_cover_pic.width + 25)
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight
-                    font.pointSize: 14
+                    font.pointSize: 11 * mainScreen.dpiMultiplier
                     opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
+                    text : Utils.printDuration(model.runtime)
+                    anchors
+                    {
+                        bottom : parent.bottom
+                        bottomMargin : 5
+                        left : song_title_text.left
+                    }
                 }
+
                 MouseArea
                 {
                     id : song_del_ma

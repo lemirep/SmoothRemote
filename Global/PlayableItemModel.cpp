@@ -63,8 +63,14 @@ PlayableItemModel::PlayableItemModel(QObject *parent) :
 }
 
 PlayableItemModel::PlayableItemModel(const PlayableItemModel &item) :
-    Models::ListItem(NULL),
-    m_itemId(-1)
+    Models::ListItem(),
+    m_rating(0),
+    m_runtime(0),
+    m_itemId(-1),
+    m_title(""),
+    m_file(""),
+    m_thumbnail(""),
+    m_fanArt("")
 {
     if (&item != this)
     {

@@ -7,13 +7,16 @@ Rectangle
     color : "#1e2124"
     anchors.fill: parent
     property alias player : player
-    property variant xbmcPlayedItem : core.currentXBMCPlayedItem
     property bool osd : false;
-    property bool playing : player.playbackState === MediaPlayer.PlayingState || core.xbmcPlayerPlaying
+    property bool xbmcPlaying : false
+    property real xbmcAdvance : 0;
+    property int  xbmcRuntime : 0;
+    property bool localPlaying : player.playbackState === MediaPlayer.PlayingState
+    property bool playing : localPlaying || xbmcPlaying
     property bool local : (player.playbackState !== MediaPlayer.StoppedState)
     focus : playing
     onPlayingChanged: {if (playing) forceActiveFocus()}
-
+    onLocalPlayingChanged: mainScreen.mediaPlaying = localPlaying;
     Component.onCompleted:
     {
         if (mainView.movieToPlay)
@@ -21,32 +24,15 @@ Rectangle
             player.source = mainView.movieToPlay;
             mainView.movieToPlay = "";
             player.play();
-            playLocalMedia();
         }
     }
 
-    function playLocalMedia()
+    Timer
     {
-        local = true;
-        osd_panel.duration = player.duration;
-    }
-
-    onXbmcPlayedItemChanged:
-    {
-        if (!local)
-            playXBMCMedia();
-    }
-
-    onLocalChanged:
-    {
-        if (!local && playing)
-            playXBMCMedia();
-    }
-
-    function playXBMCMedia()
-    {
-        local = false;
-        osd_panel.duration = xbmcPlayedItem.runtime
+        interval: 2500
+        running : !local
+        repeat : true
+        onTriggered: {core.refreshPlayers();}
     }
 
     Keys.onReleased:
@@ -54,11 +40,14 @@ Rectangle
         console.log("Player Key Released");
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
         {
-            player.stop();
+            if (local)
+                player.stop();
             event.accepted = true;
         }
         else if (event.key === Qt.Key_VolumeUp)
         {
+            if (!local)
+                return ;
             player.volume
             event.accepted = true;
             if (volume < 1.0)
@@ -66,19 +55,53 @@ Rectangle
         }
         else if (event.key === Qt.Key_VolumeDown)
         {
+            if (!local)
+                return ;
             event.accepted = true;
             if (volume > 0.0)
                 volume -= 0.1;
         }
     }
 
-
-    Image
+    ListView
     {
-        id: back_img
-        source: xbmcPlayedItem.thumbnail
-        fillMode: Image.PreserveAspectCrop
+        id : xbmc_player
         anchors.fill: parent
+        model : core.xbmcPlayersModel
+        opacity : local ? 0 : 1
+        interactive : false
+        delegate : Component {
+            Image
+            {
+                id: back_img
+
+                source : model.playerItemsModel.get(0).fanartUrl
+                fillMode: Image.PreserveAspectCrop
+                width : xbmc_player.width
+                height : xbmc_player.height
+
+                property int speed : model.speed;
+                property real advance : model.percentage * 0.01;
+                property real duration : model.playerItemsModel.get(0).runtime;
+
+                onDurationChanged: xbmcRuntime = duration;
+                onSpeedChanged: xbmcPlaying = speed > 0;
+                onAdvanceChanged: xbmcAdvance = advance * duration;
+
+                Text
+                {
+                    anchors
+                    {
+                        horizontalCenter : parent.horizontalCenter
+                        top : parent.top
+                        topMargin : 50
+                    }
+                    color : "white"
+                    font.pointSize: 15 * mainScreen.dpiMultiplier
+                    text : model.playerItemsModel.get(0).title
+                }
+            }
+        }
     }
 
     MediaPlayer
@@ -86,24 +109,17 @@ Rectangle
         id : player;
         onErrorStringChanged: console.log(errorString);
         volume : 0.3
-        onPlaybackStateChanged:
-        {
-            if (player.playbackState === MediaPlayer.PlayingState)
-                mainScreen.mediaPlaying = true;
-            else
-                mainScreen.mediaPlaying = false;
-        }
     }
-//    PinchArea
-//    {
-//        anchors.fill: parent
-//        pinch.maximumScale: 2
-//        pinch.minimumScale: 0.5
-//        pinch.target: player_output
+    //    PinchArea
+    //    {
+    //        anchors.fill: parent
+    //        pinch.maximumScale: 2
+    //        pinch.minimumScale: 0.5
+    //        pinch.target: player_output
 
-//        property real oldScale;
-//        onPinchStarted: oldScale = player_output.scale;
-//    }
+    //        property real oldScale;
+    //        onPinchStarted: oldScale = player_output.scale;
+    //    }
 
     VideoOutput
     {
@@ -113,13 +129,6 @@ Rectangle
         source: player
         enabled : (opacity === 1)
 
-        MouseArea
-        {
-            anchors.fill: parent
-            enabled: player.playbackState !== MediaPlayer.StoppedState
-            onClicked: {osd = !osd;}
-        }
-
         LoadIndicator
         {
             height: 150
@@ -128,6 +137,13 @@ Rectangle
             running : player.status === MediaPlayer.Loading
             loadText: Math.floor(player.bufferProgress * 100) + " %"
         }
+    }
+
+    MouseArea
+    {
+        anchors.fill: parent
+        enabled: playing || !local
+        onClicked: {osd = !osd;}
     }
 
     Timer
@@ -143,31 +159,36 @@ Rectangle
         id : osd_panel
         height : parent.height * 0.3
         shown : osd
-        playing : local ? player_area.playing : false
-        advance: local ? player.position : core.xbmcPlayerAdvance
+        playing : local ? localPlaying : xbmcPlaying
+        advance: local ? player.position * 0.001 : xbmcAdvance
+        duration : local ? player.duration * 0.001: xbmcRuntime
 
         onPlayPressed:
         {
             if (local)
             {
-                if (playing)
+                if (localPlaying)
                     player.pause();
                 else
                     player.play();
             }
+            else
+                core.buttonAction(7);
         }
 
         onStopPressed:
         {
             if (local)
-              player.stop();
+                player.stop();
+            else
+                core.buttonAction(8);
         }
 
         onForwardPressed:
         {
             if (!local)
             {
-
+                core.buttonAction(9);
             }
         }
 
@@ -175,7 +196,15 @@ Rectangle
         {
             if (!local)
             {
+                core.buttonAction(10);
+            }
+        }
 
+        onDurationSeek:
+        {
+            if (!local)
+            {
+                core.buttonAction(11, percentage * 100)
             }
         }
     }

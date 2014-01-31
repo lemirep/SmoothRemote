@@ -95,7 +95,8 @@ OTHER_FILES += \
     qml/Resources/star.png \
     qml/MediaActionBar.qml \
     qml/FileBrowser.qml \
-    qml/OSDPanel.qml
+    qml/OSDPanel.qml \
+    qml/Utils.js
 
 
 ANDROID_TARGET_ARCH = armeabi-v7a

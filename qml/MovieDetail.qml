@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import "Utils.js" as Utils
 
 Item
 {
@@ -50,6 +51,13 @@ Item
                 color : "#e8e8e8"
                 text : movie.studio
                 font.pointSize: 14 * mainScreen.dpiMultiplier
+            }
+            Text
+            {
+                anchors.horizontalCenter: parent.horizontalCenter
+                color : "#e8e8e8"
+                text : Utils.printDuration(movie.runtime);
+                font.pointSize: 13 * mainScreen.dpiMultiplier
             }
             Text
             {

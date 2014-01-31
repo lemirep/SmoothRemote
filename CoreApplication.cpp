@@ -34,10 +34,7 @@ CoreApplication::CoreApplication(QObject *parent) :
     this->databaseResultDispatcher[this->audioLibrary->getMajorDBIDRequest()] = this->audioLibrary;
     this->databaseResultDispatcher[this->videoLibrary->getMajorDBIDRequest()] = this->videoLibrary;
 
-    //    this->databaseResultDispatcher[this->videoLibrary->getMajorDBIDRequest()] = this->videoLibrary;
-    //    this->databaseResultDispatcher[this->audioLibrary->getMajorDBIDRequest()] = this->audioLibrary;
     this->readSettings();
-    //    this->videoLibrary->reloadDataModels(true);
 }
 
 void CoreApplication::readSettings()
@@ -291,6 +288,27 @@ void CoreApplication::buttonAction(int buttonAction, QVariant value)
     case PlayItemInPlaylist:
         this->playerManager->playPlaylist(value.toPoint().x(), value.toPoint().y());
         break;
+    case Play:
+        this->playerManager->performPlayerAction("Player.PlayPause");
+        break;
+    case Stop:
+        this->playerManager->performPlayerAction("Player.Stop");
+        break;
+    case Next:
+        this->playerManager->performPlayerAction("Player.GoTo", "to", "next");
+        break;
+    case Previous:
+        this->playerManager->performPlayerAction("Player.GoTo", "to", "previous");
+        break;
+    case Forward:
+        this->playerManager->performPlayerAction("Player.Seek", "value", "smallforward");
+        break;
+    case Backward:
+        this->playerManager->performPlayerAction("Player.Seek", "value", "backforward");
+        break;
+    case Seek:
+        this->playerManager->performPlayerAction("Player.Seek", "value", value.toDouble());
+        break;
     }
 }
 
@@ -300,9 +318,15 @@ QObject *CoreApplication::getPlaylistsModel() const
     return this->playerManager->getPlaylistsModel();
 }
 
-QObject *CoreApplication::getCurrentXBMCPlayedItem() const
+QObject *CoreApplication::getXBMCPlayers() const
 {
-    return this->playerManager->getPlayedItem();
+    this->playerManager->getActivesPlayers();
+    return this->playerManager->getPlayersModel();
+}
+
+void CoreApplication::refreshPlayers()
+{
+    this->playerManager->refreshPlayers();
 }
 
 void CoreApplication::launchStreamingApp(const QString &fileUrl)
@@ -311,12 +335,3 @@ void CoreApplication::launchStreamingApp(const QString &fileUrl)
     QDesktopServices::openUrl(fileUrl);
 }
 
-bool CoreApplication::getXBMCPlayerPlaying() const
-{
-    return this->playerManager->getIsPlaying();
-}
-
-int CoreApplication::getXBMCPlayerAdvance() const
-{
-    return this->playerManager->getPlayerAdvance();
-}
