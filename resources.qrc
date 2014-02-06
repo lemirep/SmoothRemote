@@ -93,5 +93,7 @@
         <file>qml/Resources/arrow_left.png</file>
         <file>qml/OSDPanel.qml</file>
         <file>qml/Utils.js</file>
+        <file>qml/ListViewFlow.qml</file>
+        <file>qml/ArtistsScreen.qml</file>
     </qresource>
 </RCC>

@@ -68,6 +68,7 @@ Item
 
                 radius : 5
                 width : parent.width * (advance / (duration > 0 ? duration : 1))
+                Behavior on width {NumberAnimation {duration : 1000}}
                 height : 7
                 opacity : 0.8
                 anchors.verticalCenter : parent.verticalCenter

@@ -3,10 +3,11 @@
 PlayerModelItem::PlayerModelItem(QObject *parent) : Models::SubListedListItem(parent),
     m_playerId(-1),
     m_playerType(""),
-    m_playerPlayerItems(new Models::ListModel(new PlayableItemModel())),
+    m_playerPlayerItems(NULL),
     m_playerRepeat(false),
     m_playerPercentage(0),
-    m_playerSpeed(0)
+    m_playerSpeed(0),
+    m_playerTotalTime(0)
 {
 }
 
@@ -41,6 +42,8 @@ QVariant PlayerModelItem::data(int role) const
         return this->m_playerPercentage;
     case playerSpeed:
         return this->m_playerSpeed;
+    case playerTotalTime:
+        return this->m_playerTotalTime;
     default :
         return QVariant();
     }
@@ -55,6 +58,9 @@ bool PlayerModelItem::setData(int role, const QVariant &value)
         return true;
     case playerType:
         this->m_playerType = value.toString();
+        this->m_playerPlayerItems = (this->m_playerType == "audio") ?
+                    new Models::ListModel(new SongModel(NULL)) :
+                    new Models::ListModel(new PlayableItemModel(NULL));
         return true;
     case playerPercentage:
         this->m_playerPercentage = value.toDouble();
@@ -64,6 +70,9 @@ bool PlayerModelItem::setData(int role, const QVariant &value)
         return true;
     case playerSpeed:
         this->m_playerSpeed = value.toInt();
+        return true;
+    case playerTotalTime:
+        this->m_playerTotalTime = value.toInt();
         return true;
     default :
         return false;
@@ -80,6 +89,7 @@ QHash<int, QByteArray> PlayerModelItem::roleNames() const
     roles[playerSpeed] = "speed";
     roles[playerRepeat] = "repeat";
     roles[playerPercentage] = "percentage";
+    roles[playerTotalTime] = "totaltime";
 
     return roles;
 }

@@ -91,10 +91,10 @@ Item
         id : topBanner
     }
 
-    FileBrowser
-    {
-        shown: true
-    }
+//    FileBrowser
+//    {
+//        shown: true
+//    }
 
     SlideMenu
     {

@@ -29,7 +29,7 @@
 
 PlaylistModelItem::PlaylistModelItem(QObject *parent) :
     Models::SubListedListItem(parent),
-    m_playlistItemsModel(new Models::ListModel(new PlayableItemModel(NULL))),
+    m_playlistItemsModel(NULL),
     m_playlistTypeString(""),
     m_playlistId(-1)
 {
@@ -39,7 +39,7 @@ PlaylistModelItem::PlaylistModelItem(int playlistId, const QString& playlistType
     : Models::SubListedListItem(parent),
       m_playlistId(playlistId),
       m_playlistTypeString(playlistTypeString),
-      m_playlistItemsModel(new Models::ListModel(new PlayableItemModel(NULL)))
+      m_playlistItemsModel(NULL)
 {
     qDebug() << "Type " << this->m_playlistTypeString;
     qDebug() << "Id " << this->m_playlistId;
@@ -86,6 +86,10 @@ bool PlaylistModelItem::setData(int role, const QVariant &value)
         return true;
     case (playlistTypeString):
         this->m_playlistTypeString = value.toString();
+        this->m_playlistItemsModel = new Models::ListModel(
+                    (this->m_playlistTypeString == "audio") ?
+                         new SongModel(NULL):
+                        new PlayableItemModel(NULL));
         return true;
     default :
         return false;

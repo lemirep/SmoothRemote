@@ -4,6 +4,7 @@
 #include <ListModel.h>
 #include <SubListedListItem.h>
 #include <PlayableItemModel.h>
+#include <SongModel.h>
 
 class PlayerModelItem : public Models::SubListedListItem
 {
@@ -18,7 +19,8 @@ public:
         playerItemsModel,
         playerPercentage,
         playerRepeat,
-        playerSpeed
+        playerSpeed,
+        playerTotalTime
     };
 
     PlayerModelItem(QObject *parent = 0);
@@ -45,6 +47,7 @@ private :
     bool  m_playerRepeat;
     int   m_playerSpeed;
     float m_playerPercentage;
+    int   m_playerTotalTime;
 
 };
 

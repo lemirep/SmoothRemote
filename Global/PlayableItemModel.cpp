@@ -31,7 +31,7 @@ QUrl PlayableItemModel::xbmcHostUrl;
 
 QString PlayableItemModel::formatImageUrl(const QString &imageUrl, const QString &defaultPic)
 {
-    if (imageUrl.isEmpty())
+    if (imageUrl.isEmpty() || imageUrl.endsWith("/DefaultAlbumCover.png/"))
         return defaultPic;
     QUrl url(PlayableItemModel::xbmcHostUrl);
     QByteArray encodeUrl = imageUrl.toLatin1().toPercentEncoding();

@@ -29,7 +29,7 @@ Rectangle
 
     Timer
     {
-        interval: 2500
+        interval: 1000
         running : !local
         repeat : true
         onTriggered: {core.refreshPlayers();}
@@ -75,18 +75,18 @@ Rectangle
             {
                 id: back_img
 
-                source : model.playerItemsModel.get(0).fanartUrl
-                fillMode: Image.PreserveAspectCrop
+                source : model.playerItemsModel.get(0).thumbnailUrl
+                fillMode: Image.PreserveAspectFit
                 width : xbmc_player.width
                 height : xbmc_player.height
 
                 property int speed : model.speed;
                 property real advance : model.percentage * 0.01;
-                property real duration : model.playerItemsModel.get(0).runtime;
+                property real duration : model.playerItemsModel.get(0).runtime
 
-                onDurationChanged: xbmcRuntime = duration;
-                onSpeedChanged: xbmcPlaying = speed > 0;
-                onAdvanceChanged: xbmcAdvance = advance * duration;
+                onDurationChanged: {xbmcRuntime = duration; console.log("Duration << " + duration)}
+                onSpeedChanged: {xbmcPlaying = speed > 0}
+                onAdvanceChanged: {xbmcAdvance = advance * duration;}
 
                 Text
                 {
@@ -110,16 +110,6 @@ Rectangle
         onErrorStringChanged: console.log(errorString);
         volume : 0.3
     }
-    //    PinchArea
-    //    {
-    //        anchors.fill: parent
-    //        pinch.maximumScale: 2
-    //        pinch.minimumScale: 0.5
-    //        pinch.target: player_output
-
-    //        property real oldScale;
-    //        onPinchStarted: oldScale = player_output.scale;
-    //    }
 
     VideoOutput
     {

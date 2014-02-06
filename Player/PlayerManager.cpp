@@ -236,6 +236,7 @@ void PlayerManager::getPlaylistItems(PlaylistModelItem *playlist)
     fields.remove(PlayableItemModel::itemId);
     fields.remove(PlayableItemModel::fanartUrl);
     fields.remove(PlayableItemModel::thumbnailUrl);
+    fields.remove(SongModel::songId);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -294,6 +295,7 @@ void PlayerManager::getCurrentlyPlayedItem(PlayerModelItem * player)
     fields.remove(PlayableItemModel::itemId);
     fields.remove(PlayableItemModel::fanartUrl);
     fields.remove(PlayableItemModel::thumbnailUrl);
+    fields.remove(SongModel::songId);
     foreach (const QByteArray field, fields)
         properties.prepend(QJsonValue(QString(field)));
 
@@ -417,6 +419,7 @@ void PlayerManager::getActivesPlayersCallBack(QNetworkReply *reply,  QPointer<QO
                         delete player;
                         updatedItems << oldItem;
                         this->getCurrentlyPlayedItem(oldItem);
+                        oldItem->triggerItemUpdate();
                     }
                     else
                     {
@@ -458,7 +461,7 @@ void PlayerManager::getCurrentlyPlayedItemCallBack(QNetworkReply *reply,  QPoint
              jsonRep.object().value("result").isObject())
         {
             PlayerModelItem *player = reinterpret_cast<PlayerModelItem *>(data.data());
-            PlayableItemModel *newModel = new PlayableItemModel();
+            PlayableItemModel *newModel = reinterpret_cast<PlayableItemModel *>(player->submodel()->getPrototype()->getNewItemInstance());
             PlayableItemModel *oldItem;
 
             QJsonObject item = jsonRep.object().value("result").toObject().value("item").toObject();

@@ -4,12 +4,7 @@ Row
 {
     id : media_action
     spacing : 25
-    anchors
-    {
-        verticalCenter : parent.verticalCenter
-        right : parent.right
-        rightMargin : 25
-    }
+
     enabled: opacity === 1
     signal playClicked();
     signal downloadClicked();

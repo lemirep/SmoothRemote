@@ -7,7 +7,7 @@ function printDuration(advance)
     var secondes = Math.floor((advance % 3600) % 60);
     var retString = "";
 
-    console.log("h " + hours + " m " + minutes + " s " + secondes);
+//    console.log("h " + hours + " m " + minutes + " s " + secondes);
 
     if (hours > 0)
     {

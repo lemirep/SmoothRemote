@@ -96,7 +96,9 @@ OTHER_FILES += \
     qml/MediaActionBar.qml \
     qml/FileBrowser.qml \
     qml/OSDPanel.qml \
-    qml/Utils.js
+    qml/Utils.js \
+    qml/ListViewFlow.qml \
+    qml/ArtistsScreen.qml
 
 
 ANDROID_TARGET_ARCH = armeabi-v7a

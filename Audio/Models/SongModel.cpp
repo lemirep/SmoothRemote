@@ -54,6 +54,8 @@ SongModel::~SongModel()
 
 int SongModel::id() const
 {
+    if (this->m_songId == -1)
+        return PlayableItemModel::id();
     return this->m_songId;
 }
 

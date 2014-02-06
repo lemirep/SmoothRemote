@@ -182,6 +182,12 @@ Item
             anchors.leftMargin: showCoverPic ? 25 : 0
             anchors.topMargin: showCoverPic ? 15 : 0
             width : showCoverPic ? parent.width * 0.2 : 0
+            transform: Rotation {
+                angle : 45
+                axis {x : 0; y: 1; z : 0}
+                origin.x : width * 0.5;
+                origin.y : height * 0.5
+            }
         }
 
         Item
