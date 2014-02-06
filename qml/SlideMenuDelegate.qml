@@ -6,11 +6,13 @@ Item
     property bool isCurrent : (ListView.view.currentIndex === index)
     width : ListView.view.width
     height : 70 * mainScreen.dpiMultiplier
-    Rectangle {height : isCurrent ? 4 : 1; width : parent.width; anchors.bottom: parent.bottom; color : isCurrent ? model.sectionColor : "#c8c8c8"}
+    Rectangle {height : isCurrent ? 2 : 1; width : parent.width; anchors.bottom: parent.bottom; color : isCurrent ? "#aa2200": "#333333"}
     Text
     {
         id : delegate_text
-        color : "#505050"
+        style: Text.Outline
+        styleColor: parent.isCurrent ? "#22cc2200" : "#66cc2200"
+        color : parent.isCurrent ? "#cc2200" :"white"
         text : model.sectionName
         anchors
         {
@@ -18,7 +20,11 @@ Item
             verticalCenter: parent.verticalCenter
             leftMargin: 25
         }
-        font.pointSize: 15
+//        font.family : "Helvetica"
+        font.bold: true
+        font.capitalization: Font.Capitalize
+        font.italic: true
+        font.pointSize: 20
     }
     Image
     {

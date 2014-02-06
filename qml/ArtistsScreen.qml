@@ -6,6 +6,7 @@ Item
     property bool shown : true;
     property QtObject selectedArtist : null;
     signal artistSelected();
+    enabled : shown;
 
     ListModel {id : artist_index}
 
@@ -85,6 +86,7 @@ Item
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     horizontalAlignment: Text.AlignLeft
                     elide: Text.ElideRight
+                    font.capitalization: Font.Capitalize
                     anchors
                     {
                         top : parent.bottom
@@ -95,6 +97,7 @@ Item
                 MouseArea
                 {
                     anchors.fill: parent
+                    scale : 1.25
                     onClicked:
                     {
                         if (isCurrentItem)

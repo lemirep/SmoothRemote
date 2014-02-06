@@ -95,5 +95,8 @@
         <file>qml/Utils.js</file>
         <file>qml/ListViewFlow.qml</file>
         <file>qml/ArtistsScreen.qml</file>
+        <file>qml/MovieList.qml</file>
+        <file>qml/TVShowList.qml</file>
+        <file>qml/TVShowEpisodeList.qml</file>
     </qresource>
 </RCC>

@@ -1,10 +1,11 @@
-import QtQuick 2.1
+import QtQuick 2.2
+import QtGraphicalEffects 1.0
+
 
 Item
 {
     id : slideMenu
     property bool deployed : false
-    property alias color : slideMenuPanel.color
     property alias model : slideMenuListView.model
     property alias delegate : slideMenuListView.delegate
     signal currentIndexChanged(int index)
@@ -44,10 +45,21 @@ Item
         width : mainScreen.portrait ? Math.floor(mainScreen.width * 0.8) : 400 * mainScreen.dpiMultiplier
         height : parent.height
         x : d.dragOffset - width
-        color : "#e5e5e5"
         opacity : (deployed || slideMenuMA.dragging) ? 1 : 0
         Behavior on x {SmoothedAnimation {velocity : 5; duration : 250}}
         Behavior on opacity {SmoothedAnimation {velocity : 5; duration : 500}}
+        color : "#111111"
+
+//        LinearGradient
+//        {
+//            anchors.fill: parent
+//            start: Qt.point(width, 0)
+//            end: Qt.point(0, height)
+//            gradient: Gradient {
+//                GradientStop {position: 0; color: "#25282d"}
+//                GradientStop {position: 1; color: "black"}
+//            }
+//        }
 
         ListView
         {

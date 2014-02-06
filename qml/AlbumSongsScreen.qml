@@ -152,6 +152,7 @@ Item
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight
                     font.pointSize: 15
+                    font.capitalization: Font.Capitalize
                     opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                 }
                 Text
@@ -163,6 +164,7 @@ Item
                     color : "white"
                     font.family : "Helvetica";
                     font.bold: true
+                    font.italic: true
                     font.pointSize: 18 * mainScreen.dpiMultiplier
                     width : parent.width
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -179,6 +181,7 @@ Item
                 MouseArea
                 {
                     id : song_del_ma
+                    scale : 1.25
                     anchors.fill: parent
                     onClicked:
                     {

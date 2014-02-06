@@ -23,12 +23,6 @@ Item
         id : back_arrow
         Image
         {
-//            anchors
-//            {
-//                left : parent.left
-//                top : parent.top
-//                bottom : parent.bottom
-//            }
             fillMode: Image.PreserveAspectFit
             source : "Resources/back_arrow.png"
             scale : back_ma.pressed ? 0.9 : 1
@@ -36,10 +30,7 @@ Item
             {
                 id : back_ma
                 anchors.fill: parent
-                onClicked:
-                {
-                    audio_screen.goToPreviousState();
-                }
+                onClicked: {audio_screen.goToPreviousState();}
             }
         }
     }
@@ -54,7 +45,7 @@ Item
 
     Keys.onReleased:
     {
-        console.log("Detail Key Released");
+        console.log("Audio : Key Released");
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
         {
             goToPreviousState();
@@ -122,15 +113,21 @@ Item
 
     Text
     {
-        font.pointSize: 75
+        fontSizeMode: Text.Fit
+        font.bold: true
+        font.italic: true
+        font.family: "Helvetica"
         style: Text.Sunken
-        styleColor: "#25282d";
-        color : "#111111";
+        styleColor: "#44ff2200";
+        color : "#44111111";
         text : "Music"
+        font.pointSize: 200
         anchors
         {
+            top : parent.top
+            bottom : parent.verticalCenter
+            left : parent.horizontalCenter
             right : parent.right
-            top : parent.verticalCenter
             margins : 25
         }
     }

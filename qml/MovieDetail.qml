@@ -1,13 +1,26 @@
-import QtQuick 2.1
+import QtQuick 2.2
 import "Utils.js" as Utils
 
-Item
-{
-    anchors.fill: parent
-    property variant movie : parent.getHolder();
-    ScrollBar {flickable: movie_flickable}
 
-    onMovieChanged: action_bar_loader.sourceComponent = action_bar_component;
+Image
+{
+    id : background_pic
+
+    property QtObject movie : null;
+    property bool shown : false;
+
+    fillMode: Image.PreserveAspectCrop
+    anchors.fill: parent
+    asynchronous: true
+    enabled : shown
+    source : (movie) ? movie.fanartUrl : ""
+
+    Rectangle
+    {
+        anchors.fill: parent
+        opacity : 0.4
+        color : "black"
+    }
 
     Flickable
     {
@@ -33,31 +46,49 @@ Item
 
             Text
             {
-                color : "#e8e8e8"
-                anchors.horizontalCenter: parent.horizontalCenter
+                id : title_text
+                style: Text.Sunken
+                styleColor:"#cc6600"
+                color : "#cc2200"
+                font.pointSize: 35
+                font.bold: true
+                font.italic: true
+                font.capitalization: Font.Capitalize
+                width : parent.width
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                elide : Text.ElideRight
                 text : movie.title
-                font.pointSize: 18 * mainScreen.dpiMultiplier
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Text.AlignHCenter
             }
             Text
             {
-                anchors.horizontalCenter: parent.horizontalCenter
-                color : "#e8e8e8"
-                text : movie.year
-                font.pointSize: 16 * mainScreen.dpiMultiplier
-            }
-            Text
-            {
-                anchors.horizontalCenter: parent.horizontalCenter
-                color : "#e8e8e8"
+                id : studio_text
+                style: Text.Outline
+                styleColor:"#66cc2200"
+                color : "white"
+                font.italic: true
+                font.bold: true
+                font.pointSize: 25
+                font.capitalization: Font.Capitalize
+                width : parent.width
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                elide : Text.ElideRight
                 text : movie.studio
-                font.pointSize: 14 * mainScreen.dpiMultiplier
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
             }
             Text
             {
+                style: Text.Outline
+                styleColor:"#66cc2200"
+                color : "white"
+                font.bold: true
+                font.family: "Helvetica"
+                font.italic: true
                 anchors.horizontalCenter: parent.horizontalCenter
-                color : "#e8e8e8"
                 text : Utils.printDuration(movie.runtime);
-                font.pointSize: 13 * mainScreen.dpiMultiplier
+                font.pointSize: 15 * mainScreen.dpiMultiplier
             }
             Text
             {
@@ -70,5 +101,6 @@ Item
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
         }
+        ScrollBar {flickable: movie_flickable}
     }
 }

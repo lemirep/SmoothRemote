@@ -98,7 +98,10 @@ OTHER_FILES += \
     qml/OSDPanel.qml \
     qml/Utils.js \
     qml/ListViewFlow.qml \
-    qml/ArtistsScreen.qml
+    qml/ArtistsScreen.qml \
+    qml/MovieList.qml \
+    qml/TVShowList.qml \
+    qml/TVShowEpisodeList.qml
 
 
 ANDROID_TARGET_ARCH = armeabi-v7a

@@ -30,8 +30,8 @@ Item
         }
         font.pointSize: 25 * mainScreen.dpiMultiplier
         text : artist.artist
-        style: Text.Sunken
-        styleColor: "#ff2200"
+        style: Text.Outline
+        styleColor: "#66ff2200"
         color : "white"
         font.bold: true
         font.family: "Helvetica"
@@ -40,6 +40,7 @@ Item
         width : parent.width
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+        font.capitalization: Font.Capitalize
     }
 
     CoverFlow
@@ -73,8 +74,8 @@ Item
                 Text
                 {
                     font.pointSize: 25
-                    style: Text.Sunken
-                    styleColor: "#ff2200"
+                    style: Text.Outline
+                    styleColor: "#66ff2200"
                     color : "white"
                     font.bold: true
                     font.family: "Helvetica"
@@ -83,6 +84,7 @@ Item
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    font.capitalization: Font.Capitalize
                     anchors
                     {
                         top : parent.bottom

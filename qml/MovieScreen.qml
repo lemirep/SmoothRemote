@@ -1,111 +1,126 @@
-import QtQuick 2.1
+import QtQuick 2.2
+import QtGraphicalEffects 1.0
 
-Rectangle
+Item
 {
-    id : tvShowScreen
+    id : movie_screen
     anchors.fill: parent
-    color : "#e8e8e8"
+    Component.onCompleted: {movie_screen.state = "list"; forceActiveFocus();}
 
-    GridView
+    LinearGradient
     {
-        id : grid_view
         anchors.fill: parent
-        flow : GridView.TopToBottom
-        model : core.movieModel
-        cellHeight : Math.floor(tvShowScreen.height * 0.5)
-        cellWidth : Math.floor(0.675 * cellHeight)
-        snapMode : GridView.SnapToRow
+        start: Qt.point(width, 0)
+        end: Qt.point(0, height)
+        gradient: Gradient {
+            GradientStop {position: 0; color: "#25282d"}
+            GradientStop {position: 1; color: "black"}
+        }
+    }
 
-        delegate : VideoCoverDelegate {
-            width : GridView.view.cellWidth
-            height: GridView.view.cellHeight
-            fillMode: Image.PreserveAspectCrop
-            source: model.thumbnailUrl
-            text : model.title + " (" + model.year + ")"
-            onClicked:
+    Component
+    {
+        id : back_arrow
+        Image
+        {
+            fillMode: Image.PreserveAspectFit
+            source : "Resources/back_arrow.png"
+            scale : back_ma.pressed ? 0.9 : 1
+            MouseArea
             {
-                movie_detail.holder = model;
-                movie_detail.animateCover(x - grid_view.contentX)
+                id : back_ma
+                anchors.fill: parent
+                onClicked: {movie_screen.goToPreviousState();}
             }
         }
     }
 
-    ScrollBar    {flickable: grid_view}
-
-    FocusScope
+    function goToPreviousState()
     {
-        anchors.fill: parent
-        Component.onCompleted: forceActiveFocus()
+        if (movie_screen.state === "detail")
+            movie_screen.state = "list";
+    }
 
-        MediaDetailScreen
+    Keys.onReleased:
+    {
+        console.log("Movie : Key Released");
+        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace)
         {
-            id : movie_detail
-            anchors.fill: parent
-            background: holder.fanartUrl
-            cover : holder.thumbnailUrl
-            contentComponent: MovieDetail {}
-            hasActionBar: true
+            goToPreviousState();
+            event.accepted = true;
+        }
+    }
 
-            actionBarComponent: Row   {
-                spacing : 25
-                height : 55 * mainScreen.dpiMultiplier
-                opacity : parent.enabled ? 1 : 0
+    states : [
+        State
+        {
+            name : "list"
+            PropertyChanges {target: movie_list; opacity : 1; shown : true; scale : 1}
+            PropertyChanges {target: movie_detail; opacity : 0; shown : false; scale : 0}
+            PropertyChanges {target: topBanner; menuComponent : undefined}
+        },
+        State
+        {
+            name : "detail"
+            PropertyChanges {target: movie_list; opacity : 0; shown : false; scale : 4}
+            PropertyChanges {target: movie_detail; opacity : 1; shown : true; scale : 1}
+            PropertyChanges {target: topBanner; menuComponent : back_arrow}
+        }
+    ]
 
-                Image
-                {
-                    height: parent.height - 15
-                    anchors.verticalCenter: parent.verticalCenter
-                    fillMode: Image.PreserveAspectFit
-                    horizontalAlignment: Image.AlignHCenter
-                    verticalAlignment: Image.AlignVCenter
-                    source : "Resources/play_inv.png"
-                    scale : play_ma.pressed ? 0.9 : 1
-                    MouseArea
-                    {
-                        id : play_ma
-                        anchors.fill: parent
-                        onClicked: core.buttonAction(14, movie_detail.holder.file);
-                    }
-                }
-                Image
-                {
-                    height: parent.height - 15
-                    anchors.verticalCenter: parent.verticalCenter
-                    fillMode: Image.PreserveAspectFit
-                    horizontalAlignment: Image.AlignHCenter
-                    verticalAlignment: Image.AlignVCenter
-                    source : "Resources/plus_inv.png"
-                    scale : add_ma.pressed ? 0.9 : 1
-                    MouseArea
-                    {
-                        id : add_ma
-                        anchors.fill: parent
-                        onClicked: core.buttonAction(26, movie_detail.holder.movieid);
-                    }
-                }
-                Image
-                {
-                    height: parent.height - 15
-                    anchors.verticalCenter: parent.verticalCenter
-                    fillMode: Image.PreserveAspectFit
-                    horizontalAlignment: Image.AlignHCenter
-                    verticalAlignment: Image.AlignVCenter
-                    source : "Resources/cloud_inv.png"
-                    scale : cloud_ma.pressed ? 0.9 : 1
-                    MouseArea
-                    {
-                        id : cloud_ma
-                        anchors.fill: parent
-//                        onClicked: core.buttonAction(27, movie_detail.holder.streamingFile);
-                        onClicked: mainView.launchMediaPlayer(movie_detail.holder.streamingFile);
-                    }
-                }
+    transitions: [
+        Transition {from: "list"; to: "detail"
+            ParallelAnimation
+            {
+                NumberAnimation { target: movie_list; properties: "opacity, scale"; duration: 250; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: movie_detail; properties: "opacity, scale"; duration: 500; easing.type: Easing.InOutQuad }
+            }
+        },
+        Transition {from: "detail"; to: "list"
+            ParallelAnimation
+            {
+                NumberAnimation { target: movie_detail; properties: "opacity, scale"; duration: 250; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: movie_list; properties: "opacity, scale"; duration: 500; easing.type: Easing.InOutQuad }
             }
         }
+    ]
 
-        //    Player
-        //    {
-        //        id : movie_player;
-        //    }
+    Text
+    {
+        fontSizeMode: Text.Fit
+        font.bold: true
+        font.italic: true
+        font.family: "Helvetica"
+        style: Text.Sunken
+        styleColor: "#44ff2200";
+        color : "#44111111";
+        text : "Movies"
+        font.pointSize: 200
+        anchors
+        {
+            top : parent.top
+            bottom : parent.verticalCenter
+            left : parent.horizontalCenter
+            right : parent.right
+            margins : 25
+        }
+    }
+
+    MovieList
+    {
+        id : movie_list
+        anchors.fill: parent
+        onMovieSelected:
+        {
+            movie_detail.movie = movie_list.selectedMovie;
+            movie_screen.state = "detail";
+        }
+    }
+
+    MovieDetail
+    {
+        id : movie_detail
+        anchors.fill: parent
+        shown : false
     }
 }

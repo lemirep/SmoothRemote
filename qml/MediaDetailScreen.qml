@@ -15,6 +15,8 @@ Item
     property bool hasActionBar : false
     property var backFunction : function() {shown = false};
     property bool showCoverPic : true
+    property alias studioName : studio_text.text;
+    property alias mediaTitle : title_text.text;
     enabled : shown
 
     function animateCover(x)
@@ -85,27 +87,7 @@ Item
             NumberAnimation {duration : 750; target: detail_pic; property: "scale"}
         }]
 
-    Image
-    {
-        id : background_pic
-        fillMode: Image.PreserveAspectCrop
-        anchors.fill: parent
-        opacity : detail_pic.scale
-        enabled: detail_pic.scale === 1
-        asynchronous: true
-        MouseArea
-        {
-            anchors.fill: parent
-            onClicked: {}
-            onPressed: {}
-        }
-        Rectangle
-        {
-            anchors.fill: parent
-            opacity : 0.4
-            color : "black"
-        }
-    }
+
 
     ActionBar
     {
@@ -141,7 +123,6 @@ Item
                 {
                     target : detail_pic;
                     anchors.verticalCenter: parent.verticalCenter;
-                    anchors.horizontalCenter: undefined;
                     anchors.top: undefined
                     anchors.left: parent.left
                 }
@@ -152,6 +133,13 @@ Item
                     anchors.top: parent.top
                     anchors.right: parent.right
                 }
+                AnchorChanges
+                {
+                    target : text_titles
+                    anchors.left: undefined
+                    anchors.top: detail_pic.bottom
+                    anchors.horizontalCenter: detail_pic.horizontalCenter
+                }
                 when : !portrait
             },
             State
@@ -160,15 +148,21 @@ Item
                 {
                     target : detail_pic;
                     anchors.verticalCenter: undefined;
-                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
-                    anchors.left: undefined
+                    anchors.left: parent.left
                 }
                 AnchorChanges
                 {
                     target : show_detail
                     anchors.left: parent.left
                     anchors.top: detail_pic.bottom
+                }
+                AnchorChanges
+                {
+                    target : text_titles
+                    anchors.left: detail_pic.right
+                    anchors.top: detail_pic.top
+                    anchors.horizontalCenter: undefined
                 }
                 when : portrait
             }
@@ -181,12 +175,59 @@ Item
             enabled: scale === 1
             anchors.leftMargin: showCoverPic ? 25 : 0
             anchors.topMargin: showCoverPic ? 15 : 0
-            width : showCoverPic ? parent.width * 0.2 : 0
+            height : showCoverPic ? (!mainScreen.portrait) ? parent.height * 0.8 :parent.height * 0.3 : 0
+            width : height
             transform: Rotation {
-                angle : 45
+                angle : 15
                 axis {x : 0; y: 1; z : 0}
-                origin.x : width * 0.5;
-                origin.y : height * 0.5
+            }
+        }
+
+        Item
+        {
+            id : text_titles
+            width : detail_pic.width
+            transform: Rotation {
+                angle : 15
+                axis {x : 0; y: 1; z : 0}
+            }
+
+            anchors
+            {
+                horizontalCenter: parent.horizontalCenter
+                top : parent.bottom
+                topMargin : 5
+            }
+
+            Text
+            {
+                id : title_text
+                style: Text.Outline
+                styleColor:"#66cc2200"
+                color : "#cc2200"
+                font.pointSize: 25
+                font.capitalization: Font.Capitalize
+                width : parent.width
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                elide : Text.ElideRight
+            }
+            Text
+            {
+                id : studio_text
+                style: Text.Outline
+                styleColor:"#66cc2200"
+                color : "white"
+                font.bold: true
+                font.pointSize: 15
+                font.capitalization: Font.Capitalize
+                width : parent.width
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                elide : Text.ElideRight
+                anchors
+                {
+                   left : title_text.left
+                    top : title_text.bottom
+                }
             }
         }
 
