@@ -10,6 +10,7 @@ Item
     LinearGradient
     {
         anchors.fill: parent
+        cached : true
         start: Qt.point(width, 0)
         end: Qt.point(0, height)
         gradient: Gradient {
