@@ -35,6 +35,26 @@ Rectangle
         onTriggered: {core.refreshPlayers();}
     }
 
+//    Text
+//    {
+//        id : duration_text
+//        style: Text.Sunken
+//        styleColor: "#ff2200"
+//        color : "white"
+//        font.family : "Helvetica";
+//        font.bold: true
+//        font.italic: true
+//        font.pointSize: 35
+//        width : parent.width
+//        horizontalAlignment: Text.AlignRight
+//        verticalAlignment: Text.AlignBottom
+//        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+//        elide: Text.ElideRight
+//        opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
+//        anchors.centerIn: parent
+//    }
+
+
     Keys.onReleased:
     {
         console.log("Player Key Released");

@@ -77,7 +77,7 @@ Item
     {
         id : screenLoader
         anchors.fill: parent
-        onSourceChanged: topBanner.menuComponent = undefined;
+//        onSourceChanged: topBanner.menuComponent = undefined;
     }
 
     //    TopBanner

@@ -15,7 +15,6 @@
         <file>qml/Resources/empty_cd.png</file>
         <file>qml/VideoCoverDelegate.qml</file>
         <file>qml/ScrollBar.qml</file>
-        <file>qml/MediaDetailScreen.qml</file>
         <file>qml/TVShowDetail.qml</file>
         <file>qml/MovieDetail.qml</file>
         <file>qml/PlayTargetPopup.qml</file>

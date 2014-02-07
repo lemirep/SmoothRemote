@@ -1,6 +1,5 @@
 
-HEADERS += CoreApplication.h \
-    qml/MediaActionBar.h
+HEADERS += CoreApplication.h
 
 SOURCES += main.cpp \
            CoreApplication.cpp
@@ -35,7 +34,6 @@ OTHER_FILES += \
     qml/CoverImage.qml \
     qml/VideoCoverDelegate.qml \
     qml/ScrollBar.qml \
-    qml/MediaDetailScreen.qml \
     qml/TVShowDetail.qml \
     qml/MovieDetail.qml \
     qml/PlayTargetPopup.qml \
@@ -93,8 +91,8 @@ OTHER_FILES += \
     qml/Resources/remove_inv.png \
     qml/Resources/remove.png \
     qml/Resources/star.png \
-    qml/MediaActionBar.qml \
     qml/FileBrowser.qml \
+    qml/MediaActionBar.qml \
     qml/OSDPanel.qml \
     qml/Utils.js \
     qml/ListViewFlow.qml \

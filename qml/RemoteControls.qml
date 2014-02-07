@@ -1,8 +1,41 @@
-import QtQuick 2.1
+import QtQuick 2.2
+import QtGraphicalEffects 1.0
 
 Item
 {
     anchors.fill: parent
+
+    LinearGradient
+    {
+        anchors.fill: parent
+        start: Qt.point(width, 0)
+        end: Qt.point(0, height)
+        gradient: Gradient {
+            GradientStop {position: 0; color: "#25282d"}
+            GradientStop {position: 1; color: "black"}
+        }
+    }
+
+    Text
+    {
+        fontSizeMode: Text.Fit
+        font.bold: true
+        font.italic: true
+        font.family: "Helvetica"
+        style: Text.Sunken
+        styleColor: "#44ff2200";
+        color : "#44111111";
+        text : "Remote"
+        font.pointSize: 200
+        anchors
+        {
+            top : parent.top
+            bottom : parent.verticalCenter
+            left : parent.horizontalCenter
+            right : parent.right
+            margins : 25
+        }
+    }
 
     Row
     {
