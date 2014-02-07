@@ -18,20 +18,24 @@ Item
         }
     }
 
-    Component
+    Image
     {
         id : back_arrow
-        Image
+        fillMode: Image.PreserveAspectFit
+        source : "Resources/back_arrow.png"
+        scale : back_ma.pressed ? 0.9 : 1
+        anchors
         {
-            fillMode: Image.PreserveAspectFit
-            source : "Resources/back_arrow.png"
-            scale : back_ma.pressed ? 0.9 : 1
-            MouseArea
-            {
-                id : back_ma
-                anchors.fill: parent
-                onClicked: {audio_screen.goToPreviousState();}
-            }
+            left : parent.left
+            top : parent.top
+        }
+        z : 10
+        enabled : opacity === 1
+        MouseArea
+        {
+            id : back_ma
+            anchors.fill: parent
+            onClicked: {audio_screen.goToPreviousState();}
         }
     }
 
@@ -60,7 +64,7 @@ Item
             PropertyChanges {target: artist_albums_screen; shown : false; scale : 0; x_trans : width; opacity : 0}
             PropertyChanges {target: album_songs_screen; shown : false; scale : 0; x_trans : width; opacity : 0}
             PropertyChanges {target: artists_screen; shown : true; scale : 1; x_trans : 0; opacity : 1}
-            PropertyChanges {target: topBanner; menuComponent : undefined}
+            PropertyChanges {target: back_arrow; opacity : 0}
         },
         State
         {
@@ -68,7 +72,7 @@ Item
             PropertyChanges {target: artists_screen; shown : false; scale : 3; x_trans : -width; opacity : 0}
             PropertyChanges {target: album_songs_screen; shown : false; scale : 0; x_trans : width; opacity : 0}
             PropertyChanges {target: artist_albums_screen; shown : true; scale : 1; x_trans : 0; opacity : 1}
-            PropertyChanges {target: topBanner; menuComponent : back_arrow}
+            PropertyChanges {target: back_arrow; opacity : 1}
         },
         State
         {
@@ -76,7 +80,7 @@ Item
             PropertyChanges {target: artists_screen; shown : false; scale : 3; x_trans : -width; opacity : 0}
             PropertyChanges {target: artist_albums_screen; shown : false; scale : 3; x_trans : -width; opacity : 0}
             PropertyChanges {target: album_songs_screen; shown : true; scale : 1; x_trans : 0; opacity : 1}
-            PropertyChanges {target: topBanner; menuComponent : back_arrow}
+            PropertyChanges {target: back_arrow; opacity : 1}
         }
     ]
 

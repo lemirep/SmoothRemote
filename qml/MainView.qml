@@ -76,42 +76,30 @@ Item
     Loader
     {
         id : screenLoader
-        anchors
-        {
-            top : topBanner.bottom
-            left : parent.left
-            right : parent.right
-            bottom : parent.bottom
-        }
+        anchors.fill: parent
         onSourceChanged: topBanner.menuComponent = undefined;
     }
 
-    TopBanner
-    {
-        id : topBanner
-    }
+    //    TopBanner
+    //    {
+    //        id : topBanner
+    //    }
 
-//    FileBrowser
-//    {
-//        shown: true
-//    }
+    //    FileBrowser
+    //    {
+    //        shown: true
+    //    }
 
     SlideMenu
     {
         id : slideMenu
-        anchors
-        {
-            left : parent.left
-            right : parent.right
-            bottom : parent.bottom
-            top : topBanner.bottom
-        }
+        anchors.fill: parent
 
         model : sectionsModel
         delegate : SlideMenuDelegate {}
         onCurrentIndexChanged:
         {
-            topBanner.text = sectionsModel.get(index).sectionName;
+            //            topBanner.text = sectionsModel.get(index).sectionName;
             screenLoader.source = sectionsModel.get(index).sectionSource;
         }
     }

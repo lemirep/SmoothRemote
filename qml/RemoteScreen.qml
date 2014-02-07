@@ -1,4 +1,4 @@
-import QtQuick 2.1
+import QtQuick 2.2
 import QtMultimedia 5.0
 
 Item
@@ -78,7 +78,7 @@ Item
                 MouseArea
                 {
                     anchors.fill: parent
-                    onClicked: remote_listview.currentIndex = index;
+                    onClicked: remote_listview.positionViewAtIndex(index, ListView.Center)
                 }
             }
         }
@@ -102,7 +102,7 @@ Item
     ListView
     {
         id : remote_listview
-        interactive: (!mainScreen.mediaPlaying)
+        interactive: false
         anchors
         {
             left : parent.left
@@ -110,6 +110,7 @@ Item
             top : parent.top
             bottom : section_switcher_listview.top
         }
+        maximumFlickVelocity: 500
         boundsBehavior: ListView.StopAtBounds
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange

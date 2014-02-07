@@ -102,9 +102,10 @@ Rectangle
         }
     }
 
-    ListView
+    ListViewFlow
     {
         id : playlist_items_listview
+        cacheItemCount: 12
         anchors
         {
             bottom : parent.bottom
@@ -112,89 +113,63 @@ Rectangle
             right : parent.right
             top : playlists_listview.bottom
         }
-        clip : true
-        ScrollBar {flickable: playlist_items_listview}
-
-        remove : Transition {
-            ParallelAnimation
-            {
-                NumberAnimation {property : "x"; to : width; duration : 500}
-                NumberAnimation {property : "opacity"; to : 0; duration : 500}
-            }
-        }
-
-        displaced : Transition {
-            NumberAnimation {property : "y"; duration : 500}
-        }
-
         delegate : Component {
-            Rectangle
+            Image
             {
-                width : ListView.view.width
-                height : mainScreen.portrait ? playlist_items_listview.height * 0.1 * mainScreen.dpiMultiplier : playlist_items_listview.width * 0.075 * mainScreen.dpiMultiplier
-                color : del_ma.pressed ? "#a0a0a0" : index % 2 === 0 ? "#151515" : "#080808"
-                Image
-                {
-                    id : pic
-                    anchors
-                    {
-                        left : parent.left
-                        leftMargin : 15
-                        verticalCenter : parent.verticalCenter
-                    }
-                    height : parent.height * 0.8
-                    fillMode: Image.PreserveAspectFit
-                    source : model.thumbnailUrl
+                id : artist_delegate
+                height : mainScreen.portrait ? PathView.view.width * 0.25 : PathView.view.height * 0.4
+                width : height
+                property bool isCurrentItem : index === PathView.view.currentIndex;
+                property real delScale : PathView.onPath ? (isCurrentItem) ? 1.25 : PathView.delScale : 0
+
+                Behavior on delScale {SpringAnimation {spring : 5; damping: 1; epsilon: 0.005}}
+
+                asynchronous: true
+                fillMode: Image.PreserveAspectFit
+                onStatusChanged : if (status === Image.Ready) pic_anim.start();
+                NumberAnimation {id : pic_anim; target : artist_delegate; property : "scale"; from : 0; to : delScale; duration : 500; easing.type: Easing.InOutQuad}
+                scale : del_ma.pressed ? delScale * 1.2 : delScale
+                z : isCurrentItem ? 1 : 0
+                transform: Rotation {
+                    angle : 45
+                    axis {x : 0; y: 1; z : 0}
+                    origin.x : width * 0.5;
+                    origin.y : height * 0.5
                 }
+                source : model.thumbnailUrl
+                smooth : true
                 Text
                 {
-                    color : "white"
+                    id : del_text
+                    font.pointSize: 20
+                    style: parent.isCurrentItem ? Text.Sunken : Text.Outline
+                    styleColor: parent.isCurrentItem ? "#cc6600" : "#cc2200"
+                    color : parent.isCurrentItem ? "#ff2200" :"white"
                     text : model.title
+                    width : 2 * parent.width
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    horizontalAlignment: Text.AlignLeft
+                    elide: Text.ElideRight
+                    font.capitalization: Font.Capitalize
                     anchors
                     {
-                        left : pic.right
-                        verticalCenter : parent.verticalCenter
-                        right : remove_button.left
-                        rightMargin : 10
-                        leftMargin : 15
+                        top : parent.bottom
+                        left : mainScreen.portrait ? undefined : parent.left
+                        right : !mainScreen.portrait ? undefined : parent.right
                     }
-                    width : parent.width - (pic.width + 25)
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                    elide: Text.ElideRight
-                    font.pointSize: 14
-                    opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
-                    clip : true
                 }
                 MouseArea
                 {
                     id : del_ma
                     anchors.fill: parent
+                    scale : 1.25
                     onClicked:
                     {
                         core.buttonAction(30, Qt.point(playlists_listview.model.get(playlists_listview.currentIndex).playlistid, index));
                     }
-                }
-                Image
-                {
-                    id : remove_button
-                    anchors
+                    onPressAndHold:
                     {
-                        right : parent.right
-                        rightMargin : 10
-                        verticalCenter : parent.verticalCenter
-                    }
-                    height :  Math.min(55, parent.height * 0.8) * mainScreen.dpiMultiplier
-                    fillMode: Image.PreserveAspectFit
-                    source : "Resources/remove_inv.png"
-                    scale : rm_ma.pressed ? 0.9 : 1
-                    MouseArea
-                    {
-                        id : rm_ma
-                        anchors.fill: parent
-                        onClicked:
-                        {
-                            core.buttonAction(22, Qt.point(playlists_listview.model.get(playlists_listview.currentIndex).playlistid, index));
-                        }
+                        core.buttonAction(22, Qt.point(playlists_listview.model.get(playlists_listview.currentIndex).playlistid, index));
                     }
                 }
             }

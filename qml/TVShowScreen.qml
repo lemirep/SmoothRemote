@@ -20,20 +20,24 @@ Item
         }
     }
 
-    Component
+    Image
     {
         id : back_arrow
-        Image
+        fillMode: Image.PreserveAspectFit
+        source : "Resources/back_arrow.png"
+        scale : back_ma.pressed ? 0.9 : 1
+        anchors
         {
-            fillMode: Image.PreserveAspectFit
-            source : "Resources/back_arrow.png"
-            scale : back_ma.pressed ? 0.9 : 1
-            MouseArea
-            {
-                id : back_ma
-                anchors.fill: parent
-                onClicked: {tvshow_screen.goToPreviousState();}
-            }
+            left : parent.left
+            top : parent.top
+        }
+        z : 10
+        enabled : opacity === 1
+        MouseArea
+        {
+            id : back_ma
+            anchors.fill: parent
+            onClicked: {tvshow_screen.goToPreviousState();}
         }
     }
 
@@ -62,7 +66,7 @@ Item
             PropertyChanges {target: show_list; shown : true; opacity : 1; scale : 1}
             PropertyChanges {target: show_detail; shown : false; opacity : 0; scale : 0}
             PropertyChanges {target: episode_list; shown : false; opacity : 0; scale : 0}
-            PropertyChanges {target: topBanner; menuComponent : undefined}
+            PropertyChanges {target: back_arrow; opacity : 0}
         },
         State
         {
@@ -70,7 +74,7 @@ Item
             PropertyChanges {target: show_detail; shown : true; opacity : 1; scale : 1}
             PropertyChanges {target: show_list; shown : false; opacity : 0; scale : 4}
             PropertyChanges {target: episode_list; shown : false; opacity : 0; scale : 0}
-            PropertyChanges {target: topBanner; menuComponent : back_arrow}
+            PropertyChanges {target: back_arrow; opacity : 1}
         },
         State
         {
@@ -78,7 +82,7 @@ Item
             PropertyChanges {target: episode_list; shown : true; opacity : 1; scale : 1}
             PropertyChanges {target: show_list; shown : false; opacity : 0; scale : 4}
             PropertyChanges {target: show_detail; shown : false; opacity : 0; scale : 4}
-            PropertyChanges {target: topBanner; menuComponent : back_arrow}
+            PropertyChanges {target: back_arrow; opacity : 1}
         }
     ]
 

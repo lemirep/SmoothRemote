@@ -39,8 +39,8 @@ Image
                 right : parent.right
                 top : parent.top
                 topMargin : 25
-                leftMargin : 10
-                rightMargin : 10
+                leftMargin : 25
+                rightMargin : 25
             }
             spacing: 15
 
@@ -99,6 +99,16 @@ Image
                 font.pointSize: 12  * mainScreen.dpiMultiplier
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            }
+
+            MediaActionBar
+            {
+                id : media_action_bar
+                anchors.right : parent.right
+
+                onPlayClicked: core.buttonAction(14, model.file);
+                onAddClicked: {core.buttonAction(17, model.movieid);}
+                onStreamClicked:  mainView.launchMediaPlayer(model.streamingFile); /*core.buttonAction(27, model.streamingFile);*/
             }
         }
         ScrollBar {flickable: movie_flickable}

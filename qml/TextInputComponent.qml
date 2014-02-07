@@ -10,15 +10,22 @@ Item
     signal accepted()
     height : 28 * mainScreen.dpiMultiplier
 
+    property color focusColor : "#0099cc";
+    property color unfocusColor :  "#404040";
+    property alias backgroundColor : back_rec.color
+    property alias textColor : textInput.color
+    property alias placeHolderColor : placeHolderText.color
+
     Rectangle
     {
+        id : back_rec
         height: parent.height
         anchors.fill: parent
         radius : 5
         border
         {
             width : 1
-            color : textInput.activeFocus ? "#0099cc" : "#404040"
+            color : textInput.activeFocus ? focusColor : unfocusColor
         }
     }
 
@@ -47,6 +54,7 @@ Item
             rightMargin : 8
             verticalCenter : parent.verticalCenter
         }
+
         selectByMouse: true
         onAccepted: {textFocusScope.accepted(); textInput.focus = false}
         onFocusChanged: textFocusScope.accepted()

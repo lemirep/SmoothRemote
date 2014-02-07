@@ -569,7 +569,7 @@ void VideoLibrary::retrieveTVShowEpisodesCallBack(QNetworkReply *reply, QPointer
         QJsonDocument jsonResponse = Utils::QJsonDocumentFromReply(reply);
         if (!jsonResponse.isNull() && !jsonResponse.isEmpty() && jsonResponse.isObject())
         {
-            qDebug() << jsonResponse.toJson();
+//            qDebug() << jsonResponse.toJson();
             QJsonObject resultObj = jsonResponse.object().value("result").toObject();
             QJsonArray  tvShowEpisodesArray;
             if (!resultObj.isEmpty())

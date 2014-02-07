@@ -59,11 +59,11 @@ Item
             Rectangle
             {
                 id : advance_slide
-                color : "#0099ff"
+                color : "#ff2200"
                 border
                 {
                     width : 1
-                    color : "#6699ff"
+                    color : "#ff8800"
                 }
 
                 radius : 5
@@ -85,18 +85,28 @@ Item
 
             Text
             {
-                color : "white"
                 x : advance_slide.width - (width * 0.5)
                 y : - advance_slide.height
+                color : "white"
+                style: Text.Outline
+                styleColor: "#66ff2200"
+                font.bold: true
+                font.italic: true
+                font.family: "Helvetica"
                 font.pointSize: 10 * mainScreen.dpiMultiplier
                 text : Utils.printDuration(advance)
             }
 
             Text
             {
-                color : "white"
                 x : parent.width - (width * 0.5)
                 y : - advance_slide.height
+                color : "white"
+                style: Text.Outline
+                styleColor: "#66ff2200"
+                font.bold: true
+                font.italic: true
+                font.family: "Helvetica"
                 font.pointSize: 10 * mainScreen.dpiMultiplier
                 text : Utils.printDuration(duration)
             }

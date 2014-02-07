@@ -105,53 +105,58 @@ Item
         }
 
         delegate : Component {
-            Image
+            Item
             {
-                id : song_cover_pic
-
                 property bool editMode : false
                 property bool isCurrentItem : index === PathView.view.currentIndex;
-                property real delScale : PathView.onPath ? (isCurrentItem) ? 1.25 : PathView.delScale : 0
-
-                height : mainScreen.portrait ? PathView.view.width * 0.25 : PathView.view.height * 0.4
-                width : height
-                scale: delScale
-                opacity : 0.8
-                fillMode: Image.PreserveAspectFit
-                source : model.thumbnailUrl
-                asynchronous : true
-                z : isCurrentItem ? 1 : 0
-
-                Behavior on delScale {SpringAnimation {spring : 5; damping: 1; epsilon: 0.005}}
-                onStatusChanged : if (status === Image.Ready) pic_anim.start();
-                NumberAnimation {id : pic_anim; target : song_cover_pic; property : "scale"; from : 0; to : delScale; duration : 500; easing.type: Easing.InOutQuad}
-
+                property real delScale : PathView.onPath ? PathView.delScale : 0
                 transform: Rotation {
                     angle : -45
                     axis {x : 0; y: 1; z : 0}
                     origin.x : width * 0.5
                     origin.y : height * 0.5
                 }
-
+                height : mainScreen.portrait ? PathView.view.width * 0.4 : PathView.view.height * 0.5
+                width : height
+                scale: delScale
+                z : PathView.onPath ? PathView.delZ : 0
+                Behavior on delScale {SpringAnimation {spring : 5; damping: 1; epsilon: 0.005}}
+                Image
+                {
+                    id : song_cover_pic
+                    fillMode: Image.PreserveAspectFit
+                    source : model.thumbnailUrl
+                    asynchronous : true
+                    width : parent.width * 0.5
+                    height : width
+                    anchors
+                    {
+                        horizontalCenter : parent.horizontalCenter
+                        verticalCenter : parent.verticalCenter
+                    }
+                    onStatusChanged : if (status === Image.Ready) pic_anim.start();
+                    NumberAnimation {id : pic_anim; target : song_cover_pic; property : "scale"; from : 0; to : 1; duration : 500; easing.type: Easing.InOutQuad}
+                }
                 Text
                 {
                     id : song_title_text
-                    z : isCurrentItem ? 1 : 0
                     style: Text.Sunken
                     styleColor: parent.isCurrentItem ? "#cc6600" : "#cc2200"
                     color : parent.isCurrentItem ? "#ff2200" :"white"
                     text : model.title
                     anchors
                     {
-                        left : song_cover_pic.right
-                        leftMargin : 5
-                        top : song_cover_pic.verticalCenter
-                        topMargin : 15
+                        left : parent.horizontalCenter
+                        right : parent.right
+                        bottom : duration_text.top
                     }
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignBottom
                     width : parent.width
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                    elide: Text.ElideRight
-                    font.pointSize: 15
+                    elide: Text.ElideLeft
+                    font.pointSize: 25
+                    fontSizeMode: Text.Fit
                     font.capitalization: Font.Capitalize
                     opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                 }
@@ -159,36 +164,34 @@ Item
                 {
                     id : duration_text
                     style: Text.Sunken
-                    z : isCurrentItem ? 1 : 0
                     styleColor: "#ff2200"
                     color : "white"
                     font.family : "Helvetica";
                     font.bold: true
                     font.italic: true
-                    font.pointSize: 18 * mainScreen.dpiMultiplier
+                    font.pointSize: 15 * mainScreen.dpiMultiplier
                     width : parent.width
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignBottom
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight
                     opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                     text : Utils.printDuration(model.runtime)
                     anchors
                     {
-                        top : song_title_text.bottom
-                        left : song_cover_pic.right
+                        bottom : parent.bottom
+                        right : parent.right
                     }
                 }
 
                 MouseArea
                 {
                     id : song_del_ma
-                    scale : 1.25
                     anchors.fill: parent
                     onClicked:
                     {
                         if (parent.isCurrentItem)
                             editMode = true;
-                        else
-                            songs_listview.currentIndex = index;
                     }
                 }
 
@@ -199,11 +202,10 @@ Item
                     onPlayClicked: core.buttonAction(14, model.file);
                     onAddClicked:  core.buttonAction(25, model.songid);
                     onStreamClicked: core.buttonAction(27, model.streamingFile);
-                    width : parent.width
                     anchors
                     {
-                        left : song_title_text.left
-                        top : duration_text.bottom
+                        right : parent.right
+                        bottom : song_title_text.top
                     }
 
                     Behavior on opacity {NumberAnimation {duration : 250}}
@@ -224,7 +226,7 @@ Item
     {
         id : tracks_listview
         leftToRight: false
-        cacheItemCount: 8
+        cacheItemCount: 10
         flickDeceleration: 150
         anchors
         {
@@ -232,11 +234,12 @@ Item
             right : parent.horizontalCenter
             top : parent.top
             bottom : parent.verticalCenter
+            bottomMargin : parent.height * 0.1
+            rightMargin : parent.width * 0.1
         }
         model : songs_listview.model
         pathItemCount: songs_listview.pathItemCount
         currentIndex : songs_listview.currentIndex
-
         onMovingChanged :
         {
             if (!moving)
@@ -257,6 +260,7 @@ Item
                     origin.x : width * 0.5;
                     origin.y : height * 0.5
                 }
+
                 Text
                 {
                     text : model.track

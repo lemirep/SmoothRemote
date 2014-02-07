@@ -42,8 +42,8 @@ Image
                 top : parent.top
                 topMargin : 25
                 bottom : parent.bottom
-                leftMargin : mainScreen.portrait ? 10 : 25
-                rightMargin : mainScreen.portrait ? 10 : 25
+                leftMargin : 25
+                rightMargin : 25
             }
             spacing: 15
 

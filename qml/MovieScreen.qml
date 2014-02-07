@@ -18,20 +18,24 @@ Item
         }
     }
 
-    Component
+    Image
     {
         id : back_arrow
-        Image
+        fillMode: Image.PreserveAspectFit
+        source : "Resources/back_arrow.png"
+        scale : back_ma.pressed ? 0.9 : 1
+        anchors
         {
-            fillMode: Image.PreserveAspectFit
-            source : "Resources/back_arrow.png"
-            scale : back_ma.pressed ? 0.9 : 1
-            MouseArea
-            {
-                id : back_ma
-                anchors.fill: parent
-                onClicked: {movie_screen.goToPreviousState();}
-            }
+            left : parent.left
+            top : parent.top
+        }
+        z : 10
+        enabled : opacity === 1
+        MouseArea
+        {
+            id : back_ma
+            anchors.fill: parent
+            onClicked: {movie_screen.goToPreviousState();}
         }
     }
 
@@ -57,14 +61,14 @@ Item
             name : "list"
             PropertyChanges {target: movie_list; opacity : 1; shown : true; scale : 1}
             PropertyChanges {target: movie_detail; opacity : 0; shown : false; scale : 0}
-            PropertyChanges {target: topBanner; menuComponent : undefined}
+            PropertyChanges {target: back_arrow; opacity : 0}
         },
         State
         {
             name : "detail"
             PropertyChanges {target: movie_list; opacity : 0; shown : false; scale : 4}
             PropertyChanges {target: movie_detail; opacity : 1; shown : true; scale : 1}
-            PropertyChanges {target: topBanner; menuComponent : back_arrow}
+            PropertyChanges {target: back_arrow; opacity : 1}
         }
     ]
 
