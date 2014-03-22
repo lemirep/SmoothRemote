@@ -18,11 +18,11 @@ Item
             {
                 property bool editMode : false
                 property bool isCurrentItem : index === PathView.view.currentIndex;
-                property real delScale : PathView.onPath ? (isCurrentItem) ? 1.25 : PathView.delScale : 0
+                property real delScale : PathView.onPath ? PathView.delScale : 0
                 z : PathView.onPath ? PathView.delZ : 0
                 Behavior on delScale {SpringAnimation {spring : 5; damping: 1; epsilon: 0.005}}
                 scale : delScale
-                height : mainScreen.portrait ? PathView.view.width * 0.4 : PathView.view.height * 0.5
+                height : mainScreen.portrait ? PathView.view.width * 0.6 : PathView.view.height * 0.6
                 width : height
                 transform: Rotation {
                     angle : 45
@@ -66,7 +66,7 @@ Item
                     verticalAlignment: Text.AlignBottom
                     fontSizeMode: Text.Fit
                     elide: Text.ElideRight
-                    font.pointSize: 25
+                    font.pointSize: 35
                     opacity : mainScreen.portrait ? 1 - media_action_bar.opacity : 1
                 }
                 Text
@@ -78,7 +78,7 @@ Item
                     font.family : "Helvetica";
                     font.bold: true
                     font.italic: true
-                    font.pointSize: 15 * mainScreen.dpiMultiplier
+                    font.pointSize: 20 * mainScreen.dpiMultiplier
                     width : parent.width
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideRight

@@ -14,15 +14,14 @@ PathView
     path : Path  {
         startX : leftToRight ? 0 : width
         startY: 0
-        PathAttribute {name : "delScale"; value : 0.6}
+        PathAttribute {name : "delScale"; value : 0.3}
         PathAttribute {name : "delZ"; value : 0}
 
         PathLine {x : width * 0.5; y : height * 0.5}
-        PathAttribute {name : "delScale"; value : 1}
-        PathAttribute {name : "delZ"; value : 1}
+        PathAttribute {name : "delZ"; value : 0.5}
 
         PathLine {x : leftToRight ? width : 0; y : height}
-        PathAttribute {name : "delScale"; value : 0.6}
-        PathAttribute {name : "delZ"; value : 0}
+        PathAttribute {name : "delScale"; value : 1}
+        PathAttribute {name : "delZ"; value : 1}
     }
 }

@@ -18,6 +18,7 @@ Item
         Behavior on scale {NumberAnimation {duration : 500; easing.type: Easing.InOutQuad}}
         horizontalAlignment: Image.AlignHCenter
         anchors.fill: parent
+        cache : true
     }
     MouseArea
     {

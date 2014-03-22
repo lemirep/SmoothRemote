@@ -31,21 +31,16 @@ Item
         onModelCountChanged: build_artist_index();
         leftToRight: true
         flickDeceleration: 40
-        anchors
-        {
-            left : parent.left
-            right : parent.right
-            top : parent.top
-            bottom : parent.bottom
-        }
+        anchors.fill: parent
+
         delegate : Component {
             Item
             {
                 id : artist_delegate
-                height : mainScreen.portrait ? PathView.view.width * 0.4 : PathView.view.height * 0.5
+                height : mainScreen.portrait ? PathView.view.width * 0.6 : PathView.view.height * 0.6
                 width : height
                 property bool isCurrentItem : index === PathView.view.currentIndex;
-                property real delScale : PathView.onPath ? PathView.delScale : 0
+                property real delScale : PathView.onPath ? PathView.delScale : 0.6
                 z : PathView.onPath ? PathView.delZ : 0
 
                 Behavior on delScale {SpringAnimation {spring : 5; damping: 1; epsilon: 0.005}}
@@ -64,10 +59,11 @@ Item
                 }
                 Image
                 {
+                    id : artist_img
                     asynchronous: true
                     fillMode: Image.PreserveAspectFit
                     onStatusChanged : if (status === Image.Ready) pic_anim.start();
-                    NumberAnimation {id : pic_anim; target : artist_delegate; property : "scale"; from : 0; to : 1; duration : 500; easing.type: Easing.InOutQuad}
+                    NumberAnimation {id : pic_anim; target : artist_img; property : "scale"; from : 0; to : 1; duration : 500; easing.type: Easing.InOutQuad}
                     source : model.thumbnailUrl
                     smooth : true
                     width : parent.width * 0.75
@@ -78,10 +74,58 @@ Item
                         top : parent.top
                     }
                 }
+
+                ShaderEffect
+                {
+                    property variant source : ShaderEffectSource {
+                        sourceItem: artist_img
+                        live : true
+                    }
+                    z : -5
+                    anchors
+                    {
+                        horizontalCenter : parent.horizontalCenter
+                        top : parent.verticalCenter
+                    }
+                    width : parent.width * 0.5
+                    height : parent.height * 0.5
+                    transform: Rotation {
+                        angle : -75
+                        axis {x : 1; y: 0; z : 0}
+                        origin.x : width * 0.5;
+                        origin.y : height * 0.5
+                    }
+
+                    vertexShader: "
+                            uniform highp mat4 qt_Matrix;
+                            attribute highp vec4 qt_Vertex;
+                            attribute highp vec2 qt_MultiTexCoord0;
+                            varying highp vec2 coord;
+                            uniform highp float width;
+
+                            void main()
+                            {
+                                coord = qt_MultiTexCoord0;
+                                gl_Position = qt_Matrix * qt_Vertex;
+                            }
+                        "
+
+                    fragmentShader: "
+                            varying highp vec2 coord;
+                            uniform sampler2D source;
+                            uniform lowp float qt_Opacity;
+
+                            void main()
+                            {
+                                gl_FragColor = texture2D(source, vec2(coord.x, 1.0 - coord.y)) * (0.95 - coord.y) * 0.5;
+                            }
+                        "
+                }
+
                 Text
                 {
                     id : del_text
-                    font.pointSize: 20
+                    font.pointSize: 35
                     fontSizeMode: Text.Fit
                     style: parent.isCurrentItem ? Text.Sunken : Text.Outline
                     styleColor: parent.isCurrentItem ? "#cc6600" : "#cc2200"

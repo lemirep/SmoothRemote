@@ -1,4 +1,4 @@
-import QtQuick 2.1
+import QtQuick 2.2
 import "Utils.js" as Utils
 
 Item
@@ -93,7 +93,6 @@ Item
     {
         id : songs_listview
         pathItemCount: mainScreen.portrait ? 4 : 6
-        cacheItemCount: 8
         leftToRight: false
         flickDeceleration: 75
         anchors
@@ -116,7 +115,7 @@ Item
                     origin.x : width * 0.5
                     origin.y : height * 0.5
                 }
-                height : mainScreen.portrait ? PathView.view.width * 0.4 : PathView.view.height * 0.5
+                height : mainScreen.portrait ? PathView.view.width * 0.7 : PathView.view.height * 0.7
                 width : height
                 scale: delScale
                 z : PathView.onPath ? PathView.delZ : 0
@@ -137,6 +136,53 @@ Item
                     onStatusChanged : if (status === Image.Ready) pic_anim.start();
                     NumberAnimation {id : pic_anim; target : song_cover_pic; property : "scale"; from : 0; to : 1; duration : 500; easing.type: Easing.InOutQuad}
                 }
+                ShaderEffect
+                {
+                    property variant source : ShaderEffectSource {
+                        sourceItem: song_cover_pic
+                        live : true
+                    }
+                    z : -5
+                    anchors
+                    {
+                        horizontalCenter : parent.horizontalCenter
+                        top : parent.verticalCenter
+                    }
+                    width : parent.width * 0.5
+                    height : parent.height * 0.5
+                    transform: Rotation {
+                        angle : 75
+                        axis {x : 1; y: 0; z : 0}
+                        origin.x : width * 0.5;
+                        origin.y : height * 0.5
+                    }
+
+                    vertexShader: "
+                            uniform highp mat4 qt_Matrix;
+                            attribute highp vec4 qt_Vertex;
+                            attribute highp vec2 qt_MultiTexCoord0;
+                            varying highp vec2 coord;
+                            uniform highp float width;
+
+                            void main()
+                            {
+                                coord = qt_MultiTexCoord0;
+                                gl_Position = qt_Matrix * qt_Vertex;
+                            }
+                        "
+
+                    fragmentShader: "
+                            varying highp vec2 coord;
+                            uniform sampler2D source;
+                            uniform lowp float qt_Opacity;
+
+                            void main()
+                            {
+                                gl_FragColor = texture2D(source, vec2(coord.x, 1.0 - coord.y)) * (0.95 - coord.y) * 0.5;
+                            }
+                        "
+                }
+
                 Text
                 {
                     id : song_title_text
@@ -155,7 +201,7 @@ Item
                     width : parent.width
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     elide: Text.ElideLeft
-                    font.pointSize: 25
+                    font.pointSize: 45
                     fontSizeMode: Text.Fit
                     font.capitalization: Font.Capitalize
                     opacity: mainScreen.portrait ? 1 - media_action_bar.opacity : 1
@@ -169,7 +215,7 @@ Item
                     font.family : "Helvetica";
                     font.bold: true
                     font.italic: true
-                    font.pointSize: 15 * mainScreen.dpiMultiplier
+                    font.pointSize: 20 * mainScreen.dpiMultiplier
                     width : parent.width
                     horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignBottom

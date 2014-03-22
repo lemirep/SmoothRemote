@@ -161,6 +161,7 @@ Item
         onAlbumSelected:
         {
             album_songs_screen.model = artist_albums_screen.selectedAlbum.songsModel;
+            album_songs_screen.albumId = artist_albums_screen.selectedAlbum.albumid
             parent.state = "songs"
         }
     }

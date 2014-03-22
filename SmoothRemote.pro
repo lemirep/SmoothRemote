@@ -9,6 +9,9 @@ RESOURCES += \
 
 INCLUDEPATH += $$PWD
 
+#DEFINES += "QT_NO_CAST_TO_ASCII"
+#DEFINES += "QT_NO_CAST_FROM_ASCII"
+
 include (./Global/Global.pri)
 include (./Models/Models.pri)
 include (./Audio/Audio.pri)

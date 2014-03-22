@@ -13,7 +13,7 @@ Item
     onArtistChanged: core.refreshAlbumsForArtist(artist.artistid)
 
     transform: Rotation {
-        angle : -20
+        angle : 0
         axis {x : 0; y: 1; z : 0}
         origin.x : width * 0.5
         origin.y : height * 0.5
@@ -54,7 +54,7 @@ Item
             {
                 id : album_delegate
                 property real rotAngle : PathView.onPath ? PathView.delAngle : 0
-                property real delScale : PathView.onPath ? PathView.delScale : 0
+                property real delScale : PathView.onPath ? PathView.delScale : 0.5
                 property bool isCurrentItem : index === PathView.view.currentIndex;
 
                 width : mainScreen.portrait ? PathView.view.width * 0.8 : PathView.view.height * 0.65
@@ -107,5 +107,50 @@ Item
                 }
             }
         }
+    }
+
+    ShaderEffect
+    {
+        property variant source : ShaderEffectSource {
+            sourceItem: albums_gridview
+            live : true
+            width : artists_cover_flow.width
+            height : artists_cover_flow.height
+        }
+        z : -5
+        anchors
+        {
+            left : parent.left
+            right : parent.right
+            top : parent.verticalCenter
+            topMargin : 1.25 * album_delegate.width
+        }
+        height : parent.height
+
+        vertexShader: "
+                uniform highp mat4 qt_Matrix;
+                attribute highp vec4 qt_Vertex;
+                attribute highp vec2 qt_MultiTexCoord0;
+                varying highp vec2 coord;
+                uniform highp float width;
+
+                void main()
+                {
+                    coord = qt_MultiTexCoord0;
+                    gl_Position = qt_Matrix * qt_Vertex;
+                }
+            "
+
+        fragmentShader: "
+                varying highp vec2 coord;
+                uniform sampler2D source;
+                uniform lowp float qt_Opacity;
+
+                void main()
+                {
+                    gl_FragColor = texture2D(source, vec2(coord.x, 1.0 - coord.y)) * (0.6 - coord.y) * sin(3.14 * coord.x);
+                }
+            "
+
     }
 }

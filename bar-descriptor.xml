@@ -19,7 +19,7 @@
     <arg>qnx</arg>
     <action system="true">run_native</action>
     <action>access_internet</action>
-    <asset entry="true" type="Qnx/Elf" path="SmoothRemote">SmoothRemote</asset>
+    <asset type="Qnx/Elf" path="SmoothRemote" entry="true">SmoothRemote</asset>
     <!--
     <asset path="%QT_INSTALL_LIBS%">lib</asset>
     <asset path="%QT_INSTALL_PLUGINS%">plugins</asset>

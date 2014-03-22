@@ -410,6 +410,8 @@ void VideoLibrary::retrieveMoviesFromDBCallBack(QList<QSqlRecord> result, QPoint
 
             this->moviesLibraryModel->appendRow(movie);
         }
+
+
     }
 }
 

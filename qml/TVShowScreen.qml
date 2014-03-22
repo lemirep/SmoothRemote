@@ -64,7 +64,7 @@ Item
         State
         {
             name : "show_list"
-            PropertyChanges {target: show_list; shown : true; opacity : 1; scale : 1}
+            PropertyChanges {target: show_list; shown : true; opacity : 1; scale : 1;}
             PropertyChanges {target: show_detail; shown : false; opacity : 0; scale : 0}
             PropertyChanges {target: episode_list; shown : false; opacity : 0; scale : 0}
             PropertyChanges {target: back_arrow; opacity : 0}
@@ -73,7 +73,7 @@ Item
         {
             name : "show_detail"
             PropertyChanges {target: show_detail; shown : true; opacity : 1; scale : 1}
-            PropertyChanges {target: show_list; shown : false; opacity : 0; scale : 4}
+            PropertyChanges {target: show_list; shown : false; opacity : 0; scale : 4;}
             PropertyChanges {target: episode_list; shown : false; opacity : 0; scale : 0}
             PropertyChanges {target: back_arrow; opacity : 1}
         },

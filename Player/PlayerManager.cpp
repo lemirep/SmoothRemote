@@ -407,7 +407,7 @@ void PlayerManager::getActivesPlayersCallBack(QNetworkReply *reply,  QPointer<QO
             {
                 QList<Models::ListItem *> oldItems = this->playerModels->toList();
                 QList<Models::ListItem *> updatedItems;
-                foreach (QJsonValue value, resultsArray)
+                foreach (const QJsonValue& value, resultsArray)
                 {
                     PlayerModelItem *player = new PlayerModelItem();
                     Models::JSONListItemBinder::fromQJsonValue(value, player);
@@ -511,7 +511,7 @@ void PlayerManager::getPlaylistsCallBack(QNetworkReply *reply,  QPointer<QObject
         {
             QJsonArray resultObj = jsonRep.object().value("result").toArray();
             Models::ListModel *model = reinterpret_cast<Models::ListModel *>(data.data());
-            foreach (QJsonValue playlistValue, resultObj)
+            foreach (const QJsonValue &playlistValue, resultObj)
             {
                 QJsonObject playlistObj = playlistValue.toObject();
                 if (!playlistObj.isEmpty())
@@ -551,15 +551,18 @@ void PlayerManager::getPlaylistItemsCallBack(QNetworkReply *reply, QPointer<QObj
             Models::ListModel *model = reinterpret_cast<Models::ListModel *>(data.data());
             QList<Models::ListItem *> updatedItems;
             QList<Models::ListItem *> oldItems = model->toList();
-            foreach (QJsonValue itemElem, itemsArray)
+            uint count = 0;
+            foreach (const QJsonValue& itemElem, itemsArray)
             {
                 QJsonObject item = itemElem.toObject();
                 Models::ListItem *playableItem = model->getPrototype()->getNewItemInstance();
                 Models::JSONListItemBinder::fromQJsonValue(item, playableItem);
                 if (playableItem->id() != -1)
                 {
-                    Models::ListItem* oldItem = model->find(playableItem->id());
-                    if (oldItem != NULL)
+                    // We can have several times the same song in a playlist
+                    // So we check if we find the same song at the same position
+                    Models::ListItem* oldItem = oldItems.value(count);
+                    if (oldItem != NULL && oldItem->id() == playableItem->id())
                     {
                         *oldItem = *playableItem;
                         delete playableItem;
@@ -569,6 +572,7 @@ void PlayerManager::getPlaylistItemsCallBack(QNetworkReply *reply, QPointer<QObj
                     else
                         model->appendRow(playableItem);
                 }
+                count++;
             }
             for (int i = oldItems.count(); i > 0; i--)
             {

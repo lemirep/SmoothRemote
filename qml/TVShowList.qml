@@ -8,6 +8,7 @@ GridView
     property bool shown;
     signal showSelected();
 
+    cacheBuffer: width * 2
     model : core.tvShowModel
     flow : GridView.TopToBottom
     cellHeight : Math.floor(height * 0.5)
@@ -16,6 +17,7 @@ GridView
     enabled : shown
 
     Behavior on swipeAngle { SpringAnimation {spring : 2.5; damping : 0.8; epsilon: 0.25} }
+    Behavior on scale {NumberAnimation {duration : 750}}
 
     transform: Rotation {
         angle : Math.abs(grid_view.swipeAngle) < 30 ? grid_view.swipeAngle : (grid_view.swipeAngle < 0) ? -30 : 30

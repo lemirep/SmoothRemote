@@ -1,5 +1,4 @@
 import QtQuick 2.2
-import QtMultimedia 5.0
 
 Item
 {
@@ -43,13 +42,19 @@ Item
             {
                 width : ListView.view.width / 3
                 height : ListView.view.height
-                color : "#e5e5e5"
                 visible : height > 0
+                color : "#202020"
                 Text
                 {
                     anchors.centerIn: parent
-                    color : "#101010"
                     text : model.tabName
+                    style: Text.Sunken
+                    styleColor: "#ff2200"
+                    color : "white"
+                    font.family : "Helvetica";
+                    font.bold: true
+                    font.italic: true
+                    font.pointSize: 15 * mainScreen.dpiMultiplier
                 }
                 Rectangle
                 {
@@ -59,8 +64,8 @@ Item
                         right : parent.right
                         bottom : bottom_border.top
                     }
-                    height : 7
-                    color : "#00ccff"
+                    height : 2
+                    color : "#ff3300"
                     visible: index === remote_listview.currentIndex
                 }
                 Rectangle
